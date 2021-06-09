@@ -1,6 +1,6 @@
 # Realm-Kotlin Samples
 
-This repository contains a set of projects to help you learn about learn about using [Realm-Kotlin](https://github.com/realm/realm-kotlin) SDK
+This repository contains a set of projects to help you learn about using [Realm-Kotlin](https://github.com/realm/realm-kotlin) SDK
 Each sample demonstrates different use cases.
 
 💻 Requirements
