@@ -19,7 +19,9 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
 
+    - name: Change to Bookshelf directory 
+      run: cd Bookshelf
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: cd Bookshelf ./gradlew buildDebug
+      run: ./gradlew buildDebug
