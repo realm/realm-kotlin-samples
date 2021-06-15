@@ -19,7 +19,13 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
 
-    - name: Setting Bookshelf as working directory
+    - name: Building Intro [Debug]
+      working-directory: ./Intro
+      run: |
+        chmod +x gradlew
+        ./gradlew buildDebug
+
+    - name: Building Bookshelf [Debug]
       working-directory: ./Bookshelf
       run: |
         chmod +x gradlew
