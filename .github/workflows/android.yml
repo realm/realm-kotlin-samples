@@ -23,10 +23,10 @@ jobs:
       working-directory: ./Intro
       run: |
         chmod +x gradlew
-        ./gradlew buildDebug
+        ./gradlew buildDebug packForXcode
 
     - name: Building Bookshelf [Debug]
       working-directory: ./Bookshelf
       run: |
         chmod +x gradlew
-        ./gradlew buildDebug
+        ./gradlew buildDebug packForXcode
