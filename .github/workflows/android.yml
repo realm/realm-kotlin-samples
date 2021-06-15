@@ -9,7 +9,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -21,6 +21,9 @@ jobs:
 
     - name: Change to Bookshelf directory 
       run: cd Bookshelf
+    - name: List files in the Bookshelf
+    - run: |
+      ls -alt
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
