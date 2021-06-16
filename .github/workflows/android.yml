@@ -9,7 +9,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -19,9 +19,14 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
 
-    - name: Change to Bookshelf directory 
-      run: cd Bookshelf
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew buildDebug
+    - name: Building Intro [Debug]
+      working-directory: ./Intro
+      run: |
+        chmod +x gradlew
+        ./gradlew buildDebug packForXcode
+
+    - name: Building Bookshelf [Debug]
+      working-directory: ./Bookshelf
+      run: |
+        chmod +x gradlew
+        ./gradlew buildDebug packForXcode
