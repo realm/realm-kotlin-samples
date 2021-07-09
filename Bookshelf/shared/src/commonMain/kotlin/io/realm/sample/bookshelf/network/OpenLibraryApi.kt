@@ -13,15 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.realm.sample.bookshelf.network
 
-import io.ktor.client.HttpClient
+import io.ktor.client.*
 import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.features.json.serializer.KotlinxSerializer
+import io.ktor.client.features.json.serializer.*
 import io.ktor.client.request.*
 import kotlinx.serialization.json.Json
 
 class OpenLibraryApi {
+
     private val httpClient by lazy {
         HttpClient {
             install(JsonFeature) {
@@ -30,6 +32,7 @@ class OpenLibraryApi {
             }
         }
     }
+
     suspend fun findBook(title: String): SearchResult {
         return httpClient.get("$BOOK_SEARCH_ENDPOINT${title}&limit=10")
     }

@@ -12,11 +12,9 @@ repositories {
 
 dependencies {
     implementation(project(":shared"))
-    implementation("com.google.android.material:material:1.3.0")
-    implementation("androidx.appcompat:appcompat:1.2.0")
     implementation("androidx.constraintlayout:constraintlayout:2.0.4")
     implementation("androidx.compose.compiler:compiler:$compose_version")
-    compileOnly("io.realm.kotlin:library:0.1.0")
+    compileOnly("io.realm.kotlin:library:0.3.2")
 
     implementation("androidx.core:core-ktx:1.5.0")
     implementation("androidx.appcompat:appcompat:1.3.0")
@@ -30,6 +28,8 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.4.0-alpha01")
     implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.3.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha05")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
 }
 
 android {
@@ -61,6 +61,6 @@ android {
 
     composeOptions {
         kotlinCompilerVersion = "1.5.10"
-        kotlinCompilerExtensionVersion = "1.0.0-beta08"
+        kotlinCompilerExtensionVersion = compose_version
     }
 }

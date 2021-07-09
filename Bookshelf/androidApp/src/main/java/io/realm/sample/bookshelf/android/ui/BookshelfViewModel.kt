@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.realm.sample.bookshelf.android.ui
 
 import androidx.compose.runtime.mutableStateListOf
@@ -28,27 +29,34 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class BookshelfViewModel : ViewModel() {
-    private var sdk = BookshelfRepository()
 
-    val savedBooks: StateFlow<List<Book>> = sdk.allBooksAsFlowable()
+    private var repository = BookshelfRepository()
+
+    val savedBooks: StateFlow<List<Book>> = repository.allBooksAsFlowable()
         .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
-    var searchResults: SnapshotStateList<Book> = mutableStateListOf()
-        private set
+    val searchResults: SnapshotStateList<Book> = mutableStateListOf()
 
-    var searching: MutableStateFlow<Boolean> =  MutableStateFlow(false)
-        private set
+    val searching: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
     fun findBooks(keyword: String) {
         viewModelScope.launch {
             searching.value = true
             searchResults.clear()
-            searchResults.addAll(sdk.getBookByTitle(keyword))
+            searchResults.addAll(repository.getBookByTitle(keyword))
             searching.value = false
         }
     }
 
     fun addBook(book: Book) {
-        sdk.addToBookshelf(book)
+        repository.addToBookshelf(book)
+    }
+
+    fun removeBook(book: Book) {
+        repository.removeFromBookshelf(book.title)
+    }
+
+    fun isBookCached(book: Book): Boolean {
+        return repository.getBookByTitleFromDb(book.title) != null
     }
 }

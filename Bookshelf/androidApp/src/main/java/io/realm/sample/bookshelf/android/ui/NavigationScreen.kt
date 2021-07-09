@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.realm.sample.bookshelf.android.ui
 
 import androidx.annotation.StringRes
@@ -30,18 +31,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.navArgument
 import io.realm.sample.bookshelf.android.R
+import io.realm.sample.bookshelf.model.Book
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 
-sealed class NavigationScreens(
+sealed class NavigationScreen(
     val name: String,
     @StringRes val resourceId: Int,
     val icon: ImageVector
 ) {
     companion object {
-        fun fromRoute(route: String?): NavigationScreens =
+        fun fromRoute(route: String?): NavigationScreen =
             when (route?.substringBefore("/")) {
                 Search.name -> Search
                 Books.name -> Books
@@ -49,62 +55,105 @@ sealed class NavigationScreens(
                 null -> Search
                 else -> throw IllegalArgumentException("Route $route is not recognized.")
             }
+
+        fun isNavigationScreen(route: String?): Boolean =
+            when (route) {
+                null,
+                Search.name,
+                Books.name,
+                About.name -> true
+                else -> false
+            }
     }
 
-    object Search :
-        NavigationScreens("Search", R.string.search_screen_route, Icons.Filled.Search)
-
-    object Books : NavigationScreens("Books", R.string.books_screen_route, Icons.Filled.List)
-    object About : NavigationScreens("About", R.string.about_screen_route, Icons.Filled.Home)
+    object Search : NavigationScreen("Search", R.string.route_search_screen, Icons.Filled.Search)
+    object Books : NavigationScreen("Books", R.string.route_books_screen, Icons.Filled.List)
+    object About : NavigationScreen("About", R.string.route_about_screen, Icons.Filled.Home)
 }
 
 @Composable
-fun bottomNavigation(
+fun BottomNavigation(
     navController: NavHostController,
-    items: List<NavigationScreens>
+    items: List<NavigationScreen>
 ) {
     val backstackEntry = navController.currentBackStackEntryAsState()
-    val currentScreen = NavigationScreens.fromRoute(backstackEntry.value?.destination?.route)
+    val route = backstackEntry.value?.destination?.route
 
-    BottomNavigation {
-        items.forEach { screen ->
-            BottomNavigationItem(
-                icon = { Icon(screen.icon, contentDescription = null) },
-                label = { Text(stringResource(id = screen.resourceId)) },
-                selected = currentScreen.name == screen.name,
-                onClick = {
-                    navController.navigate(screen.name)
-                }
-            )
+    // Only use navigation bar when receiving a navigation route
+    if (NavigationScreen.isNavigationScreen(route)) {
+        val currentScreen = NavigationScreen.fromRoute(route)
+
+        BottomNavigation {
+            items.forEach { screen ->
+                BottomNavigationItem(
+                    icon = { Icon(screen.icon, contentDescription = null) },
+                    label = { Text(stringResource(id = screen.resourceId)) },
+                    selected = currentScreen.name == screen.name,
+                    onClick = {
+                        navController.navigate(screen.name)
+                    }
+                )
+            }
         }
     }
 }
 
-
 @ExperimentalComposeUiApi
 @Composable
-fun bookshelfNavHost(
+fun BookshelfNavHost(
     bookshelfViewModel: BookshelfViewModel,
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
     NavHost(
         navController,
-        startDestination = NavigationScreens.About.name,
+        startDestination = NavigationScreen.About.name,
         modifier = modifier
     ) {
-        composable(NavigationScreens.Search.name) {
-            searchScreen(bookshelfViewModel.searchResults,
-                bookshelfViewModel.searching,
+        composable(NavigationScreen.Search.name) {
+            SearchScreen(
                 navController,
-                bookshelfViewModel::findBooks, bookshelfViewModel::addBook)
+                bookshelfViewModel.searchResults,
+                bookshelfViewModel.searching,
+                { name -> bookshelfViewModel.findBooks(name) },
+                { book -> bookshelfViewModel.isBookCached(book) }
+            )
         }
         // FIXME This doesn't bring saved Books to Realm
-        composable(NavigationScreens.Books.name) {
-            savedBooks(bookshelfViewModel.savedBooks)
+        composable(NavigationScreen.Books.name) {
+            SavedBooks(
+                navController,
+                bookshelfViewModel.savedBooks
+            )
         }
-        composable(NavigationScreens.About.name) {
-            aboutScreen()
+        composable(NavigationScreen.About.name) {
+            AboutScreen()
+        }
+        composable(
+            route = "${DetailsScreen.name}/{${DetailsScreen.argScreenMode}}/{${DetailsScreen.argBook}}",
+            arguments = listOf(
+                navArgument(DetailsScreen.argScreenMode) {
+                    type = NavType.EnumType(DetailsScreen.ScreenMode::class.java)
+                },
+                navArgument(DetailsScreen.argBook) {
+                    type = NavType.StringType
+                }
+            )
+        ) { backStackEntry ->
+            backStackEntry.arguments?.also { args ->
+                val screenMode = args.get(DetailsScreen.argScreenMode) as DetailsScreen.ScreenMode
+                val book = args.getString(DetailsScreen.argBook)
+                    ?.let { serializedBook ->
+                        Json.decodeFromString<Book>(serializedBook)
+                    } ?: throw IllegalStateException("Book not found")
+                DetailsScreen(
+                    navController,
+                    screenMode,
+                    book,
+                    bookshelfViewModel::addBook,
+                    bookshelfViewModel::removeBook
+                )
+            } ?: throw IllegalStateException("Missing navigation arguments")
         }
     }
 }

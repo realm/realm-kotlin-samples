@@ -13,29 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.realm.sample.bookshelf.android.ui
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Button
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -48,19 +36,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import io.realm.sample.bookshelf.android.theme.horizontalTextPadding
+import io.realm.sample.bookshelf.android.theme.rowSize
+import io.realm.sample.bookshelf.android.theme.verticalTextPadding
 import io.realm.sample.bookshelf.model.Book
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 @ExperimentalComposeUiApi
 @Composable
-fun searchScreen(
+fun SearchScreen(
+    navController: NavHostController,
     items: List<Book>,
     searching: MutableStateFlow<Boolean>,
-    navController: NavHostController,
-    findBooks: (name: String) -> Unit,
-    addBook: (Book) -> Unit
+    findBooks: (String) -> Unit,
+    isBookCached: (Book) -> Boolean,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -69,6 +64,7 @@ fun searchScreen(
             keyboardController?.hide()
             findBooks(it)
         }
+
         val isSearching: Boolean by searching.collectAsState()
 
         if (isSearching) {
@@ -81,18 +77,41 @@ fun searchScreen(
         } else {
             LazyColumn(
                 modifier = Modifier.weight(1f),
-                contentPadding = PaddingValues(top = 8.dp)
             ) {
                 items(items = items) { book ->
-                    Row {
-                        Text(book.title)
-                        Button(onClick = {
-                            addBook(book)
-                            //navigate to My Books View
-                            navController.navigate(NavigationScreens.Books.name)
-                        }) {
-                            Text(text = "➕")
-                        }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .height(rowSize)
+                            .clickable {
+                                val bookCached = isBookCached(book)
+                                val mode = if (bookCached) {
+                                    DetailsScreen.ScreenMode.REMOVE
+                                } else {
+                                    DetailsScreen.ScreenMode.ADD
+                                }
+
+                                val serializedBook = Json.encodeToString(book)
+                                navController.navigate("${DetailsScreen.name}/" +
+                                        "$mode/" +
+                                        serializedBook
+                                )
+                            }
+                    ) {
+                        Text(
+                            text = book.title,
+                            modifier = Modifier
+                                .padding(
+                                    top = verticalTextPadding,
+                                    bottom = verticalTextPadding,
+                                    start = horizontalTextPadding,
+                                    end = horizontalTextPadding
+                                )
+                                .weight(1f),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            textAlign = TextAlign.Start,
+                        )
                     }
                 }
             }

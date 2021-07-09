@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.realm.sample.bookshelf
 
 import io.realm.Cancellable
@@ -22,6 +23,7 @@ import io.realm.sample.bookshelf.network.OpenLibraryApi
 import kotlinx.coroutines.flow.Flow
 
 class BookshelfRepository {
+
     private val api = OpenLibraryApi()
     private val database = RealmDatabase()
 
@@ -48,6 +50,15 @@ class BookshelfRepository {
 
     fun removeFromBookshelf(title: String) {
         database.deleteBook(title)
+    }
+
+    fun getBookByTitleFromDb(title: String): Book? {
+        return database.getBooksByTitle(title).let {
+            when {
+                it.isEmpty() -> null
+                else -> it.first()
+            }
+        }
     }
 
     fun clearBookshelf() {

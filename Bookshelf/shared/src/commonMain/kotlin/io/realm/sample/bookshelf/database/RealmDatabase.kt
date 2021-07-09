@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.realm.sample.bookshelf.database
 
 import io.realm.Cancellable
@@ -25,9 +26,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 
 class RealmDatabase {
+
     val realm: Realm by lazy {
-        val configuration = RealmConfiguration(schema = setOf(Book::class))
-        Realm.open(configuration)
+        RealmConfiguration.Builder()
+            .schema(Book::class)
+            .build()
+            .let { Realm.open(it) }
     }
 
     fun getAllBooks(): List<Book> {
@@ -44,10 +48,14 @@ class RealmDatabase {
         }
     }
 
-    fun getAllBooksAsCallback(success: (List<Book>) -> Unit) : Cancellable {
+    fun getAllBooksAsCallback(success: (List<Book>) -> Unit): Cancellable {
         return realm.objects<Book>().observe { result ->
             success(result.toList()) // FIXME RealmResults is the same (equals) causing the compose to not re-compose (maybe define a hashcode/equals based on size or Core version/counter of the list)
         }
+    }
+
+    fun getBooksByTitle(title: String): List<Book> {
+        return realm.objects<Book>().query("title = $0", title)
     }
 
     // Missing insert as list
@@ -59,17 +67,17 @@ class RealmDatabase {
 
     fun deleteBook(title: String) {
         realm.writeBlocking {
-            objects(Book::class).query("title = $0", title).first().delete()
+            objects<Book>().query("title = $0", title).first().delete()
         }
     }
 
     fun clearAllBooks() {
         realm.writeBlocking {
-            objects(Book::class).delete()
+            objects<Book>().delete()
         }
     }
 
     fun onBookChange(block: () -> Unit): Cancellable {
-        return realm.objects(Book::class).observe { block() }
+        return realm.objects<Book>().observe { block() }
     }
 }

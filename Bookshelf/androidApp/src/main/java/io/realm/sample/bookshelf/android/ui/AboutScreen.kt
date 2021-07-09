@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.realm.sample.bookshelf.android.ui
 
 import android.content.Intent
@@ -29,7 +30,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun aboutScreen() {
+fun AboutScreen() {
     val context = LocalContext.current
     Card(
         elevation = 4.dp,
@@ -38,7 +39,8 @@ fun aboutScreen() {
             .padding(8.dp)
     ) {
         Column(Modifier.clickable {
-            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.github.com/realm/realm-kotlin"))
+            val browserIntent =
+                Intent(Intent.ACTION_VIEW, Uri.parse("https://www.github.com/realm/realm-kotlin"))
             context.startActivity(browserIntent)
         }) {
             Text(

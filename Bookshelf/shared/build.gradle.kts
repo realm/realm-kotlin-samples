@@ -31,7 +31,7 @@ kotlin {
     val ktorVersion = "1.4.1"
     val serializationVersion = "1.0.0-RC"
     val coroutinesVersion = "1.3.9-native-mt"
-    val realmVersion = "0.1.0"
+    val realmVersion = "0.3.2"
 
     sourceSets {
         val commonMain  by getting {
