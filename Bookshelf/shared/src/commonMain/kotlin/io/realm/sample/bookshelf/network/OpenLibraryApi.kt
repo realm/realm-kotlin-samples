@@ -25,7 +25,7 @@ class OpenLibraryApi {
     private val httpClient by lazy {
         HttpClient {
             install(JsonFeature) {
-                val json = Json { ignoreUnknownKeys = true; isLenient = true }
+                val json = Json { ignoreUnknownKeys = true; isLenient = true; useAlternativeNames = false }
                 serializer = KotlinxSerializer(json)
             }
         }

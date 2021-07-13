@@ -23,18 +23,11 @@ plugins {
     id("com.android.library")
     id("kotlin-android-extensions")
     // Apply Realm Kotlin plugin
-    id("io.realm.kotlin") version "0.1.0"
-    // Apply Realm specific linting plugin to get common Realm linting tasks
-//    id("realm-lint")
+    id("io.realm.kotlin") version "0.4.0"
 }
-
-group = "io.realm.example"
-version = "0.1.0"
 
 kotlin {
     android()
-    // TODO Realm is not available for non-X64 hosts yet
-    //  https://github.com/realm/realm-kotlin/issues/72
     ios {
         binaries {
             framework {
@@ -45,8 +38,8 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                // TODO AUTO-SETUP
-                implementation("io.realm.kotlin:library:$version")
+                implementation("io.realm.kotlin:library:0.4.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0-native-mt")
             }
         }
         val commonTest by getting {

@@ -15,7 +15,8 @@
  */
 package io.realm.sample.bookshelf
 
-import io.realm.Cancellable
+import io.realm.RealmResults
+import io.realm.sample.bookshelf.database.CFlow
 import io.realm.sample.bookshelf.database.RealmDatabase
 import io.realm.sample.bookshelf.model.Book
 import io.realm.sample.bookshelf.network.OpenLibraryApi
@@ -30,16 +31,12 @@ class BookshelfRepository {
         return api.findBook(title).books
     }
 
-    fun allBooks(): List<Book> {
-        return database.getAllBooks()
-    }
-
     fun allBooksAsFlowable(): Flow<List<Book>> {
         return database.getAllBooksAsFlowable()
     }
 
-    fun allBooksAsCallback(success: (List<Book>) -> Unit): Cancellable {
-        return database.getAllBooksAsCallback(success)
+    fun allBooksAsCommonFlowable(): CFlow<RealmResults<Book>> {
+        return database.getAllBooksAsCommonFlowable()
     }
 
     fun addToBookshelf(book: Book) {
@@ -52,10 +49,5 @@ class BookshelfRepository {
 
     fun clearBookshelf() {
         database.clearAllBooks()
-    }
-
-    // Platform specific logger is needed to debug notification
-    fun onBookshelfChanged(block: () -> Unit): Cancellable {
-        return database.onBookChange(block)
     }
 }
