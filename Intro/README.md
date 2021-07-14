@@ -6,12 +6,12 @@ multiplatform project for both Android and iOS.
 The example is based on the Kotlin Multiplatform Mobile Project from
 https://github.com/Kotlin/kmm-sample/blob/master/README.md
 
-NOTE: The SDK doesn't currently support  `x86` - Please use an `x86_64` or `arm64` emulator/device
+NOTE: The SDK doesn't currently support `x86` - Please use an `x86_64` or `arm64` emulator/device
 
 
 ## Overview
 
-The Realm Kotlin Multiplatform SDK is used to provide an common implementation of an
+The Realm Kotlin Multiplatform SDK is used to provide a common implementation of an
 `ExpressionRepository` for storing a computation history of calculations performed in the respective 
 apps. The repository is implemented once in the `commonMain` source set of the `shared`-module and
 is triggered by the shared `Calculator`-implementation from the original KMM-sample project.

@@ -8,9 +8,6 @@ plugins {
     id("io.realm.kotlin") version "0.4.0"
 }
 
-group = "io.realm.sample.bookshelf"
-version = "0.4.0"
-
 kotlin {
     android()
 
@@ -28,9 +25,9 @@ kotlin {
         }
     }
 
-    val ktorVersion = "1.4.1"
-    val serializationVersion = "1.0.0-RC"
-    val coroutinesVersion = "1.3.9-native-mt"
+    val ktorVersion = "1.6.1"
+    val serializationVersion = "1.2.1"
+    val coroutinesVersion = "1.5.0-native-mt"
     val realmVersion = "0.4.0"
 
     sourceSets {
@@ -38,7 +35,7 @@ kotlin {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:${serializationVersion}")
                 implementation("io.ktor:ktor-client-serialization:$ktorVersion")
                 implementation("io.realm.kotlin:library:$realmVersion")
             }

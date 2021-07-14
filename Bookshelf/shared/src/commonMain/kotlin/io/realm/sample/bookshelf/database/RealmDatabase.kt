@@ -15,42 +15,31 @@
  */
 package io.realm.sample.bookshelf.database
 
-import io.realm.Cancellable
 import io.realm.Realm
 import io.realm.RealmConfiguration
+import io.realm.RealmResults
 import io.realm.delete
 import io.realm.sample.bookshelf.model.Book
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
 
 class RealmDatabase {
     val realm: Realm by lazy {
         val configuration = RealmConfiguration(schema = setOf(Book::class))
-        Realm.open(configuration)
+        Realm(configuration)
     }
 
     fun getAllBooks(): List<Book> {
         return realm.objects(Book::class)
     }
 
-    fun getAllBooksAsFlowable(): Flow<List<Book>> = callbackFlow {
-        val cancellable: Cancellable = realm.objects<Book>().observe { result ->
-            offer(result.toList()) // FIXME RealmResults is the same (equals) causing the compose to not re-compose (maybe define a hashcode/equals based on size or Core version/counter of the list)
-        }
-
-        awaitClose {
-            cancellable.cancel()
-        }
+    fun getAllBooksAsFlowable(): Flow<List<Book>> {
+        return realm.objects<Book>().observe()
     }
 
-    fun getAllBooksAsCallback(success: (List<Book>) -> Unit) : Cancellable {
-        return realm.objects<Book>().observe { result ->
-            success(result.toList()) // FIXME RealmResults is the same (equals) causing the compose to not re-compose (maybe define a hashcode/equals based on size or Core version/counter of the list)
-        }
+    fun getAllBooksAsCommonFlowable(): CFlow<RealmResults<Book>> {
+        return realm.objects<Book>().observe().wrap()
     }
 
-    // Missing insert as list
     fun addBook(book: Book) {
         realm.writeBlocking {
             copyToRealm(book)
@@ -67,9 +56,5 @@ class RealmDatabase {
         realm.writeBlocking {
             objects(Book::class).delete()
         }
-    }
-
-    fun onBookChange(block: () -> Unit): Cancellable {
-        return realm.objects(Book::class).observe { block() }
     }
 }

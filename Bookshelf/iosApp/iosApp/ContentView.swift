@@ -18,20 +18,20 @@ import shared
 
 class BookshelfViewModel : ObservableObject {
     private let sdk = BookshelfRepository()
-    private var cancellable: LibraryCancellable?
+    private var job: Closeable? = nil
     
     @Published var searching: Bool = false
     @Published var mySavedBooks = [Book]()
     @Published var bookSearchResults = [Book]()
     
     func startObservingSavedBooks() {
-        self.cancellable = self.sdk.allBooksAsCallback(success: { data in
-            self.mySavedBooks = data
-        })
+        self.job = self.sdk.allBooksAsCommonFlowable().watch { books in
+            self.mySavedBooks = books as! [Book]
+        }
     }
     
     func stopObservingSavedBooks() {
-        cancellable?.cancel()
+        job?.close()
     }
     
     func addBook(book: Book) {

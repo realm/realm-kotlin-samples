@@ -38,6 +38,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation("io.realm.kotlin:library:0.4.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0-native-mt")
             }
         }
         val commonTest by getting {
@@ -75,7 +76,6 @@ android {
     // https://github.com/realm/realm-kotlin/issues/73
     sourceSets.getByName("androidTest").java.srcDir(file("src/androidTest/kotlin"))
 }
-
 val packForXcode by tasks.creating(Sync::class) {
     group = "build"
     val mode = System.getenv("CONFIGURATION") ?: "DEBUG"
