@@ -20,30 +20,35 @@ plugins {
     id("com.android.application")
     kotlin("android")
     id("kotlin-android-extensions")
-    // Apply Realm Kotlin plugin even though we technically do not need it, to ensure that we have
-    // the right kotlinOptions
-    id("io.realm.kotlin") version "0.1.0"
-    // Apply Realm specific linting plugin to get common Realm linting tasks
-//    id("realm-lint") TODO enable again
 }
-
-group = "io.realm.example"
-version = "0.1.0"
 
 dependencies {
     implementation(project(":shared"))
     implementation("com.google.android.material:material:1.2.0")
     implementation("androidx.appcompat:appcompat:1.2.0")
     implementation("androidx.constraintlayout:constraintlayout:1.1.3")
-    // TODO AUTO-SETUP
-    compileOnly("io.realm.kotlin:library:$version")
+    compileOnly("io.realm.kotlin:library:0.4.0")
 }
 
 android {
+    signingConfigs {
+        getByName("debug") {
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+            storeFile = rootProject.file("debug.keystore")
+            storePassword = "android"
+        }
+        // TODO create key for Playstore
+//        create("release") {
+//            keyAlias = "release"
+//            keyPassword = "my release key password"
+//            storeFile = file("release.keystore")
+//            storePassword = "my keystore password"
+//        }
+    }
     compileSdkVersion(29)
     defaultConfig {
         applicationId = "io.realm.example.kmmsample.androidApp"
-        // FIXME Use Versions.Android.minSdk when it is aligned in the SDK
         minSdkVersion(21)
         targetSdkVersion(29)
         versionCode = 1
@@ -51,7 +56,9 @@ android {
     }
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {

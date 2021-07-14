@@ -5,11 +5,11 @@ plugins {
     id("com.android.library")
     id("kotlin-android-extensions")
     kotlin("plugin.serialization")
-    id("io.realm.kotlin") version "0.1.0"
+    id("io.realm.kotlin") version "0.4.0"
 }
 
 group = "io.realm.sample.bookshelf"
-version = "0.1.0"
+version = "0.4.0"
 
 kotlin {
     android()
@@ -31,7 +31,7 @@ kotlin {
     val ktorVersion = "1.4.1"
     val serializationVersion = "1.0.0-RC"
     val coroutinesVersion = "1.3.9-native-mt"
-    val realmVersion = "0.1.0"
+    val realmVersion = "0.4.0"
 
     sourceSets {
         val commonMain  by getting {
