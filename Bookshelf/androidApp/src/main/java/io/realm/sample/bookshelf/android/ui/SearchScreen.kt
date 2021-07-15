@@ -43,19 +43,16 @@ import androidx.navigation.NavHostController
 import io.realm.sample.bookshelf.android.theme.horizontalTextPadding
 import io.realm.sample.bookshelf.android.theme.rowSize
 import io.realm.sample.bookshelf.android.theme.verticalTextPadding
-import io.realm.sample.bookshelf.model.Book
+import io.realm.sample.bookshelf.network.ApiBook
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 
 @ExperimentalComposeUiApi
 @Composable
 fun SearchScreen(
     navController: NavHostController,
-    items: List<Book>,
+    items: List<ApiBook>,
     searching: MutableStateFlow<Boolean>,
-    findBooks: (String) -> Unit,
-    isBookCached: (Book) -> Boolean,
+    findBooks: (String) -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -84,18 +81,7 @@ fun SearchScreen(
                         modifier = Modifier
                             .height(rowSize)
                             .clickable {
-                                val bookCached = isBookCached(book)
-                                val mode = if (bookCached) {
-                                    DetailsScreen.ScreenMode.REMOVE
-                                } else {
-                                    DetailsScreen.ScreenMode.ADD
-                                }
-
-                                val serializedBook = Json.encodeToString(book)
-                                navController.navigate("${DetailsScreen.name}/" +
-                                        "$mode/" +
-                                        serializedBook
-                                )
+                                navController.navigate("${DetailsScreen.name}/${book.title}")
                             }
                     ) {
                         Text(

@@ -16,9 +16,11 @@
 
 package io.realm.sample.bookshelf
 
-import io.realm.Cancellable
+import io.realm.RealmResults
+import io.realm.sample.bookshelf.database.CFlow
+import io.realm.sample.bookshelf.database.RealmBook
 import io.realm.sample.bookshelf.database.RealmDatabase
-import io.realm.sample.bookshelf.model.Book
+import io.realm.sample.bookshelf.network.ApiBook
 import io.realm.sample.bookshelf.network.OpenLibraryApi
 import kotlinx.coroutines.flow.Flow
 
@@ -28,23 +30,19 @@ class BookshelfRepository {
     private val database = RealmDatabase()
 
     @Throws(Exception::class)
-    suspend fun getBookByTitle(title: String): List<Book> {
+    suspend fun getBookByTitle(title: String): List<ApiBook> {
         return api.findBook(title).books
     }
 
-    fun allBooks(): List<Book> {
-        return database.getAllBooks()
+    fun allBooksAsFlowable(): Flow<List<RealmBook>> {
+        return database.getAllBooksAsFlow()
     }
 
-    fun allBooksAsFlowable(): Flow<List<Book>> {
-        return database.getAllBooksAsFlowable()
+    fun allBooksAsCommonFlowable(): CFlow<RealmResults<RealmBook>> {
+        return database.getAllBooksAsCommonFlow()
     }
 
-    fun allBooksAsCallback(success: (List<Book>) -> Unit): Cancellable {
-        return database.getAllBooksAsCallback(success)
-    }
-
-    fun addToBookshelf(book: Book) {
+    fun addToBookshelf(book: RealmBook) {
         database.addBook(book)
     }
 
@@ -52,21 +50,7 @@ class BookshelfRepository {
         database.deleteBook(title)
     }
 
-    fun getBookByTitleFromDb(title: String): Book? {
-        return database.getBooksByTitle(title).let {
-            when {
-                it.isEmpty() -> null
-                else -> it.first()
-            }
-        }
-    }
-
     fun clearBookshelf() {
         database.clearAllBooks()
-    }
-
-    // Platform specific logger is needed to debug notification
-    fun onBookshelfChanged(block: () -> Unit): Cancellable {
-        return database.onBookChange(block)
     }
 }

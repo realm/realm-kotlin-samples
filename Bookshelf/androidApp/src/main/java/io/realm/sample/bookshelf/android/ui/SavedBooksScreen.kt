@@ -25,6 +25,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -35,17 +37,17 @@ import io.realm.sample.bookshelf.android.R
 import io.realm.sample.bookshelf.android.theme.horizontalTextPadding
 import io.realm.sample.bookshelf.android.theme.rowSize
 import io.realm.sample.bookshelf.android.theme.verticalTextPadding
-import io.realm.sample.bookshelf.model.Book
+import io.realm.sample.bookshelf.database.RealmBook
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 
 @Composable
 fun SavedBooks(
     navController: NavHostController,
-    savedBooks: StateFlow<List<Book>>
+    savedBooks: StateFlow<List<RealmBook>>
 ) {
-    if (savedBooks.value.isEmpty()) {
+    val books: List<RealmBook> by savedBooks.collectAsState()
+
+    if (books.isEmpty()) {
         Text(
             text = stringResource(id = R.string.search_empty_bookshelf),
             modifier = Modifier
@@ -64,18 +66,13 @@ fun SavedBooks(
             LazyColumn(
                 modifier = Modifier.weight(1f),
             ) {
-                items(items = savedBooks.value) { book ->
+                items(items = books) { book ->
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
                             .height(rowSize)
                             .clickable {
-                                val serializedBook = Json.encodeToString(book)
-                                navController.navigate(
-                                    "${DetailsScreen.name}/" +
-                                            "${DetailsScreen.ScreenMode.REMOVE}/" +
-                                            serializedBook
-                                )
+                                navController.navigate("${DetailsScreen.name}/${book.title}")
                             }
                     ) {
                         Text(

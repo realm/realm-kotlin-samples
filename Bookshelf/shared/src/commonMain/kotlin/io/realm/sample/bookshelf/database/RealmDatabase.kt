@@ -16,50 +16,44 @@
 
 package io.realm.sample.bookshelf.database
 
-import io.realm.Cancellable
 import io.realm.Realm
 import io.realm.RealmConfiguration
+import io.realm.RealmResults
 import io.realm.delete
-import io.realm.sample.bookshelf.model.Book
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
 
 class RealmDatabase {
 
     val realm: Realm by lazy {
-        RealmConfiguration.Builder()
-            .schema(Book::class)
-            .build()
-            .let { Realm.open(it) }
+        val configuration = RealmConfiguration(schema = setOf(RealmBook::class))
+        Realm(configuration)
     }
 
-    fun getAllBooks(): List<Book> {
-        return realm.objects(Book::class)
+    fun getAllBooks(): List<RealmBook> {
+        return realm.objects(RealmBook::class)
     }
 
-    fun getAllBooksAsFlowable(): Flow<List<Book>> = callbackFlow {
-        val cancellable: Cancellable = realm.objects<Book>().observe { result ->
-            offer(result.toList()) // FIXME RealmResults is the same (equals) causing the compose to not re-compose (maybe define a hashcode/equals based on size or Core version/counter of the list)
-        }
-
-        awaitClose {
-            cancellable.cancel()
-        }
+    fun getAllBooksAsFlow(): Flow<List<RealmBook>> {
+        return realm.objects<RealmBook>().observe()
     }
 
-    fun getAllBooksAsCallback(success: (List<Book>) -> Unit): Cancellable {
-        return realm.objects<Book>().observe { result ->
-            success(result.toList()) // FIXME RealmResults is the same (equals) causing the compose to not re-compose (maybe define a hashcode/equals based on size or Core version/counter of the list)
-        }
+    fun getAllBooksAsCommonFlow(): CFlow<RealmResults<RealmBook>> {
+        return realm.objects<RealmBook>().observe().wrap()
     }
 
-    fun getBooksByTitle(title: String): List<Book> {
-        return realm.objects<Book>().query("title = $0", title)
+    fun getBooksByTitle(title: String): List<RealmBook> {
+        return realm.objects<RealmBook>().query("title = $0", title)
     }
 
-    // Missing insert as list
-    fun addBook(book: Book) {
+    fun getBooksByTitleAsFlow(title: String): Flow<List<RealmBook>> {
+        return realm.objects<RealmBook>().query("title = $0", title).observe()
+    }
+
+    fun getBooksByTitleAsCommonFlow(title: String): CFlow<RealmResults<RealmBook>> {
+        return realm.objects<RealmBook>().query("title = $0", title).observe().wrap()
+    }
+
+    fun addBook(book: RealmBook) {
         realm.writeBlocking {
             copyToRealm(book)
         }
@@ -67,17 +61,17 @@ class RealmDatabase {
 
     fun deleteBook(title: String) {
         realm.writeBlocking {
-            objects<Book>().query("title = $0", title).first().delete()
+            objects<RealmBook>().query("title = $0", title)
+                .first()
+                .let { findLatest(it) }
+                ?.delete()
+                ?: throw IllegalStateException("Book not found.")
         }
     }
 
     fun clearAllBooks() {
         realm.writeBlocking {
-            objects<Book>().delete()
+            objects<RealmBook>().delete()
         }
-    }
-
-    fun onBookChange(block: () -> Unit): Cancellable {
-        return realm.objects<Book>().observe { block() }
     }
 }

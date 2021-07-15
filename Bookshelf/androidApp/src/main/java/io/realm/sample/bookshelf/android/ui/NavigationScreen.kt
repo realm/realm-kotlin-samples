@@ -37,9 +37,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navArgument
 import io.realm.sample.bookshelf.android.R
-import io.realm.sample.bookshelf.model.Book
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
 
 sealed class NavigationScreen(
     val name: String,
@@ -90,7 +87,21 @@ fun BottomNavigation(
                     label = { Text(stringResource(id = screen.resourceId)) },
                     selected = currentScreen.name == screen.name,
                     onClick = {
-                        navController.navigate(screen.name)
+                        // Detect patterns like "A-B-C-B" and pop to and get to A
+                        val immediateLoop = navController.backQueue.map { it.destination.route }
+                            .let { routes -> routes[routes.size - 2] }
+                            .equals(screen.name)
+
+                        navController.navigate(screen.name) {
+                            if (immediateLoop) {
+                                popUpTo(screen.name) {
+                                    inclusive = true
+                                }
+                            } else {
+                                // Avoid navigating to the same tab
+                                launchSingleTop = true
+                            }
+                        }
                     }
                 )
             }
@@ -115,8 +126,7 @@ fun BookshelfNavHost(
                 navController,
                 bookshelfViewModel.searchResults,
                 bookshelfViewModel.searching,
-                { name -> bookshelfViewModel.findBooks(name) },
-                { book -> bookshelfViewModel.isBookCached(book) }
+                { name -> bookshelfViewModel.findBooks(name) }
             )
         }
         // FIXME This doesn't bring saved Books to Realm
@@ -130,28 +140,23 @@ fun BookshelfNavHost(
             AboutScreen()
         }
         composable(
-            route = "${DetailsScreen.name}/{${DetailsScreen.argScreenMode}}/{${DetailsScreen.argBook}}",
+            route = "${DetailsScreen.name}/{${DetailsScreen.ARG_BOOK_KEY}}",
             arguments = listOf(
-                navArgument(DetailsScreen.argScreenMode) {
-                    type = NavType.EnumType(DetailsScreen.ScreenMode::class.java)
-                },
-                navArgument(DetailsScreen.argBook) {
+                navArgument(DetailsScreen.ARG_BOOK_KEY) {
                     type = NavType.StringType
                 }
             )
         ) { backStackEntry ->
             backStackEntry.arguments?.also { args ->
-                val screenMode = args.get(DetailsScreen.argScreenMode) as DetailsScreen.ScreenMode
-                val book = args.getString(DetailsScreen.argBook)
-                    ?.let { serializedBook ->
-                        Json.decodeFromString<Book>(serializedBook)
-                    } ?: throw IllegalStateException("Book not found")
+                val bookKey = args.getString(DetailsScreen.ARG_BOOK_KEY)
+                    ?: throw IllegalStateException("Book not found")
                 DetailsScreen(
                     navController,
-                    screenMode,
-                    book,
+                    bookKey,
+                    bookshelfViewModel.savedBooks,
                     bookshelfViewModel::addBook,
-                    bookshelfViewModel::removeBook
+                    bookshelfViewModel::removeBook,
+                    bookshelfViewModel::getUnsavedBook
                 )
             } ?: throw IllegalStateException("Missing navigation arguments")
         }
