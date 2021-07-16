@@ -16,16 +16,17 @@
   ~ limitations under the License.
   -->
 
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="io.realm.example.kmmsample.androidApp">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="io.realm.example.kmmsample.androidApp">
 
     <application
             android:allowBackup="false"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name="io.realm.example.kmmsample.androidApp.MainActivity">
+        <activity android:name="io.realm.example.kmmsample.androidApp.MainActivity"
+            android:label="Realm Intro">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
