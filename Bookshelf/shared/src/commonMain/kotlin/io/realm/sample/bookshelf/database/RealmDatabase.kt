@@ -20,40 +20,41 @@ import io.realm.Realm
 import io.realm.RealmConfiguration
 import io.realm.RealmResults
 import io.realm.delete
+import io.realm.sample.bookshelf.model.Book
 import kotlinx.coroutines.flow.Flow
 
 class RealmDatabase {
 
     val realm: Realm by lazy {
-        val configuration = RealmConfiguration(schema = setOf(RealmBook::class))
+        val configuration = RealmConfiguration(schema = setOf(Book::class))
         Realm(configuration)
     }
 
-    fun getAllBooks(): List<RealmBook> {
-        return realm.objects(RealmBook::class)
+    fun getAllBooks(): List<Book> {
+        return realm.objects(Book::class)
     }
 
-    fun getAllBooksAsFlow(): Flow<List<RealmBook>> {
-        return realm.objects<RealmBook>().observe()
+    fun getAllBooksAsFlow(): Flow<List<Book>> {
+        return realm.objects<Book>().observe()
     }
 
-    fun getAllBooksAsCommonFlow(): CFlow<RealmResults<RealmBook>> {
-        return realm.objects<RealmBook>().observe().wrap()
+    fun getAllBooksAsCommonFlow(): CFlow<RealmResults<Book>> {
+        return realm.objects<Book>().observe().wrap()
     }
 
-    fun getBooksByTitle(title: String): List<RealmBook> {
-        return realm.objects<RealmBook>().query("title = $0", title)
+    fun getBooksByTitle(title: String): List<Book> {
+        return realm.objects<Book>().query("title = $0", title)
     }
 
-    fun getBooksByTitleAsFlow(title: String): Flow<List<RealmBook>> {
-        return realm.objects<RealmBook>().query("title = $0", title).observe()
+    fun getBooksByTitleAsFlow(title: String): Flow<List<Book>> {
+        return realm.objects<Book>().query("title = $0", title).observe()
     }
 
-    fun getBooksByTitleAsCommonFlow(title: String): CFlow<RealmResults<RealmBook>> {
-        return realm.objects<RealmBook>().query("title = $0", title).observe().wrap()
+    fun getBooksByTitleAsCommonFlow(title: String): CFlow<RealmResults<Book>> {
+        return realm.objects<Book>().query("title = $0", title).observe().wrap()
     }
 
-    fun addBook(book: RealmBook) {
+    fun addBook(book: Book) {
         realm.writeBlocking {
             copyToRealm(book)
         }
@@ -61,7 +62,7 @@ class RealmDatabase {
 
     fun deleteBook(title: String) {
         realm.writeBlocking {
-            objects<RealmBook>().query("title = $0", title)
+            objects<Book>().query("title = $0", title)
                 .first()
                 .let { findLatest(it) }
                 ?.delete()
@@ -71,7 +72,7 @@ class RealmDatabase {
 
     fun clearAllBooks() {
         realm.writeBlocking {
-            objects<RealmBook>().delete()
+            objects<Book>().delete()
         }
     }
 }

@@ -17,7 +17,7 @@
 package io.realm.sample.bookshelf.network
 
 import io.realm.RealmList
-import io.realm.sample.bookshelf.database.RealmBook
+import io.realm.sample.bookshelf.model.Book
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -25,14 +25,18 @@ import kotlinx.serialization.Serializable
 data class ApiBook(
     val subtitle: String? = "",
     val title: String = "",
+    @SerialName("edition_count") val editionCount: Int? = null,
+    @SerialName("first_publish_year") val firstPublishYear: Int? = null,
     @SerialName("cover_i") val imgId: String? = null,
-    @SerialName("author_name") val authors: List<String> = emptyList()
+    @SerialName("author_name") val authors: List<String> = emptyList(),
 )
 
-fun ApiBook.toRealmBook(): RealmBook {
-    return RealmBook().apply {
+fun ApiBook.toRealmBook(): Book {
+    return Book().apply {
         subtitle = this@toRealmBook.subtitle
         title = this@toRealmBook.title
+        editionCount = this@toRealmBook.editionCount
+        firstPublishYear = this@toRealmBook.firstPublishYear
         imgId = this@toRealmBook.imgId
         authors = RealmList<String>().apply {
             addAll(this@toRealmBook.authors)

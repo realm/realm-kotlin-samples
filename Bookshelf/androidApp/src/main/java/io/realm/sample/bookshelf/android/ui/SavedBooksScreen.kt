@@ -37,15 +37,15 @@ import io.realm.sample.bookshelf.android.R
 import io.realm.sample.bookshelf.android.theme.horizontalTextPadding
 import io.realm.sample.bookshelf.android.theme.rowSize
 import io.realm.sample.bookshelf.android.theme.verticalTextPadding
-import io.realm.sample.bookshelf.database.RealmBook
+import io.realm.sample.bookshelf.model.Book
 import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun SavedBooks(
     navController: NavHostController,
-    savedBooks: StateFlow<List<RealmBook>>
+    savedBooks: StateFlow<List<Book>>
 ) {
-    val books: List<RealmBook> by savedBooks.collectAsState()
+    val books: List<Book> by savedBooks.collectAsState()
 
     if (books.isEmpty()) {
         Text(

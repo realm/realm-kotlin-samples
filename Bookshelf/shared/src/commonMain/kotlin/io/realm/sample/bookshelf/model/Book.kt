@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-package io.realm.sample.bookshelf.database
+package io.realm.sample.bookshelf.model
 
 import io.realm.RealmList
 import io.realm.RealmObject
 
-class RealmBook : RealmObject {
+class Book : RealmObject {
 
     var subtitle: String? = ""
     var title: String = ""
+    var editionCount: Int? = null
+    var firstPublishYear: Int? = null
     var imgId: String? = null
     var authors: RealmList<String> = RealmList()
 

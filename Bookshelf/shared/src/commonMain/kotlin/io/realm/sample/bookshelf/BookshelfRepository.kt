@@ -18,7 +18,7 @@ package io.realm.sample.bookshelf
 
 import io.realm.RealmResults
 import io.realm.sample.bookshelf.database.CFlow
-import io.realm.sample.bookshelf.database.RealmBook
+import io.realm.sample.bookshelf.model.Book
 import io.realm.sample.bookshelf.database.RealmDatabase
 import io.realm.sample.bookshelf.network.ApiBook
 import io.realm.sample.bookshelf.network.OpenLibraryApi
@@ -34,15 +34,15 @@ class BookshelfRepository {
         return api.findBook(title).books
     }
 
-    fun allBooksAsFlowable(): Flow<List<RealmBook>> {
+    fun allBooksAsFlowable(): Flow<List<Book>> {
         return database.getAllBooksAsFlow()
     }
 
-    fun allBooksAsCommonFlowable(): CFlow<RealmResults<RealmBook>> {
+    fun allBooksAsCommonFlowable(): CFlow<RealmResults<Book>> {
         return database.getAllBooksAsCommonFlow()
     }
 
-    fun addToBookshelf(book: RealmBook) {
+    fun addToBookshelf(book: Book) {
         database.addBook(book)
     }
 

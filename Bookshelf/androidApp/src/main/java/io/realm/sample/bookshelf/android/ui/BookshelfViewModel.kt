@@ -21,7 +21,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.realm.sample.bookshelf.BookshelfRepository
-import io.realm.sample.bookshelf.database.RealmBook
+import io.realm.sample.bookshelf.model.Book
 import io.realm.sample.bookshelf.network.ApiBook
 import io.realm.sample.bookshelf.network.toRealmBook
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,10 +34,10 @@ class BookshelfViewModel : ViewModel() {
 
     private var repository = BookshelfRepository()
 
-    val savedBooks: StateFlow<List<RealmBook>> = repository.allBooksAsFlowable()
-        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
     val searchResults: SnapshotStateList<ApiBook> = mutableStateListOf()
     val searching: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val savedBooks: StateFlow<List<Book>> = repository.allBooksAsFlowable()
+        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
     fun findBooks(keyword: String) {
         viewModelScope.launch {
@@ -48,17 +48,17 @@ class BookshelfViewModel : ViewModel() {
         }
     }
 
-    fun addBook(book: ApiBook) {
-        repository.addToBookshelf(book.toRealmBook())
+    fun addBook(book: Book) {
+        repository.addToBookshelf(book)
     }
 
-    fun removeBook(bookKey: String) {
-        repository.removeFromBookshelf(bookKey)
+    fun removeBook(bookId: String) {
+        repository.removeFromBookshelf(bookId)
     }
 
-    fun getUnsavedBook(bookKey: String): ApiBook {
-        return searchResults.find { apiBook ->
-            apiBook.title == bookKey
-        } ?: throw IllegalStateException("Book '$bookKey' not found")
+    fun getUnsavedBook(bookId: String): Book {
+        return searchResults.find { apiBook -> apiBook.title == bookId }
+            ?.toRealmBook()
+            ?: throw IllegalStateException("Book '$bookId' not found")
     }
 }

@@ -35,31 +35,28 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import io.realm.sample.bookshelf.android.R
 import io.realm.sample.bookshelf.android.theme.horizontalTextPadding
-import io.realm.sample.bookshelf.database.RealmBook
-import io.realm.sample.bookshelf.network.ApiBook
+import io.realm.sample.bookshelf.model.Book
 import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun DetailsScreen(
     navController: NavHostController? = null,
-    bookKey: String,
-    savedBooks: StateFlow<List<RealmBook>>,
-    addBook: (ApiBook) -> Unit,
+    bookId: String,
+    getSavedBooks: StateFlow<List<Book>>,
+    addBook: (Book) -> Unit,
     removeBook: (String) -> Unit,
-    getUnsavedBook: (String) -> ApiBook
+    getUnsavedBook: (String) -> Book
 ) {
-    val allCachedBooks: List<RealmBook> by savedBooks.collectAsState()
-    val cachedBook = allCachedBooks.find { it.title == bookKey }
+    val allCachedBooks: List<Book> by getSavedBooks.collectAsState()
+    val cachedBook = allCachedBooks.find { it.title == bookId }
     val screenMode = when (cachedBook) {
         null -> DetailsScreen.ScreenMode.ADD
         else -> DetailsScreen.ScreenMode.REMOVE
     }
 
     val domainBook = when (screenMode) {
-        DetailsScreen.ScreenMode.ADD ->
-            getUnsavedBook(bookKey)
-        DetailsScreen.ScreenMode.REMOVE ->
-            requireNotNull(cachedBook).let { ApiBook(it.subtitle, it.title, it.imgId) }
+        DetailsScreen.ScreenMode.ADD -> getUnsavedBook(bookId)
+        DetailsScreen.ScreenMode.REMOVE -> requireNotNull(cachedBook)
     }
 
     Column {
@@ -132,5 +129,5 @@ object DetailsScreen {
 val DetailsScreen.name: String
     get() = "Details"
 
-val DetailsScreen.ARG_BOOK_KEY: String
-    get() = "ARG_BOOK_KEY"
+val DetailsScreen.ARG_BOOK_ID: String
+    get() = "ARG_BOOK_ID"

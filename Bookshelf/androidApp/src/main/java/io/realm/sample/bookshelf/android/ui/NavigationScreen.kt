@@ -140,23 +140,24 @@ fun BookshelfNavHost(
             AboutScreen()
         }
         composable(
-            route = "${DetailsScreen.name}/{${DetailsScreen.ARG_BOOK_KEY}}",
+            route = "${DetailsScreen.name}/" +
+                    "{${DetailsScreen.ARG_BOOK_ID}}",
             arguments = listOf(
-                navArgument(DetailsScreen.ARG_BOOK_KEY) {
+                navArgument(DetailsScreen.ARG_BOOK_ID) {
                     type = NavType.StringType
                 }
             )
         ) { backStackEntry ->
             backStackEntry.arguments?.also { args ->
-                val bookKey = args.getString(DetailsScreen.ARG_BOOK_KEY)
+                val bookId = args.getString(DetailsScreen.ARG_BOOK_ID)
                     ?: throw IllegalStateException("Book not found")
                 DetailsScreen(
-                    navController,
-                    bookKey,
-                    bookshelfViewModel.savedBooks,
-                    bookshelfViewModel::addBook,
-                    bookshelfViewModel::removeBook,
-                    bookshelfViewModel::getUnsavedBook
+                    navController = navController,
+                    bookId = bookId,
+                    getSavedBooks = bookshelfViewModel.savedBooks,
+                    addBook = bookshelfViewModel::addBook,
+                    removeBook = bookshelfViewModel::removeBook,
+                    getUnsavedBook = bookshelfViewModel::getUnsavedBook
                 )
             } ?: throw IllegalStateException("Missing navigation arguments")
         }
