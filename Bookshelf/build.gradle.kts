@@ -19,7 +19,7 @@ allprojects {
 }
 
 group = "io.realm.sample.bookshelf"
-version = "0.4.0"
+version = "0.4.1"
 
 tasks.register("clean", Delete::class) {
     delete(rootProject.buildDir)

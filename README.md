@@ -15,3 +15,7 @@ Samples are based on Kotlin `1.5`.
 |---|---|---|
 | [Intro](./Intro): <br> This is a simple example based on the official [KMM Sample](https://github.com/Kotlin/kmm-sample/blob/master/README.md) | <img src="./Intro/Screenshots/Android/Home.png" width="400">  | <img src="./Intro/Screenshots/iOS/Home.png" width="400"> |
 | [Bookshelf](./Bookshelf): <br> A more elaborate example using a shared business logic in Ktor, Kotlinx.Serialization and Realm, combined with a platform specific UI using Jetpack Compose and SwiftUI | <img src="./Bookshelf/Screenshots/Android/Results.png" width="400">  | <img src="./Bookshelf/Screenshots/iOS/Search.png" width="400">  |
+
+| External Project  |   |   |
+|---|---|---|
+| [FantasyPremierLeague](https://github.com/joreilly/FantasyPremierLeague): <br> Kotlin Multiplatform project with Jetpack Compose and SwiftUI by [@joreilly](https://github.com/joreilly/) | <img src="https://raw.githubusercontent.com/joreilly/FantasyPremierLeague/main/art/screenshot1.png" width="300">  | <img src="https://raw.githubusercontent.com/joreilly/FantasyPremierLeague/main/art/screenshot2.png" width="300">  |
