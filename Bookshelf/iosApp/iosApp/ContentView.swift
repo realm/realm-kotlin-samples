@@ -13,53 +13,75 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import SwiftUI
 import shared
 
+enum BookshelfError: Error {
+    case bookNotFoundError(String)
+}
+
 class BookshelfViewModel : ObservableObject {
-    private let sdk = BookshelfRepository()
+
+    private let repository = BookshelfRepository()
     private var job: Closeable? = nil
-    
+
+    @Published var searchResults = [ApiBook]()
     @Published var searching: Bool = false
-    @Published var mySavedBooks = [Book]()
-    @Published var bookSearchResults = [Book]()
-    
-    func startObservingSavedBooks() {
-        self.job = self.sdk.allBooksAsCommonFlowable().watch { books in
-            self.mySavedBooks = books as! [Book]
-        }
-    }
-    
-    func stopObservingSavedBooks() {
-        job?.close()
-    }
-    
-    func addBook(book: Book) {
-        self.sdk.addToBookshelf(book: book)
-    }
-    
+    @Published var savedBooks = [Book]()
+
     func findBooks(title: String) {
         self.searching = true
-        sdk.getBookByTitle(title: title, completionHandler:
+        repository.getBookByTitle(title: title, completionHandler:
             { result, error in
                 if let errorBooks = error {
                     print(errorBooks.localizedDescription)
                     self.searching = false
                 }
-                if let resultBooks = result {
-                    self.bookSearchResults = resultBooks
+                if let resultBooks: [ApiBook] = result {
+                    self.searchResults.removeAll()
+                    self.searchResults = resultBooks
                     self.searching = false
                 }
             })
     }
+
+    func addBook(book: Book) {
+        self.repository.addToBookshelf(book: book)
+    }
+
+    func removeBook(bookId: String) {
+        self.repository.removeFromBookshelf(title: bookId)
+    }
+
+    func getUnsavedBook(bookId: String) throws -> Book {
+        let book = self.searchResults.first { (apiBook: ApiBook) -> Bool in
+            apiBook.title == bookId
+        }?.toRealmBook()
+        if (book == nil) {
+            throw BookshelfError.bookNotFoundError("Book \(bookId) not found.")
+        }
+        return book!
+    }
+
+    func startObservingSavedBooks() {
+        self.job = self.repository.allBooksAsCommonFlowable().watch { books in
+            self.savedBooks = books as! [Book]
+        }
+    }
+
+    func stopObservingSavedBooks() {
+        job?.close()
+    }
 }
 
 struct ContentView: View {
+
     @State private var selection = 0
     @State private var searchByTitle = ""
     @State private var searchText = ""
     @StateObject var viewModel = BookshelfViewModel()
-    
+
     var body: some View {
         NavigationView {
             TabView(selection: $selection) {
@@ -69,7 +91,7 @@ struct ContentView: View {
                         Text("Home")
                     }
                     .tag(0)
-                
+
                 MySavedBooks(viewModel: viewModel)
                     .font(.system(size: 30, weight: .bold, design: .rounded))
                     .tabItem {
@@ -77,7 +99,7 @@ struct ContentView: View {
                         Text("Books")
                     }
                     .tag(1)
-                
+
                 AboutScreen()
                     .font(.system(size: 30, weight: .bold, design: .rounded))
                     .tabItem {
@@ -85,7 +107,7 @@ struct ContentView: View {
                         Text("About")
                     }
                     .tag(2)
-                
+
             }
             .onAppear() {
                 UITabBar.appearance().barTintColor = .white
@@ -99,7 +121,7 @@ struct SearchScreen: View {
     @Binding var selection: Int
     @Binding var searchText: String
     @ObservedObject var viewModel: BookshelfViewModel
-    
+
     var body: some View {
         VStack {
             SearchBar(text: $searchText, viewModel: viewModel)
@@ -107,13 +129,13 @@ struct SearchScreen: View {
                 ProgressView("🔎 Openlibrary.org…")
                     .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
             } else {
-                List(viewModel.bookSearchResults, id: \.self) { book in
+                List(viewModel.searchResults, id: \.self) { book in
                     NavigationLink(
                         destination: HStack {
                             Text(book.title)
                             Button(action: {
                                 selection = 1 // Navigate to Books
-                                viewModel.addBook(book: book) // persist book
+                                viewModel.addBook(book: book.toRealmBook()) // persist book
                             }, label: {
                                 Text("Add")
                             })
@@ -132,7 +154,7 @@ struct SearchBar: View {
     @Binding var text: String
     @State private var isEditing = false
     @ObservedObject var viewModel: BookshelfViewModel
-    
+
     var body: some View {
         HStack {
             TextField("Search ...", text: $text)
@@ -146,7 +168,7 @@ struct SearchBar: View {
                             .foregroundColor(.gray)
                             .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
                             .padding(.leading, 8)
-                        
+
                         if isEditing {
                             Button(action: {
                                 self.text = ""
@@ -162,12 +184,12 @@ struct SearchBar: View {
                 .onTapGesture {
                     self.isEditing = true
                 }
-            
+
             if isEditing {
                 Button(action: {
                     self.isEditing = false
                     viewModel.findBooks(title: self.text)
-                    
+
                     self.text = ""
                     // Dismiss the keyboard
                     UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
@@ -184,11 +206,11 @@ struct SearchBar: View {
 
 struct MySavedBooks: View {
     @ObservedObject var viewModel: BookshelfViewModel
-    
+
     var body: some View {
         NavigationView {
             VStack {
-                List(viewModel.mySavedBooks, id: \.self) { book in
+                List(viewModel.savedBooks, id: \.self) { book in
                     Text("Book: \(book.title)")
                 }
                 .onAppear {
