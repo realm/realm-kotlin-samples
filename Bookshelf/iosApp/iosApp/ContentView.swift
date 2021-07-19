@@ -22,38 +22,38 @@ enum BookshelfError: Error {
 }
 
 class BookshelfViewModel : ObservableObject {
-
+    
     private let repository = BookshelfRepository()
     private var job: Closeable? = nil
-
+    
     @Published var searchResults = [ApiBook]()
     @Published var searching: Bool = false
     @Published var savedBooks = [Book]()
-
+    
     func findBooks(title: String) {
         self.searching = true
         repository.getBookByTitle(title: title, completionHandler:
-            { result, error in
-                if let errorBooks = error {
-                    print(errorBooks.localizedDescription)
-                    self.searching = false
-                }
-                if let resultBooks: [ApiBook] = result {
-                    self.searchResults.removeAll()
-                    self.searchResults = resultBooks
-                    self.searching = false
-                }
-            })
+                                    { result, error in
+                                        if let errorBooks = error {
+                                            print(errorBooks.localizedDescription)
+                                            self.searching = false
+                                        }
+                                        if let resultBooks: [ApiBook] = result {
+                                            self.searchResults.removeAll()
+                                            self.searchResults = resultBooks
+                                            self.searching = false
+                                        }
+                                    })
     }
-
+    
     func addBook(book: Book) {
         self.repository.addToBookshelf(book: book)
     }
-
+    
     func removeBook(bookId: String) {
         self.repository.removeFromBookshelf(title: bookId)
     }
-
+    
     func getUnsavedBook(bookId: String) throws -> Book {
         let book = self.searchResults.first { (apiBook: ApiBook) -> Bool in
             apiBook.title == bookId
@@ -63,25 +63,25 @@ class BookshelfViewModel : ObservableObject {
         }
         return book!
     }
-
+    
     func startObservingSavedBooks() {
         self.job = self.repository.allBooksAsCommonFlowable().watch { books in
             self.savedBooks = books as! [Book]
         }
     }
-
+    
     func stopObservingSavedBooks() {
         job?.close()
     }
 }
 
 struct ContentView: View {
-
+    
     @State private var selection = 0
     @State private var searchByTitle = ""
     @State private var searchText = ""
     @StateObject var viewModel = BookshelfViewModel()
-
+    
     var body: some View {
         NavigationView {
             TabView(selection: $selection) {
@@ -91,15 +91,14 @@ struct ContentView: View {
                         Text("Home")
                     }
                     .tag(0)
-
-                MySavedBooks(viewModel: viewModel)
-                    .font(.system(size: 30, weight: .bold, design: .rounded))
+                
+                MySavedBooks(selection: $selection, viewModel: viewModel)
                     .tabItem {
                         Image(systemName: "bookmark.circle.fill")
                         Text("Books")
                     }
                     .tag(1)
-
+                
                 AboutScreen()
                     .font(.system(size: 30, weight: .bold, design: .rounded))
                     .tabItem {
@@ -107,7 +106,7 @@ struct ContentView: View {
                         Text("About")
                     }
                     .tag(2)
-
+                
             }
             .onAppear() {
                 UITabBar.appearance().barTintColor = .white
@@ -121,7 +120,7 @@ struct SearchScreen: View {
     @Binding var selection: Int
     @Binding var searchText: String
     @ObservedObject var viewModel: BookshelfViewModel
-
+    
     var body: some View {
         VStack {
             SearchBar(text: $searchText, viewModel: viewModel)
@@ -133,17 +132,21 @@ struct SearchScreen: View {
                     NavigationLink(
                         destination: HStack {
                             Text(book.title)
-                            Button(action: {
-                                selection = 1 // Navigate to Books
-                                viewModel.addBook(book: book.toRealmBook()) // persist book
-                            }, label: {
-                                Text("Add")
-                            })
+                            Button(
+                                action: {
+                                    selection = 1 // Navigate to Books
+                                    viewModel.addBook(book: book.toRealmBook()) // persist book
+                                },
+                                label: {
+                                    Text("Add")
+                                }
+                            )
                         },
                         label: {
                             Text(book.title)
                                 .font(.system(size: 20, weight: .bold, design: .rounded))
-                        })
+                        }
+                    )
                 }
             }
         }
@@ -154,7 +157,7 @@ struct SearchBar: View {
     @Binding var text: String
     @State private var isEditing = false
     @ObservedObject var viewModel: BookshelfViewModel
-
+    
     var body: some View {
         HStack {
             TextField("Search ...", text: $text)
@@ -168,7 +171,7 @@ struct SearchBar: View {
                             .foregroundColor(.gray)
                             .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
                             .padding(.leading, 8)
-
+                        
                         if isEditing {
                             Button(action: {
                                 self.text = ""
@@ -184,12 +187,12 @@ struct SearchBar: View {
                 .onTapGesture {
                     self.isEditing = true
                 }
-
+            
             if isEditing {
                 Button(action: {
                     self.isEditing = false
                     viewModel.findBooks(title: self.text)
-
+                    
                     self.text = ""
                     // Dismiss the keyboard
                     UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
@@ -205,20 +208,39 @@ struct SearchBar: View {
 }
 
 struct MySavedBooks: View {
+    @Binding var selection: Int
     @ObservedObject var viewModel: BookshelfViewModel
-
+    
     var body: some View {
-        NavigationView {
-            VStack {
+        VStack {
+            if (viewModel.savedBooks.isEmpty) {
+                Text("Your bookshelf is empty")
+            } else {
                 List(viewModel.savedBooks, id: \.self) { book in
-                    Text("Book: \(book.title)")
-                }
-                .onAppear {
-                    viewModel.startObservingSavedBooks()
-                }.onDisappear {
-                    viewModel.stopObservingSavedBooks()
+                    NavigationLink(
+                        destination: HStack {
+                            Text(book.title)
+                            Button(
+                                action: {
+                                    selection = 1 // Navigate to Books
+                                    viewModel.removeBook(bookId: book.title) // remove book
+                                },
+                                label: {
+                                    Text("Remove")
+                                }
+                            )
+                        },
+                        label: {
+                            Text(book.title)
+                                .font(.system(size: 20, weight: .bold, design: .rounded))
+                        }
+                    )
                 }
             }
+        }.onAppear {
+            viewModel.startObservingSavedBooks()
+        }.onDisappear {
+            viewModel.stopObservingSavedBooks()
         }
     }
 }
@@ -243,8 +265,8 @@ Demo app using Realm-Kotlin Multiplatform SDK
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .font(.body)
                             .foregroundColor(.black)
-                        
-                    })
+                    }
+            )
         }
         .padding(20)
         .multilineTextAlignment(.center)
