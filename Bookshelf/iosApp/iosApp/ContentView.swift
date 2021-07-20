@@ -76,7 +76,6 @@ class BookshelfViewModel : ObservableObject {
 }
 
 struct ContentView: View {
-    
     @State private var selection = 0
     @State private var searchByTitle = ""
     @State private var searchText = ""
@@ -85,33 +84,33 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             TabView(selection: $selection) {
-                SearchScreen(selection: $selection, searchText: $searchText, viewModel: viewModel)
-                    .tabItem {
-                        Image(systemName: "house.fill")
-                        Text("Home")
-                    }
-                    .tag(0)
+                SearchScreen(
+                    selection: $selection,
+                    searchText: $searchText,
+                    viewModel: viewModel
+                ).tabItem {
+                    Image(systemName: "house.fill")
+                    Text("Home")
+                }.tag(0)
                 
-                MySavedBooks(selection: $selection, viewModel: viewModel)
-                    .tabItem {
-                        Image(systemName: "bookmark.circle.fill")
-                        Text("Books")
-                    }
-                    .tag(1)
+                MySavedBooks(
+                    selection: $selection,
+                    viewModel: viewModel
+                ).tabItem {
+                    Image(systemName: "bookmark.circle.fill")
+                    Text("Books")
+                }.tag(1)
                 
                 AboutScreen()
                     .font(.system(size: 30, weight: .bold, design: .rounded))
                     .tabItem {
                         Image(systemName: "video.circle.fill")
                         Text("About")
-                    }
-                    .tag(2)
+                    }.tag(2)
                 
-            }
-            .onAppear() {
+            }.onAppear() {
                 UITabBar.appearance().barTintColor = .white
-            }
-            .navigationTitle("Bookshelf")
+            }.navigationTitle("Bookshelf")
         }
     }
 }
@@ -130,18 +129,11 @@ struct SearchScreen: View {
             } else {
                 List(viewModel.searchResults, id: \.self) { book in
                     NavigationLink(
-                        destination: HStack {
-                            Text(book.title)
-                            Button(
-                                action: {
-                                    selection = 1 // Navigate to Books
-                                    viewModel.addBook(book: book.toRealmBook()) // persist book
-                                },
-                                label: {
-                                    Text("Add")
-                                }
-                            )
-                        },
+                        destination: DetalisView(
+                            book: book.toRealmBook(),
+                            selection: $selection,
+                            viewModel: viewModel
+                        ),
                         label: {
                             Text(book.title)
                                 .font(.system(size: 20, weight: .bold, design: .rounded))
@@ -218,18 +210,11 @@ struct MySavedBooks: View {
             } else {
                 List(viewModel.savedBooks, id: \.self) { book in
                     NavigationLink(
-                        destination: HStack {
-                            Text(book.title)
-                            Button(
-                                action: {
-                                    selection = 1 // Navigate to Books
-                                    viewModel.removeBook(bookId: book.title) // remove book
-                                },
-                                label: {
-                                    Text("Remove")
-                                }
-                            )
-                        },
+                        destination: DetalisView(
+                            book: book,
+                            selection: $selection,
+                            viewModel: viewModel
+                        ),
                         label: {
                             Text(book.title)
                                 .font(.system(size: 20, weight: .bold, design: .rounded))
@@ -245,6 +230,43 @@ struct MySavedBooks: View {
     }
 }
 
+enum DetailsMode {
+    case add
+    case remove
+}
+
+struct DetalisView: View {
+    var book: Book
+    @Binding var selection: Int
+    @ObservedObject var viewModel: BookshelfViewModel
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+
+    var body: some View {
+        let cachedBook = viewModel.savedBooks.first { (realmBook: Book) -> Bool in
+            realmBook.title == book.title
+        }
+        let screenMode = cachedBook == nil ? DetailsMode.add : DetailsMode.remove
+
+        HStack {
+            Text(book.title)
+            Button(
+                action: {
+                    if (screenMode == DetailsMode.add) {
+                        viewModel.addBook(book: book)
+                    } else {
+                        viewModel.removeBook(bookId: book.title)
+                    }
+                    selection = 1 // Navigate to Books
+                    presentationMode.wrappedValue.dismiss() // Pop view
+                },
+                label: {
+                    Text(screenMode == DetailsMode.add ? "Add" : "Remove")
+                }
+            )
+        }
+    }
+}
+
 struct AboutScreen: View {
     @Environment(\.openURL) var openURL
     
@@ -256,7 +278,7 @@ struct AboutScreen: View {
                     openURL(URL(string: "https://www.github.com/realm/realm-kotlin")!)}, label: {
                         Text("""
 Demo app using Realm-Kotlin Multiplatform SDK
-                        
+
 🎨 UI: using SwiftUI
 ---- Shared ---
 📡 Network: using Ktor and Kotlinx.serialization
