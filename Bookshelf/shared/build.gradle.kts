@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
     kotlin("multiplatform")
+    kotlin("plugin.serialization") version "1.5.20"
     id("com.android.library")
     id("kotlin-android-extensions")
     id("io.realm.kotlin") version "0.4.1"
@@ -25,7 +26,7 @@ kotlin {
     }
 
     val ktorVersion = "1.6.1"
-    val serializationVersion = "1.2.1"
+    val serializationVersion = "1.2.2"
     val coroutinesVersion = "1.5.0-native-mt"
     val realmVersion = "0.4.1"
 
@@ -34,7 +35,8 @@ kotlin {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:${serializationVersion}")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
                 implementation("io.ktor:ktor-client-serialization:$ktorVersion")
                 implementation("io.realm.kotlin:library:$realmVersion")
             }

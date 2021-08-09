@@ -28,6 +28,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.4.0-alpha01")
     implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.3.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha05")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
 }
 
 android {

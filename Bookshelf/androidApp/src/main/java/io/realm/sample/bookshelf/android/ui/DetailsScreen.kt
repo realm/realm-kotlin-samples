@@ -48,23 +48,39 @@ fun DetailsScreen(
     getUnsavedBook: (String) -> Book
 ) {
     val allCachedBooks: List<Book> by getSavedBooks.collectAsState()
-    val cachedBook = allCachedBooks.find { it.title == bookId }
-    val screenMode = when (cachedBook) {
+    val cachedBook: Book? = allCachedBooks.find { it.title == bookId }
+    val screenMode: DetailsScreen.ScreenMode = when (cachedBook) {
         null -> DetailsScreen.ScreenMode.ADD
         else -> DetailsScreen.ScreenMode.REMOVE
     }
-
-    val domainBook = when (screenMode) {
+    val domainBook: Book = when (screenMode) {
         DetailsScreen.ScreenMode.ADD -> getUnsavedBook(bookId)
         DetailsScreen.ScreenMode.REMOVE -> requireNotNull(cachedBook)
     }
 
+    DetailsContent(
+        navController = navController,
+        screenMode = screenMode,
+        book = domainBook,
+        addBook = addBook,
+        removeBook = removeBook
+    )
+}
+
+@Composable
+fun DetailsContent(
+    navController: NavHostController? = null,
+    screenMode: DetailsScreen.ScreenMode,
+    book: Book,
+    addBook: (Book) -> Unit,
+    removeBook: (String) -> Unit
+) {
     Column {
         Spacer(modifier = Modifier.padding(8.dp))
         DetailsHeader(text = stringResource(id = R.string.details_title))
         Spacer(modifier = Modifier.padding(8.dp))
         Text(
-            text = domainBook.title,
+            text = book.title,
             modifier = Modifier
                 .padding(
                     start = horizontalTextPadding,
@@ -84,8 +100,8 @@ fun DetailsScreen(
                 .fillMaxWidth(),
             onClick = {
                 when (screenMode) {
-                    DetailsScreen.ScreenMode.ADD -> addBook(domainBook)
-                    DetailsScreen.ScreenMode.REMOVE -> removeBook(domainBook.title)
+                    DetailsScreen.ScreenMode.ADD -> addBook(book)
+                    DetailsScreen.ScreenMode.REMOVE -> removeBook(book.title)
                 }
                 requireNotNull(navController)
                     .also {
@@ -124,10 +140,8 @@ object DetailsScreen {
     enum class ScreenMode {
         ADD, REMOVE
     }
+
+    val name: String = "Details"
+    val ARG_BOOK_ID: String
+        get() = "ARG_BOOK_ID"
 }
-
-val DetailsScreen.name: String
-    get() = "Details"
-
-val DetailsScreen.ARG_BOOK_ID: String
-    get() = "ARG_BOOK_ID"
