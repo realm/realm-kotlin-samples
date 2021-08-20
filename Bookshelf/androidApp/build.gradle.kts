@@ -3,7 +3,7 @@ plugins {
     kotlin("android")
 }
 
-val compose_version = "1.0.0-beta08"
+val compose_version = "1.0.1"
 
 repositories {
     google()
@@ -16,7 +16,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.2.0")
     implementation("androidx.constraintlayout:constraintlayout:2.0.4")
     implementation("androidx.compose.compiler:compiler:$compose_version")
-    compileOnly("io.realm.kotlin:library:0.4.0")
+    compileOnly("io.realm.kotlin:library:0.5.0")
 
     implementation("androidx.core:core-ktx:1.5.0")
     implementation("androidx.appcompat:appcompat:1.3.0")
@@ -61,6 +61,6 @@ android {
 
     composeOptions {
         kotlinCompilerVersion = "1.5.10"
-        kotlinCompilerExtensionVersion = "1.0.0-beta08"
+        kotlinCompilerExtensionVersion = "1.0.1"
     }
 }

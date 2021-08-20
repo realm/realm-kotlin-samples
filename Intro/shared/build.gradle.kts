@@ -23,7 +23,7 @@ plugins {
     id("com.android.library")
     id("kotlin-android-extensions")
     // Apply Realm Kotlin plugin
-    id("io.realm.kotlin") version "0.4.0"
+    id("io.realm.kotlin") version "0.5.0"
 }
 
 kotlin {
@@ -38,7 +38,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("io.realm.kotlin:library:0.4.0")
+                implementation("io.realm.kotlin:library:0.5.0")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0-native-mt")
             }
         }

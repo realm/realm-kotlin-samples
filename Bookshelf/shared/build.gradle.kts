@@ -5,7 +5,7 @@ plugins {
     id("com.android.library")
     id("kotlin-android-extensions")
     kotlin("plugin.serialization")
-    id("io.realm.kotlin") version "0.4.0"
+    id("io.realm.kotlin") version "0.5.0"
 }
 
 kotlin {
@@ -28,7 +28,7 @@ kotlin {
     val ktorVersion = "1.6.1"
     val serializationVersion = "1.2.1"
     val coroutinesVersion = "1.5.0-native-mt"
-    val realmVersion = "0.4.0"
+    val realmVersion = "0.5.0"
 
     sourceSets {
         val commonMain  by getting {
