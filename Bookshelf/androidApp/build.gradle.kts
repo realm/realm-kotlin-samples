@@ -33,6 +33,21 @@ dependencies {
 }
 
 android {
+    signingConfigs {
+        getByName("debug") {
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+            storeFile = rootProject.file("debug.keystore")
+            storePassword = "android"
+        }
+        // TODO create key for Playstore
+//        create("release") {
+//            keyAlias = "release"
+//            keyPassword = "my release key password"
+//            storeFile = file("release.keystore")
+//            storePassword = "my keystore password"
+//        }
+    }
     compileSdk = 30
     defaultConfig {
         applicationId = "io.realm.sample.bookshelf.android"
@@ -43,7 +58,9 @@ android {
     }
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     buildFeatures {
