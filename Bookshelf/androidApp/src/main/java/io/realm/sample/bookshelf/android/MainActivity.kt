@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.realm.sample.bookshelf.android
 
 import android.os.Bundle
@@ -30,13 +31,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import io.realm.sample.bookshelf.android.theme.MyApplicationTheme
 import io.realm.sample.bookshelf.android.theme.RallyTheme
+import io.realm.sample.bookshelf.android.ui.BookshelfNavHost
 import io.realm.sample.bookshelf.android.ui.BookshelfViewModel
-import io.realm.sample.bookshelf.android.ui.NavigationScreens
-import io.realm.sample.bookshelf.android.ui.bookshelfNavHost
-import io.realm.sample.bookshelf.android.ui.bottomNavigation
-
+import io.realm.sample.bookshelf.android.ui.BottomNavigation
+import io.realm.sample.bookshelf.android.ui.NavigationScreen
 
 class MainActivity : ComponentActivity() {
+
     private val bookshelfViewModel by viewModels<BookshelfViewModel>()
 
     @ExperimentalComposeUiApi
@@ -45,8 +46,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             MyApplicationTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(color = MaterialTheme.colors.background) {
-                    bookShelfApp(bookshelfViewModel)
+                Surface(
+                    color = MaterialTheme.colors.background
+                ) {
+                    BookShelfApp(bookshelfViewModel)
                 }
             }
         }
@@ -54,18 +57,18 @@ class MainActivity : ComponentActivity() {
 
     @ExperimentalComposeUiApi
     @Composable
-    fun bookShelfApp(bookshelfViewModel: BookshelfViewModel) {
+    fun BookShelfApp(bookshelfViewModel: BookshelfViewModel) {
         RallyTheme {
             val navController = rememberNavController()
             val navigationItems =
-                listOf(NavigationScreens.Search, NavigationScreens.Books, NavigationScreens.About)
+                listOf(NavigationScreen.Search, NavigationScreen.Books, NavigationScreen.About)
 
             Scaffold(
                 bottomBar = {
-                    bottomNavigation(navController, navigationItems)
+                    BottomNavigation(navController, navigationItems)
                 },
             ) { innerPadding ->
-                bookshelfNavHost(
+                BookshelfNavHost(
                     bookshelfViewModel,
                     navController,
                     modifier = Modifier.padding(innerPadding)
@@ -79,7 +82,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun DefaultPreview() {
         MyApplicationTheme {
-            bookShelfApp(bookshelfViewModel)
+            BookShelfApp(bookshelfViewModel)
         }
     }
 }

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.realm.sample.bookshelf.android.ui
 
 import androidx.compose.runtime.mutableStateListOf
@@ -21,6 +22,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.realm.sample.bookshelf.BookshelfRepository
 import io.realm.sample.bookshelf.model.Book
+import io.realm.sample.bookshelf.network.ApiBook
+import io.realm.sample.bookshelf.network.toRealmBook
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -28,27 +31,34 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class BookshelfViewModel : ViewModel() {
-    private var sdk = BookshelfRepository()
 
-    val savedBooks: StateFlow<List<Book>> = sdk.allBooksAsFlowable()
+    private var repository = BookshelfRepository()
+
+    val searchResults: SnapshotStateList<ApiBook> = mutableStateListOf()
+    val searching: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val savedBooks: StateFlow<List<Book>> = repository.allBooksAsFlowable()
         .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
-
-    var searchResults: SnapshotStateList<Book> = mutableStateListOf()
-        private set
-
-    var searching: MutableStateFlow<Boolean> =  MutableStateFlow(false)
-        private set
 
     fun findBooks(keyword: String) {
         viewModelScope.launch {
             searching.value = true
             searchResults.clear()
-            searchResults.addAll(sdk.getBookByTitle(keyword))
+            searchResults.addAll(repository.getBookByTitle(keyword))
             searching.value = false
         }
     }
 
     fun addBook(book: Book) {
-        sdk.addToBookshelf(book)
+        repository.addToBookshelf(book)
+    }
+
+    fun removeBook(bookId: String) {
+        repository.removeFromBookshelf(bookId)
+    }
+
+    fun getUnsavedBook(bookId: String): Book {
+        return searchResults.find { apiBook -> apiBook.title == bookId }
+            ?.toRealmBook()
+            ?: throw IllegalStateException("Book '$bookId' not found")
     }
 }

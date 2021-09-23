@@ -13,30 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.realm.sample.bookshelf
 
 import io.realm.RealmResults
 import io.realm.sample.bookshelf.database.CFlow
-import io.realm.sample.bookshelf.database.RealmDatabase
 import io.realm.sample.bookshelf.model.Book
+import io.realm.sample.bookshelf.database.RealmDatabase
+import io.realm.sample.bookshelf.network.ApiBook
 import io.realm.sample.bookshelf.network.OpenLibraryApi
 import kotlinx.coroutines.flow.Flow
 
 class BookshelfRepository {
+
     private val api = OpenLibraryApi()
     private val database = RealmDatabase()
 
     @Throws(Exception::class)
-    suspend fun getBookByTitle(title: String): List<Book> {
+    suspend fun getBookByTitle(title: String): List<ApiBook> {
         return api.findBook(title).books
     }
 
     fun allBooksAsFlowable(): Flow<List<Book>> {
-        return database.getAllBooksAsFlowable()
+        return database.getAllBooksAsFlow()
     }
 
     fun allBooksAsCommonFlowable(): CFlow<RealmResults<Book>> {
-        return database.getAllBooksAsCommonFlowable()
+        return database.getAllBooksAsCommonFlow()
     }
 
     fun addToBookshelf(book: Book) {

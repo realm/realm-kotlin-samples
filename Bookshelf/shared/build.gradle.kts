@@ -4,7 +4,7 @@ plugins {
     kotlin("multiplatform")
     id("com.android.library")
     id("kotlin-android-extensions")
-    kotlin("plugin.serialization")
+    kotlin("plugin.serialization") version "1.5.20"
     id("io.realm.kotlin") version "0.4.1"
 }
 
@@ -35,7 +35,7 @@ kotlin {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:${serializationVersion}")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion")
                 implementation("io.ktor:ktor-client-serialization:$ktorVersion")
                 implementation("io.realm.kotlin:library:$realmVersion")
             }

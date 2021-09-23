@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.realm.sample.bookshelf.network
 
-import io.realm.sample.bookshelf.model.Book
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class SearchResult(
-    @SerialName("numFound")
-    val numberOrResults: Int,
-    @SerialName("docs")
-    val books: List<Book>
+    @SerialName("numFound") val numberOrResults: Int,
+    @SerialName("docs") val books: List<ApiBook>
 )

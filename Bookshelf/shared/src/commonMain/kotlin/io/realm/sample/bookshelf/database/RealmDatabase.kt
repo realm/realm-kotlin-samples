@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.realm.sample.bookshelf.database
 
 import io.realm.Realm
@@ -23,6 +24,7 @@ import io.realm.sample.bookshelf.model.Book
 import kotlinx.coroutines.flow.Flow
 
 class RealmDatabase {
+
     val realm: Realm by lazy {
         val configuration = RealmConfiguration(schema = setOf(Book::class))
         Realm(configuration)
@@ -32,12 +34,24 @@ class RealmDatabase {
         return realm.objects(Book::class)
     }
 
-    fun getAllBooksAsFlowable(): Flow<List<Book>> {
+    fun getAllBooksAsFlow(): Flow<List<Book>> {
         return realm.objects<Book>().observe()
     }
 
-    fun getAllBooksAsCommonFlowable(): CFlow<RealmResults<Book>> {
+    fun getAllBooksAsCommonFlow(): CFlow<RealmResults<Book>> {
         return realm.objects<Book>().observe().wrap()
+    }
+
+    fun getBooksByTitle(title: String): List<Book> {
+        return realm.objects<Book>().query("title = $0", title)
+    }
+
+    fun getBooksByTitleAsFlow(title: String): Flow<List<Book>> {
+        return realm.objects<Book>().query("title = $0", title).observe()
+    }
+
+    fun getBooksByTitleAsCommonFlow(title: String): CFlow<RealmResults<Book>> {
+        return realm.objects<Book>().query("title = $0", title).observe().wrap()
     }
 
     fun addBook(book: Book) {
@@ -48,13 +62,17 @@ class RealmDatabase {
 
     fun deleteBook(title: String) {
         realm.writeBlocking {
-            objects(Book::class).query("title = $0", title).first().delete()
+            objects<Book>().query("title = $0", title)
+                .first()
+                .let { findLatest(it) }
+                ?.delete()
+                ?: throw IllegalStateException("Book not found.")
         }
     }
 
     fun clearAllBooks() {
         realm.writeBlocking {
-            objects(Book::class).delete()
+            objects<Book>().delete()
         }
     }
 }

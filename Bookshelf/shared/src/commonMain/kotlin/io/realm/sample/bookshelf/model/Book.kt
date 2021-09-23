@@ -13,25 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.realm.sample.bookshelf.model
 
+import io.realm.RealmList
 import io.realm.RealmObject
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 
-// A RealmObject class behaves likes a regular class, we can use for instance kotlinx.Serializable annotation
-@Serializable
 class Book : RealmObject {
+
     var subtitle: String? = ""
     var title: String = ""
-    @SerialName("cover_i")
+    var editionCount: Int? = null
+    var firstPublishYear: Int? = null
     var imgId: String? = null
+    var authors: RealmList<String> = RealmList()
 
     companion object {
         private const val BOOK_COVER_URL = "https://covers.openlibrary.org/b/id/"
     }
 
-    fun getImageURL() : String {
+    fun getImageURL(): String {
         return "$BOOK_COVER_URL$imgId-M.jpg"
     }
 }
