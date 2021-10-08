@@ -30,3 +30,9 @@ jobs:
       run: |
         chmod +x gradlew
         ./gradlew buildDebug packForXcode
+        
+    - name: Building KMP Demo
+      working-directory: ./MultiplatformDemo
+      run: |
+        chmod +x gradlew
+        ./gradlew assemble        
