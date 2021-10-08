@@ -2,4 +2,4 @@
 
 The demo works on Android, iOS, macOS and JVM (currently Mac & Linux).
 
-<img src="./Screenshots/Overview.png" width="400">
+<img src="./Screenshots/Overview.png" width="800">
