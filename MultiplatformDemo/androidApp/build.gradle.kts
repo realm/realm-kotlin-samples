@@ -3,7 +3,7 @@ plugins {
     kotlin("android")
 }
 
-val compose_version = "1.0.2"
+val compose_version = "1.0.4"
 
 dependencies {
     implementation(project(":shared"))

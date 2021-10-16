@@ -18,6 +18,7 @@ package io.realm.sample.bookshelf.model
 
 import io.realm.RealmList
 import io.realm.RealmObject
+import io.realm.realmListOf
 
 class Book : RealmObject {
 
@@ -26,7 +27,7 @@ class Book : RealmObject {
     var editionCount: Int? = null
     var firstPublishYear: Int? = null
     var imgId: String? = null
-    var authors: RealmList<String> = RealmList()
+    var authors: RealmList<String> = realmListOf()
 
     companion object {
         private const val BOOK_COVER_URL = "https://covers.openlibrary.org/b/id/"

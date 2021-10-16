@@ -22,7 +22,7 @@ plugins {
     kotlin("multiplatform")
     id("com.android.library")
     id("kotlin-android-extensions")
-    id("io.realm.kotlin") version "0.4.1"
+    id("io.realm.kotlin") version "0.6.0"
 }
 
 kotlin {
@@ -37,8 +37,8 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("io.realm.kotlin:library:0.4.1")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0-native-mt")
+                implementation("io.realm.kotlin:library-base:0.6.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2-native-mt")
             }
         }
         val commonTest by getting {
@@ -49,13 +49,13 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
-                implementation("com.google.android.material:material:1.2.0")
+                implementation("com.google.android.material:material:1.4.0")
             }
         }
         val androidTest by getting {
             dependencies {
                 implementation(kotlin("test-junit"))
-                implementation("junit:junit:4.12")
+                implementation("junit:junit:4.13.2")
             }
         }
         val iosMain by getting
