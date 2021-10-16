@@ -16,7 +16,7 @@
 
 package io.realm.sample.bookshelf.network
 
-import io.realm.RealmList
+import io.realm.realmListOf
 import io.realm.sample.bookshelf.model.Book
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -38,7 +38,7 @@ fun ApiBook.toRealmBook(): Book {
         editionCount = this@toRealmBook.editionCount
         firstPublishYear = this@toRealmBook.firstPublishYear
         imgId = this@toRealmBook.imgId
-        authors = RealmList<String>().apply {
+        authors = realmListOf<String>().apply {
             addAll(this@toRealmBook.authors)
         }
     }

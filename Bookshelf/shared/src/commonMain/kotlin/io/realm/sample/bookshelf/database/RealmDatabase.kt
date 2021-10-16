@@ -20,14 +20,15 @@ import io.realm.Realm
 import io.realm.RealmConfiguration
 import io.realm.RealmResults
 import io.realm.delete
+import io.realm.objects
 import io.realm.sample.bookshelf.model.Book
 import kotlinx.coroutines.flow.Flow
 
 class RealmDatabase {
 
     val realm: Realm by lazy {
-        val configuration = RealmConfiguration(schema = setOf(Book::class))
-        Realm(configuration)
+        val configuration = RealmConfiguration.with(schema = setOf(Book::class))
+        Realm.open(configuration)
     }
 
     fun getAllBooks(): List<Book> {
