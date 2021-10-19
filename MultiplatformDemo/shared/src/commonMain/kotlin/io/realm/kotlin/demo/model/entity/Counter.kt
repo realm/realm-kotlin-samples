@@ -22,6 +22,7 @@ import io.realm.realmListOf
 
 class Counter: RealmObject {
     @PrimaryKey
-    var id: String = "primary"
+    var _id: String = "primary"
+    var realm_id: String? = "my-partition"
     var operations: RealmList<Int> = realmListOf()
 }

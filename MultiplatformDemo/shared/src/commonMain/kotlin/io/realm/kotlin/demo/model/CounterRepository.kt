@@ -15,9 +15,14 @@
  */
 package io.realm.kotlin.demo.model
 
-import io.realm.kotlin.demo.model.entity.Counter
 import io.realm.Realm
-import io.realm.RealmConfiguration
+import io.realm.internal.platform.runBlocking
+import io.realm.kotlin.demo.model.entity.Counter
+import io.realm.log.LogLevel
+import io.realm.mongodb.App
+import io.realm.mongodb.AppConfiguration
+import io.realm.mongodb.Credentials
+import io.realm.mongodb.SyncConfiguration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -32,13 +37,23 @@ class CounterRepository {
     private var realm: Realm
     private val counterObj: Counter
 
-    init {
-        val config = RealmConfiguration.Builder(
-            schema = setOf(Counter::class)
-        ).build()
+    private val app: App = App.create(AppConfiguration.Builder("realm-kotlin-sync-demo-pcvre").build())
 
-        // Open Realm
-        realm = Realm.open(config)
+    init {
+        realm = runBlocking {
+            // Enable Realm with Sync support
+            val user = app.login(Credentials.emailPassword("foo@bar.com", "123456"))
+            val config = SyncConfiguration.Builder(
+                schema = setOf(Counter::class),
+                user = user,
+                partitionValue = "my-partition"
+            )
+                .log(LogLevel.DEBUG)
+                .build()
+
+            // Open Realm
+            Realm.open(config)
+        }
 
         // With no support for setting up initial values, we just do it manually.
         // WARNING: Writing directly on the UI thread is not encouraged.
@@ -69,7 +84,7 @@ class CounterRepository {
      * Listen to changes to the counter.
      */
     fun observeCounter(): Flow<Long> {
-        return realm.objects(Counter::class).query("id = 'primary'").observe()
+        return realm.objects(Counter::class).query("_id = 'primary'").observe()
             .filter { it.size == 1 }
             .map { it.first() }
             .map {
