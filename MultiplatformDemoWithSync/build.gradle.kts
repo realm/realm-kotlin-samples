@@ -3,7 +3,8 @@ buildscript {
         gradlePluginPortal()
         google()
         mavenCentral()
-        maven ("https://oss.sonatype.org/content/repositories/snapshots")
+        mavenLocal()
+//        maven ("https://oss.sonatype.org/content/repositories/snapshots")
     }
     dependencies {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31")
@@ -16,7 +17,8 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        maven ("https://oss.sonatype.org/content/repositories/snapshots")
+        mavenLocal()
+//        maven ("https://oss.sonatype.org/content/repositories/snapshots")
     }
 }
 

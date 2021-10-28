@@ -37,7 +37,7 @@ class CounterRepository {
     private var realm: Realm
     private val counterObj: Counter
 
-    private val app: App = App.create(AppConfiguration.Builder("realm-kotlin-sync-demo-klzgl").build())
+    private val app: App = App.create(AppConfiguration.Builder("sync-demo-rupbg").build())
 
     init {
         realm = runBlocking {
@@ -46,7 +46,7 @@ class CounterRepository {
             val config = SyncConfiguration.Builder(
                 schema = setOf(Counter::class),
                 user = user,
-                partitionValue = "my-partition"
+                partitionValue = "demo-parition"
             )
                 .log(LogLevel.ALL)
                 .build()
