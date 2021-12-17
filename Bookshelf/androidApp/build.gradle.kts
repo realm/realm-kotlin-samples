@@ -3,7 +3,7 @@ plugins {
     kotlin("android")
 }
 
-val compose_version = "1.0.4"
+val compose_version = "1.1.0-rc01"
 
 repositories {
     google()

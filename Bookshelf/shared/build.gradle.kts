@@ -4,13 +4,12 @@ plugins {
     kotlin("multiplatform")
     id("com.android.library")
     id("kotlin-android-extensions")
-    kotlin("plugin.serialization") version "1.5.31"
-    id("io.realm.kotlin") version "0.6.0"
+    kotlin("plugin.serialization") version "1.6.10"
+    id("io.realm.kotlin")// version "0.8.0-SNAPSHOT"
 }
 
 kotlin {
     android()
-
     val iosTarget: (String, KotlinNativeTarget.() -> Unit) -> KotlinNativeTarget =
         if (System.getenv("SDK_NAME")?.startsWith("iphoneos") == true)
             ::iosArm64
@@ -28,7 +27,7 @@ kotlin {
     val ktorVersion = "1.6.1"
     val serializationVersion = "1.2.1"
     val coroutinesVersion = "1.5.2-native-mt"
-    val realmVersion = "0.6.0"
+    val realmVersion = "0.8.0-SNAPSHOT"
 
     sourceSets {
         val commonMain  by getting {

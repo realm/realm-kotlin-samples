@@ -40,7 +40,7 @@ class MainActivity : ComponentActivity() {
 
     private val bookshelfViewModel by viewModels<BookshelfViewModel>()
 
-    @ExperimentalComposeUiApi
+    @OptIn(ExperimentalComposeUiApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
