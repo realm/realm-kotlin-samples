@@ -5,17 +5,17 @@ plugins {
     id("com.android.library")
     id("kotlin-android-extensions")
     kotlin("plugin.serialization") version "1.5.31"
-    id("io.realm.kotlin") version "0.6.0"
+    id("io.realm.kotlin") version "0.8.0"
 }
 
 kotlin {
     android()
 
-    val iosTarget: (String, KotlinNativeTarget.() -> Unit) -> KotlinNativeTarget =
-        if (System.getenv("SDK_NAME")?.startsWith("iphoneos") == true)
-            ::iosArm64
-        else
-            ::iosX64
+    val iosTarget: (String, KotlinNativeTarget.() -> Unit) -> KotlinNativeTarget = when {
+        System.getenv("SDK_NAME")?.startsWith("iphoneos") == true -> ::iosArm64
+        System.getenv("NATIVE_ARCH")?.startsWith("arm") == true -> ::iosSimulatorArm64
+        else -> ::iosX64
+    }
 
     iosTarget("ios") {
         binaries {
@@ -28,7 +28,7 @@ kotlin {
     val ktorVersion = "1.6.1"
     val serializationVersion = "1.2.1"
     val coroutinesVersion = "1.5.2-native-mt"
-    val realmVersion = "0.6.0"
+    val realmVersion = "0.8.0"
 
     sourceSets {
         val commonMain  by getting {
@@ -73,11 +73,11 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
-    compileSdkVersion(31)
+    compileSdk = 31
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
-        minSdkVersion(21)
-        targetSdkVersion(31)
+        minSdk = 21
+        targetSdk =31
     }
 }
 

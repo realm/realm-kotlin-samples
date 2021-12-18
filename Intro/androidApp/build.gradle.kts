@@ -47,11 +47,11 @@ android {
 //            storePassword = "my keystore password"
 //        }
     }
-    compileSdkVersion(29)
+    compileSdkVersion(31)
     defaultConfig {
         applicationId = "io.realm.example.kmmsample.androidApp"
         minSdkVersion(21)
-        targetSdkVersion(29)
+        targetSdkVersion(31)
         versionCode = 1
         versionName = "$version"
     }
