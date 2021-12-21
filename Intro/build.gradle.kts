@@ -10,7 +10,7 @@ buildscript {
     }
 }
 group = "io.realm.example"
-version = "0.4.1"
+version = "0.8.0"
 
 allprojects {
     repositories {

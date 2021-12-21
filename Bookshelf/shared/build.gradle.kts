@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
     kotlin("multiplatform")
+    kotlin("native.cocoapods")
     id("com.android.library")
     id("kotlin-android-extensions")
     kotlin("plugin.serialization") version "1.5.31"
@@ -16,13 +17,14 @@ kotlin {
         System.getenv("NATIVE_ARCH")?.startsWith("arm") == true -> ::iosSimulatorArm64
         else -> ::iosX64
     }
+    iosTarget("ios") {}
 
-    iosTarget("ios") {
-        binaries {
-            framework {
-                baseName = "shared"
-            }
-        }
+    cocoapods {
+        summary = "Realm Kotlin Multiplatform Demo Shared Library"
+        homepage = "https://github.com/realm/realm-kotlin"
+        ios.deploymentTarget = "14.1"
+        osx.deploymentTarget = "11.0"
+        frameworkName = "shared"
     }
 
     val ktorVersion = "1.6.1"
@@ -80,18 +82,3 @@ android {
         targetSdk =31
     }
 }
-
-val packForXcode by tasks.creating(Sync::class) {
-    val mode = System.getenv("CONFIGURATION") ?: "DEBUG"
-    val framework = kotlin.targets.getByName<KotlinNativeTarget>("ios").binaries.getFramework(mode)
-    val targetDir = File(buildDir, "xcode-frameworks")
-
-    group = "build"
-    dependsOn(framework.linkTask)
-    inputs.property("mode", mode)
-
-    from({ framework.outputDirectory })
-    into(targetDir)
-}
-
-tasks.getByName("build").dependsOn(packForXcode)
