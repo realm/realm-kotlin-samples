@@ -13,6 +13,10 @@ The UI part 🎨 is platform specific:
 - Android Studio [Bumblebee (2021.1.1) Beta 5](https://developer.android.com/studio/preview)
 - NOTE: The SDK doesn't currently support `x86` - Please use an `x86_64` or `arm64` emulator/device
 
+## Limitation
+
+- This doesn't run on a M1 device for now until Ktor client (libcurl) supports [macos_arm64](https://youtrack.jetbrains.com/issue/KTOR-3248) 
+
 ## Screenshots:
 
 ### Android

@@ -37,7 +37,6 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("io.insert-koin:koin-core:3.1.2")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2-native-mt")
                 implementation("io.realm.kotlin:library-base:0.8.0")
             }
