@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		79209147469BB583EE4B66D6 /* Pods_macosApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F975C0A19332F8F51075E7CB /* Pods_macosApp.framework */; };
 		832C50A227067DDB0086207A /* MacOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832C50A127067DDB0086207A /* MacOSApp.swift */; };
 		832C50A427067DDB0086207A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832C50A327067DDB0086207A /* ContentView.swift */; };
 		832C50A627067DE20086207A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 832C50A527067DE20086207A /* Assets.xcassets */; };
@@ -16,6 +15,7 @@
 		832C50C027067DE20086207A /* macosAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832C50BF27067DE20086207A /* macosAppUITests.swift */; };
 		832C50EF27072F450086207A /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832C50EE27072F450086207A /* ViewModel.swift */; };
 		832C50FD270774FC0086207A /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832C50FC270774FC0086207A /* Theme.swift */; };
+		BB89BECB0855A6FB60BC6A9B /* Pods_macosApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38385CDECB030274ACA0B50A /* Pods_macosApp.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,7 +36,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		3A572C1A237E2FCC7AF9267E /* Pods-macosApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-macosApp.release.xcconfig"; path = "Target Support Files/Pods-macosApp/Pods-macosApp.release.xcconfig"; sourceTree = "<group>"; };
+		331F8126544CE1EF30F179D1 /* Pods-macosApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-macosApp.release.xcconfig"; path = "Target Support Files/Pods-macosApp/Pods-macosApp.release.xcconfig"; sourceTree = "<group>"; };
+		38385CDECB030274ACA0B50A /* Pods_macosApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_macosApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		832C509E27067DDA0086207A /* macosApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = macosApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		832C50A127067DDB0086207A /* MacOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacOSApp.swift; sourceTree = "<group>"; };
 		832C50A327067DDB0086207A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -52,8 +53,7 @@
 		832C50C127067DE20086207A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		832C50EE27072F450086207A /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		832C50FC270774FC0086207A /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
-		CE4D340881994872EAD8BD1C /* Pods-macosApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-macosApp.debug.xcconfig"; path = "Target Support Files/Pods-macosApp/Pods-macosApp.debug.xcconfig"; sourceTree = "<group>"; };
-		F975C0A19332F8F51075E7CB /* Pods_macosApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_macosApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8AF3E31EE3382F47C273857C /* Pods-macosApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-macosApp.debug.xcconfig"; path = "Target Support Files/Pods-macosApp/Pods-macosApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,7 +61,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				79209147469BB583EE4B66D6 /* Pods_macosApp.framework in Frameworks */,
+				BB89BECB0855A6FB60BC6A9B /* Pods_macosApp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,6 +82,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1D6FBD1663B58667167D90AF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				38385CDECB030274ACA0B50A /* Pods_macosApp.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		832C509527067DDA0086207A = {
 			isa = PBXGroup;
 			children = (
@@ -90,7 +98,7 @@
 				832C50BE27067DE20086207A /* macosAppUITests */,
 				832C509F27067DDA0086207A /* Products */,
 				C59E600E717D53B4EE2A251F /* Pods */,
-				AF8A6F96A47BC4713EC62168 /* Frameworks */,
+				1D6FBD1663B58667167D90AF /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -145,19 +153,11 @@
 			path = macosAppUITests;
 			sourceTree = "<group>";
 		};
-		AF8A6F96A47BC4713EC62168 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				F975C0A19332F8F51075E7CB /* Pods_macosApp.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		C59E600E717D53B4EE2A251F /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				CE4D340881994872EAD8BD1C /* Pods-macosApp.debug.xcconfig */,
-				3A572C1A237E2FCC7AF9267E /* Pods-macosApp.release.xcconfig */,
+				8AF3E31EE3382F47C273857C /* Pods-macosApp.debug.xcconfig */,
+				331F8126544CE1EF30F179D1 /* Pods-macosApp.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -169,7 +169,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 832C50C427067DE20086207A /* Build configuration list for PBXNativeTarget "macosApp" */;
 			buildPhases = (
-				9F88DE23C741673794BE001A /* [CP] Check Pods Manifest.lock */,
+				D16BDA791402F97A565D248C /* [CP] Check Pods Manifest.lock */,
 				832C509A27067DDA0086207A /* Sources */,
 				832C509B27067DDA0086207A /* Frameworks */,
 				832C509C27067DDA0086207A /* Resources */,
@@ -288,7 +288,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		9F88DE23C741673794BE001A /* [CP] Check Pods Manifest.lock */ = {
+		D16BDA791402F97A565D248C /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -473,7 +473,7 @@
 		};
 		832C50C527067DE20086207A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CE4D340881994872EAD8BD1C /* Pods-macosApp.debug.xcconfig */;
+			baseConfigurationReference = 8AF3E31EE3382F47C273857C /* Pods-macosApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -506,7 +506,7 @@
 		};
 		832C50C627067DE20086207A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3A572C1A237E2FCC7AF9267E /* Pods-macosApp.release.xcconfig */;
+			baseConfigurationReference = 331F8126544CE1EF30F179D1 /* Pods-macosApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

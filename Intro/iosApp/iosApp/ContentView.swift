@@ -4,10 +4,10 @@ import shared
 struct ContentView: View {
     let calculator = Calculator.Companion()
     let greet = Greeting().greeting()
-    
+
     @State private var firstNum: String = "0"
     @State private var secondNum: String = "0"
-    
+
     @State var job: Closeable? = nil
 
     private var sum: String {

@@ -4,6 +4,12 @@ The demo works on Android, iOS, macOS and JVM (currently Mac & Linux).
 
 <img src="./Screenshots/Overview.png" width="800">
 
+## Requirements
+
+- JDK 11
+- Android Studio [Bumblebee (2021.1.1) Beta 5](https://developer.android.com/studio/preview)
+- NOTE: The SDK doesn't currently support `x86` - Please use an `x86_64` or `arm64` emulator/device
+
 # Build and run for iOS
 
 ```

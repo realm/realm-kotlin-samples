@@ -12,32 +12,32 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
- * See the License for the specific language governing permissions and
+ * See the License for the specific language gov erning permissions and
  * limitations under the License.
  */
-
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
     kotlin("multiplatform")
     id("com.android.library")
-    id("kotlin-android-extensions")
-    id("io.realm.kotlin") version "0.6.0"
+    id("io.realm.kotlin") version "0.8.0"
 }
 
 kotlin {
     android()
-    ios {
-        binaries {
-            framework {
-                baseName = "shared"
-            }
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach {
+        it.binaries.framework {
+            baseName = "shared"
         }
     }
+
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("io.realm.kotlin:library-base:0.6.0")
+                implementation("io.realm.kotlin:library-base:0.8.0")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2-native-mt")
             }
         }
@@ -58,34 +58,35 @@ kotlin {
                 implementation("junit:junit:4.13.2")
             }
         }
-        val iosMain by getting
-        val iosTest by getting
+        val iosX64Main by getting
+        val iosArm64Main by getting
+        val iosSimulatorArm64Main by getting
+        val iosMain by creating {
+            dependsOn(commonMain)
+            iosX64Main.dependsOn(this)
+            iosArm64Main.dependsOn(this)
+            iosSimulatorArm64Main.dependsOn(this)
+        }
+        val iosX64Test by getting
+        val iosArm64Test by getting
+        val iosSimulatorArm64Test by getting
+        val iosTest by creating {
+            dependsOn(commonTest)
+            iosX64Test.dependsOn(this)
+            iosArm64Test.dependsOn(this)
+            iosSimulatorArm64Test.dependsOn(this)
+        }
     }
 }
 android {
-    compileSdkVersion(29)
+    compileSdk = 31
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
-        minSdkVersion(16)
-        targetSdkVersion(29)
-        versionCode = 1
-        versionName = "$version"
+        minSdk = 16
+        targetSdk = 31
     }
     // FIXME connectedAndroidTest does not trigger any test.
     // https://youtrack.jetbrains.com/issue/KT-35016
     // https://github.com/realm/realm-kotlin/issues/73
     sourceSets.getByName("androidTest").java.srcDir(file("src/androidTest/kotlin"))
 }
-val packForXcode by tasks.creating(Sync::class) {
-    group = "build"
-    val mode = System.getenv("CONFIGURATION") ?: "DEBUG"
-    val sdkName = System.getenv("SDK_NAME") ?: "iphonesimulator"
-    val targetName = "ios" + if (sdkName.startsWith("iphoneos")) "Arm64" else "X64"
-    val framework = kotlin.targets.getByName<KotlinNativeTarget>(targetName).binaries.getFramework(mode)
-    inputs.property("mode", mode)
-    dependsOn(framework.linkTask)
-    val targetDir = File(buildDir, "xcode-frameworks")
-    from({ framework.outputDirectory })
-    into(targetDir)
-}
-tasks.getByName("build").dependsOn(packForXcode)

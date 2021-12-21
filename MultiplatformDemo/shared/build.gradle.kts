@@ -4,21 +4,26 @@ plugins {
     kotlin("multiplatform")
     kotlin("native.cocoapods")
     id("com.android.library")
-    id("io.realm.kotlin") version "0.6.0"
+    id("io.realm.kotlin") version "0.8.0"
 }
 
-version = "1.0"
+apply(plugin = "io.realm.kotlin")
 
 kotlin {
     android()
 
     val iosTarget: (String, KotlinNativeTarget.() -> Unit) -> KotlinNativeTarget = when {
         System.getenv("SDK_NAME")?.startsWith("iphoneos") == true -> ::iosArm64
+        System.getenv("NATIVE_ARCH")?.startsWith("arm") == true -> ::iosSimulatorArm64
         else -> ::iosX64
     }
-
     iosTarget("ios") {}
-    macosX64("macos") {}
+
+    val macosTarget: (String, KotlinNativeTarget.() -> Unit) -> KotlinNativeTarget = when {
+        System.getenv("NATIVE_ARCH")?.startsWith("arm") == true -> ::macosArm64
+        else -> ::macosX64
+    }
+    macosTarget("macos") {}
     jvm {}
 
     cocoapods {
@@ -32,9 +37,8 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("io.insert-koin:koin-core:3.1.2")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2-native-mt")
-                implementation("io.realm.kotlin:library-base:0.6.0")
+                implementation("io.realm.kotlin:library-base:0.8.0")
             }
         }
         val commonTest by getting {

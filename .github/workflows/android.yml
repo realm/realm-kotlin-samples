@@ -23,16 +23,22 @@ jobs:
       working-directory: ./Intro
       run: |
         chmod +x gradlew
-        ./gradlew buildDebug packForXcode
+        ./gradlew buildDebug
 
     - name: Building Bookshelf [Debug]
       working-directory: ./Bookshelf
       run: |
         chmod +x gradlew
-        ./gradlew buildDebug packForXcode
+        ./gradlew buildDebug
         
     - name: Building KMP Demo
       working-directory: ./MultiplatformDemo
       run: |
         chmod +x gradlew
-        ./gradlew assemble        
+        ./gradlew assemble  
+        
+    - name: JVM Console
+      working-directory: ./JVMConsole
+      run: |
+        chmod +x gradlew
+        ./gradlew jar        
