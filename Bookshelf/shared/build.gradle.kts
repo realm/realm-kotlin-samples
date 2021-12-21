@@ -20,7 +20,7 @@ kotlin {
     iosTarget("ios") {}
 
     cocoapods {
-        summary = "Realm Kotlin Multiplatform Demo Shared Library"
+        summary = "Realm Kotlin Bookshelf shared Library"
         homepage = "https://github.com/realm/realm-kotlin"
         ios.deploymentTarget = "14.1"
         osx.deploymentTarget = "11.0"

@@ -7,7 +7,6 @@ plugins {
     id("io.realm.kotlin") version "0.8.0"
 }
 
-version = "1.0"
 apply(plugin = "io.realm.kotlin")
 
 kotlin {
