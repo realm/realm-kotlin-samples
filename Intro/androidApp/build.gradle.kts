@@ -19,7 +19,6 @@
 plugins {
     id("com.android.application")
     kotlin("android")
-    id("kotlin-android-extensions")
 }
 
 dependencies {
@@ -47,11 +46,11 @@ android {
 //            storePassword = "my keystore password"
 //        }
     }
-    compileSdkVersion(31)
+    compileSdk = 31
     defaultConfig {
         applicationId = "io.realm.example.kmmsample.androidApp"
-        minSdkVersion(21)
-        targetSdkVersion(31)
+        minSdk = 21
+        targetSdk = 31
         versionCode = 1
         versionName = "$version"
     }

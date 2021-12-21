@@ -24,7 +24,8 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity android:name="io.realm.example.kmmsample.androidApp.MainActivity"
-            android:label="Realm Intro">
+            android:label="Realm Intro"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
