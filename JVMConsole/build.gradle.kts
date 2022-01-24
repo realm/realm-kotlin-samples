@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.6.0"
-    id("io.realm.kotlin") version "0.8.0"
+    kotlin("jvm") version "1.6.10"
+    id("io.realm.kotlin") version "0.8.2"
     application
 }
 group = "io.realm.example"
@@ -13,7 +13,7 @@ repositories {
 }
 dependencies {
     implementation("com.jakewharton.fliptables:fliptables:1.1.0")
-    implementation("io.realm.kotlin:library-base:0.8.0")
+    implementation("io.realm.kotlin:library-base:0.8.2")
     testImplementation(kotlin("test-junit"))
 }
 tasks.withType<KotlinCompile>() {
