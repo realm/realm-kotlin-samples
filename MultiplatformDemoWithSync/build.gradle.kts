@@ -3,13 +3,10 @@ buildscript {
         gradlePluginPortal()
         google()
         mavenCentral()
-//        mavenLocal()
-        maven ("https://oss.sonatype.org/content/repositories/snapshots")
     }
     dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31")
-        classpath("com.android.tools.build:gradle:7.0.3")
-        classpath("io.realm.kotlin:gradle-plugin:0.7.0-SNAPSHOT")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10")
+        classpath("com.android.tools.build:gradle:7.1.0-rc01")
     }
 }
 
@@ -17,9 +14,10 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-//        mavenLocal()
-        maven ("https://oss.sonatype.org/content/repositories/snapshots")
     }
+
+    group = "io.realm.sample"
+    version = "0.8.2"
 }
 
 tasks.register("clean", Delete::class) {

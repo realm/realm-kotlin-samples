@@ -4,7 +4,7 @@ plugins {
     kotlin("multiplatform")
     kotlin("native.cocoapods")
     id("com.android.library")
-    id("io.realm.kotlin")
+    id("io.realm.kotlin") version "0.8.2"
 }
 
 version = "1.0"
@@ -32,9 +32,8 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("io.insert-koin:koin-core:3.1.2")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2-native-mt")
-                implementation("io.realm.kotlin:library-sync:0.7.0-SNAPSHOT")
+                implementation("io.realm.kotlin:library-sync:0.8.2")
             }
         }
         val commonTest by getting {

@@ -18,6 +18,9 @@ package io.realm.kotlin.demo.model
 import io.realm.Realm
 import io.realm.internal.platform.runBlocking
 import io.realm.kotlin.demo.model.entity.Counter
+import io.realm.kotlin.demo.util.Constants.MONGODB_REALM_APP_ID
+import io.realm.kotlin.demo.util.Constants.MONGODB_REALM_APP_PASSWORD
+import io.realm.kotlin.demo.util.Constants.MONGODB_REALM_APP_USER
 import io.realm.log.LogLevel
 import io.realm.mongodb.App
 import io.realm.mongodb.AppConfiguration
@@ -37,21 +40,20 @@ class CounterRepository {
     private var realm: Realm
     private val counterObj: Counter
 
-    private val app: App = App.create(AppConfiguration.Builder("sync-demo-rupbg").build())
+    private val app: App = App.create(AppConfiguration.Builder(MONGODB_REALM_APP_ID).build())
 
     init {
         realm = runBlocking {
             // Enable Realm with Sync support
-            val user = app.login(Credentials.emailPassword("foo@bar.com", "123456"))
+            val user = app.login(Credentials.emailPassword(MONGODB_REALM_APP_USER, MONGODB_REALM_APP_PASSWORD))
             val config = SyncConfiguration.Builder(
                 schema = setOf(Counter::class),
                 user = user,
-                partitionValue = "demo-parition"
+                partitionValue = "demo-parition",
             )
                 .log(LogLevel.ALL)
                 .build()
 
-            // Open Realm
             Realm.open(config)
         }
 
