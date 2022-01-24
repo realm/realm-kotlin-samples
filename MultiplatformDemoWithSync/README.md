@@ -2,7 +2,7 @@
 
 The demo demonstrates [Sync](https://www.mongodb.com/realm/mobile/sync) capability between on Android, iOS, macOS and JVM (currently Mac & Linux).
 
-<img src="./Screenshots/kotlin-sync-demo" width="800">
+<img src="./Screenshots/kotlin-sync-demo.gif" width="800">
 
 # Steps to build:
 
