@@ -1,6 +1,6 @@
 ## Kotlin Multiplatform Sync demo App using a shared business logic:
 
-The demo demonstrates [Sync](https://www.mongodb.com/realm/mobile/sync) capability between on Android, iOS, macOS and JVM (currently Mac & Linux).
+The demo demonstrates [Sync](https://www.mongodb.com/realm/mobile/sync) capability between an Android, iOS, macOS and JVM (currently Mac & Linux).
 
 <img src="./Screenshots/kotlin-sync-demo.gif" width="800">
 
