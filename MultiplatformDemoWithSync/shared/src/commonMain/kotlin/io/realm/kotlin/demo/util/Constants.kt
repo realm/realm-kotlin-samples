@@ -21,7 +21,7 @@ package io.realm.kotlin.demo.util
  * https://docs.mongodb.com/realm/tutorial/realm-app/ or watch the video tutorial https://www.youtube.com/watch?v=lqo0Yf7lnyg
  */
 object Constants {
-    val MONGODB_REALM_APP_ID = "sync-demo-rupbg"
-    val MONGODB_REALM_APP_USER = "foo@bar.com"
-    val MONGODB_REALM_APP_PASSWORD = "123456"
+    val MONGODB_REALM_APP_ID = "[REPLACE ME]"
+    val MONGODB_REALM_APP_USER = "[REPLACE ME]"
+    val MONGODB_REALM_APP_PASSWORD = "[REPLACE ME]"
 }
