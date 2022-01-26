@@ -3,7 +3,7 @@ plugins {
     kotlin("android")
 }
 
-val compose_version = "1.1.0-rc01"
+val compose_version = "1.2.0-alpha01"
 
 dependencies {
     implementation(project(":shared"))
@@ -33,7 +33,6 @@ android {
     // Required by Compose
     kotlinOptions {
         jvmTarget = "11"
-        freeCompilerArgs += "-Xallow-jvm-ir-dependencies"
     }
 
     buildFeatures {

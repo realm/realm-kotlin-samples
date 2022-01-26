@@ -20,11 +20,6 @@ dependencies {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "11"
-    kotlinOptions.freeCompilerArgs += listOf(
-        "-P",
-        // FIXME remove this flag when there's an Android Release that supports 1.6.10 so we can remove this suppress
-        "plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=true"
-    )
 }
 
 application {
