@@ -19,8 +19,9 @@
 plugins {
     kotlin("multiplatform")
     id("com.android.library")
-    id("io.realm.kotlin") version "0.8.2"
+    //id("io.realm.kotlin") version "0.9.0"
 }
+apply(plugin = "io.realm.kotlin")
 
 kotlin {
     android()
@@ -37,7 +38,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("io.realm.kotlin:library-base:0.8.2")
+                implementation("io.realm.kotlin:library-base:0.9.0-SNAPSHOT")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2-native-mt")
             }
         }

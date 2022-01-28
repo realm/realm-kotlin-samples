@@ -19,6 +19,7 @@ package io.realm.example.kmmsample
 
 import io.realm.Realm
 import io.realm.RealmConfiguration
+import io.realm.query
 import kotlinx.coroutines.flow.Flow
 
 class ExpressionRepository {
@@ -35,10 +36,10 @@ class ExpressionRepository {
     }
 
     fun expressions(): List<Expression> {
-        return realm.objects(Expression::class)
+        return realm.query<Expression>().find()
     }
 
     fun observeChanges(): Flow<List<Expression>> {
-        return realm.objects(Expression::class).observe()
+        return realm.query<Expression>().asFlow()
     }
 }
