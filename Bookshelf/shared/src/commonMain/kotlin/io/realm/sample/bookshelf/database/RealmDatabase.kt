@@ -20,7 +20,7 @@ import io.realm.Realm
 import io.realm.RealmConfiguration
 import io.realm.RealmResults
 import io.realm.delete
-import io.realm.objects
+import io.realm.query
 import io.realm.sample.bookshelf.model.Book
 import kotlinx.coroutines.flow.Flow
 
@@ -32,27 +32,27 @@ class RealmDatabase {
     }
 
     fun getAllBooks(): List<Book> {
-        return realm.objects(Book::class)
+        return realm.query<Book>().find()
     }
 
     fun getAllBooksAsFlow(): Flow<List<Book>> {
-        return realm.objects<Book>().observe()
+        return realm.query<Book>().asFlow()
     }
 
     fun getAllBooksAsCommonFlow(): CFlow<RealmResults<Book>> {
-        return realm.objects<Book>().observe().wrap()
+        return realm.query<Book>().asFlow().wrap()
     }
 
     fun getBooksByTitle(title: String): List<Book> {
-        return realm.objects<Book>().query("title = $0", title)
+        return realm.query<Book>("title = $0", title).find()
     }
 
     fun getBooksByTitleAsFlow(title: String): Flow<List<Book>> {
-        return realm.objects<Book>().query("title = $0", title).observe()
+        return realm.query<Book>("title = $0", title).asFlow()
     }
 
     fun getBooksByTitleAsCommonFlow(title: String): CFlow<RealmResults<Book>> {
-        return realm.objects<Book>().query("title = $0", title).observe().wrap()
+        return realm.query<Book>("title = $0", title).asFlow().wrap()
     }
 
     fun addBook(book: Book) {
@@ -63,9 +63,10 @@ class RealmDatabase {
 
     fun deleteBook(title: String) {
         realm.writeBlocking {
-            objects<Book>().query("title = $0", title)
+            query<Book>("title = $0", title)
                 .first()
-                .let { findLatest(it) }
+                .find()
+                ?.let { findLatest(it) }
                 ?.delete()
                 ?: throw IllegalStateException("Book not found.")
         }
@@ -73,7 +74,7 @@ class RealmDatabase {
 
     fun clearAllBooks() {
         realm.writeBlocking {
-            objects<Book>().delete()
+            query<Book>().find().delete()
         }
     }
 }

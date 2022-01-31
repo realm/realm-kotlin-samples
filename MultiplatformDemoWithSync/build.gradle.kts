@@ -6,7 +6,7 @@ buildscript {
     }
     dependencies {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10")
-        classpath("com.android.tools.build:gradle:7.1.0-rc01")
+        classpath("com.android.tools.build:gradle:7.1.0")
     }
 }
 
@@ -17,7 +17,7 @@ allprojects {
     }
 
     group = "io.realm.sample"
-    version = "0.8.2"
+    version = "0.9.0"
 }
 
 tasks.register("clean", Delete::class) {
