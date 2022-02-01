@@ -26,6 +26,7 @@ import io.realm.mongodb.App
 import io.realm.mongodb.AppConfiguration
 import io.realm.mongodb.Credentials
 import io.realm.mongodb.SyncConfiguration
+import io.realm.query
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -60,7 +61,7 @@ class CounterRepository {
         // With no support for setting up initial values, we just do it manually.
         // WARNING: Writing directly on the UI thread is not encouraged.
         counterObj = realm.writeBlocking {
-            val objects = objects(Counter::class)
+            val objects = query<Counter>().find()
             when (objects.size) {
                 0 -> copyToRealm(Counter())
                 1 -> objects.first()
@@ -86,7 +87,7 @@ class CounterRepository {
      * Listen to changes to the counter.
      */
     fun observeCounter(): Flow<Long> {
-        return realm.objects(Counter::class).query("_id = 'primary'").observe()
+        return realm.query<Counter>("_id = 'primary'").asFlow()
             .filter { it.size == 1 }
             .map { it.first() }
             .map {
