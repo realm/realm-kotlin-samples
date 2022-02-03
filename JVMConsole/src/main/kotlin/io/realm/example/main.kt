@@ -4,7 +4,7 @@ import com.jakewharton.fliptables.FlipTableConverters
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import io.realm.RealmObject
-import io.realm.objects
+import io.realm.query
 import io.realm.RealmResults
 import kotlin.system.exitProcess
 
@@ -61,7 +61,7 @@ class AuthorsREPL(private val realm: Realm) {
 
     private fun displayAuthors() {
         val headers = arrayOf("First Name", "Last Name", "Age")
-        val authors: RealmResults<Author> = realm.objects<Author>()
+        val authors: RealmResults<Author> = realm.query<Author>().find()
         if (authors.isNotEmpty()) {
            val persistedAuthors =  mutableListOf<Array<String>>().also { data ->
                 authors.map { author ->
