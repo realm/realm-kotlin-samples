@@ -2,21 +2,23 @@
 // reincluding the below
 // includeBuild("<Realm-Kotlin-Repo>/packages")
 
-
 pluginManagement {
     repositories {
-        gradlePluginPortal()
         google()
+        gradlePluginPortal()
         mavenCentral()
-    }
-    resolutionStrategy {
-        eachPlugin {
-            if (requested.id.namespace == "com.android" || requested.id.name == "kotlin-android-extensions") {
-                useModule("com.android.tools.build:gradle:4.0.1")
-            }
-        }
+        maven("https://oss.sonatype.org/content/repositories/snapshots")
     }
 }
+
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+        maven("https://oss.sonatype.org/content/repositories/snapshots")
+    }
+}
+
 rootProject.name = "KmmSample"
 
 include(":androidApp")

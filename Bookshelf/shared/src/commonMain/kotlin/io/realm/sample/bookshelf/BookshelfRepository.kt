@@ -38,7 +38,7 @@ class BookshelfRepository {
         return database.getAllBooksAsFlow()
     }
 
-    fun allBooksAsCommonFlowable(): CFlow<RealmResults<Book>> {
+    fun allBooksAsCommonFlowable(): CFlow<List<Book>> {
         return database.getAllBooksAsCommonFlow()
     }
 

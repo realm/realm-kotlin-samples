@@ -4,7 +4,7 @@ plugins {
     kotlin("multiplatform")
     kotlin("native.cocoapods")
     id("com.android.library")
-    id("io.realm.kotlin") version "0.9.0"
+    id("io.realm.kotlin")
 }
 
 kotlin {
@@ -35,8 +35,8 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2-native-mt")
-                implementation("io.realm.kotlin:library-base:0.9.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0-native-mt")
+                implementation("io.realm.kotlin:library-base:${rootProject.extra["realmVersion"]}")
             }
         }
         val commonTest by getting {

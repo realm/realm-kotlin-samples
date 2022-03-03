@@ -18,6 +18,8 @@ package io.realm.kotlin.demo.model
 import io.realm.kotlin.demo.model.entity.Counter
 import io.realm.Realm
 import io.realm.RealmConfiguration
+import io.realm.RealmResults
+import io.realm.notifications.ResultsChange
 import io.realm.query
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -71,9 +73,10 @@ class CounterRepository {
      */
     fun observeCounter(): Flow<Long> {
         return realm.query<Counter>("id = 'primary'").asFlow()
-            .filter { it.size == 1 }
-            .map { it.first() }
-            .map {
+            .map { it: ResultsChange<Counter> -> it.list }
+            .filter { it: RealmResults<Counter> -> it.size == 1 }
+            .map { it: RealmResults<Counter> -> it.first() }
+            .map { it: Counter ->
                 it.operations.fold(0L,) { sum, el -> sum + el }
             }
     }

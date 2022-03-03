@@ -18,6 +18,7 @@
 
 package io.realm.example.kmmsample
 
+import io.realm.RealmResults
 import kotlinx.coroutines.flow.Flow
 
 class Calculator private constructor() {
@@ -30,7 +31,7 @@ class Calculator private constructor() {
             return a + b
         }
 
-        fun listen(): Flow<List<Expression>> {
+        fun listen(): Flow<RealmResults<Expression>> {
             return this.repository.observeChanges()
         }
 
