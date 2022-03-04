@@ -7,10 +7,10 @@ plugins {
 
 buildscript {
     dependencies {
-        classpath("io.realm.kotlin:gradle-plugin:0.10.0-SNAPSHOT")
+        classpath("io.realm.kotlin:gradle-plugin:0.10.0")
     }
 }
-rootProject.extra["realmVersion"] = "0.10.0-SNAPSHOT"
+rootProject.extra["realmVersion"] = "0.10.0"
 
 apply(plugin = "io.realm.kotlin")
 
@@ -23,7 +23,7 @@ repositories {
 }
 dependencies {
     implementation("com.jakewharton.fliptables:fliptables:1.1.0")
-    implementation("io.realm.kotlin:library-base:0.10.0-SNAPSHOT")
+    implementation("io.realm.kotlin:library-base:0.10.0")
     testImplementation(kotlin("test-junit"))
 }
 tasks.withType<KotlinCompile>() {
