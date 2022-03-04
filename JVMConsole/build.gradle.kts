@@ -19,6 +19,7 @@ version = "0.10.0"
 
 repositories {
     mavenCentral()
+    // Only required for realm-kotlin snapshots
     maven("https://oss.sonatype.org/content/repositories/snapshots")
 }
 dependencies {
