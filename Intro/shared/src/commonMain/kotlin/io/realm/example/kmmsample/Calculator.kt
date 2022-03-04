@@ -31,12 +31,12 @@ class Calculator private constructor() {
             return a + b
         }
 
-        fun listen(): Flow<RealmResults<Expression>> {
+        fun listen(): Flow<List<Expression>> {
             return this.repository.observeChanges()
         }
 
         fun listenAsCommonFlow(): CFlow<List<Expression>> {
-            return this.repository.observeChanges().wrap()
+            return listen().wrap()
         }
 
         fun history(): List<Expression> {

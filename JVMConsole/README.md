@@ -15,6 +15,6 @@ Click on `Run MainKt`
 
 ```Gradle
 ./gradlew clean jar
-java -jar build/libs/JVM_Console-1.0.jar
+java -jar build/libs/JVM_Console-0.10.0.jar
 ```
 
