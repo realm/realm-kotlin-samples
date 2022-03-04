@@ -6,7 +6,7 @@ plugins {
     id("com.android.library")
     id("kotlin-android-extensions")
     kotlin("plugin.serialization") version "1.5.31"
-    id("io.realm.kotlin") version "0.9.0"
+    id("io.realm.kotlin")
 }
 
 kotlin {
@@ -29,8 +29,7 @@ kotlin {
 
     val ktorVersion = "1.6.1"
     val serializationVersion = "1.2.1"
-    val coroutinesVersion = "1.5.2-native-mt"
-    val realmVersion = "0.9.0"
+    val coroutinesVersion = "1.6.0-native-mt"
 
     sourceSets {
         val commonMain  by getting {
@@ -39,7 +38,7 @@ kotlin {
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion")
                 implementation("io.ktor:ktor-client-serialization:$ktorVersion")
-                implementation("io.realm.kotlin:library-base:$realmVersion")
+                implementation("io.realm.kotlin:library-base:${rootProject.extra["realmVersion"]}")
             }
         }
 

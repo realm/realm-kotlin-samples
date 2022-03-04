@@ -1,23 +1,21 @@
-buildscript {
-    repositories {
-        gradlePluginPortal()
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10")
-        classpath("com.android.tools.build:gradle:7.1.0")
-    }
+plugins {
+    kotlin("multiplatform") version "1.6.10" apply false
+    id("com.android.library") version "7.1.0" apply false
 }
 
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
+// Explicitly adding the plugin to the classpath as it makes it easier to control the version
+// centrally (don't need version in the 'plugins' block). Further, snapshots are not published with
+// marker interface so would need to be added to the classpath manually anyway.
+buildscript {
+    dependencies {
+        classpath("io.realm.kotlin:gradle-plugin:0.10.0")
     }
+}
+rootProject.extra["realmVersion"] = "0.10.0"
 
+allprojects {
     group = "io.realm.sample"
-    version = "0.9.0"
+    version = "0.10.0"
 }
 
 tasks.register("clean", Delete::class) {

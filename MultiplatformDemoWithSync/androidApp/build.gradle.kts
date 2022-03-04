@@ -10,9 +10,9 @@ dependencies {
 
     implementation("androidx.compose.compiler:compiler:$compose_version")
     implementation("androidx.compose.material:material:$compose_version")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2-native-mt") {
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0-native-mt") {
         version {
-            strictly("1.5.2-native-mt")
+            strictly("1.6.0-native-mt")
         }
     }
     implementation("androidx.compose.ui:ui:$compose_version")

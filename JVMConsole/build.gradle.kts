@@ -2,18 +2,29 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.6.10"
-    id("io.realm.kotlin") version "0.9.0"
     application
 }
+
+buildscript {
+    dependencies {
+        classpath("io.realm.kotlin:gradle-plugin:0.10.0")
+    }
+}
+rootProject.extra["realmVersion"] = "0.10.0"
+
+apply(plugin = "io.realm.kotlin")
+
 group = "io.realm.example"
-version = "1.0"
+version = "0.10.0"
 
 repositories {
     mavenCentral()
+    // Only required for realm-kotlin snapshots
+    maven("https://oss.sonatype.org/content/repositories/snapshots")
 }
 dependencies {
     implementation("com.jakewharton.fliptables:fliptables:1.1.0")
-    implementation("io.realm.kotlin:library-base:0.9.0")
+    implementation("io.realm.kotlin:library-base:0.10.0")
     testImplementation(kotlin("test-junit"))
 }
 tasks.withType<KotlinCompile>() {

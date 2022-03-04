@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import io.realm.example.kmmsample.Calculator
 import io.realm.example.kmmsample.Greeting
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 fun greet(): String {

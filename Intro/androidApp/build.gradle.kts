@@ -27,7 +27,6 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.3.0")
     implementation("androidx.constraintlayout:constraintlayout:2.0.4")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
-    compileOnly("io.realm.kotlin:library:0.4.1")
 }
 
 android {

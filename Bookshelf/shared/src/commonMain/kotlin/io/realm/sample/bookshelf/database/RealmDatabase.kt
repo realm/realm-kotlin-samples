@@ -19,10 +19,10 @@ package io.realm.sample.bookshelf.database
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import io.realm.RealmResults
-import io.realm.delete
 import io.realm.query
 import io.realm.sample.bookshelf.model.Book
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class RealmDatabase {
 
@@ -36,11 +36,11 @@ class RealmDatabase {
     }
 
     fun getAllBooksAsFlow(): Flow<List<Book>> {
-        return realm.query<Book>().asFlow()
+        return realm.query<Book>().asFlow().map { it.list }
     }
 
-    fun getAllBooksAsCommonFlow(): CFlow<RealmResults<Book>> {
-        return realm.query<Book>().asFlow().wrap()
+    fun getAllBooksAsCommonFlow(): CFlow<List<Book>> {
+        return getAllBooksAsFlow().wrap()
     }
 
     fun getBooksByTitle(title: String): List<Book> {
@@ -48,11 +48,11 @@ class RealmDatabase {
     }
 
     fun getBooksByTitleAsFlow(title: String): Flow<List<Book>> {
-        return realm.query<Book>("title = $0", title).asFlow()
+        return realm.query<Book>("title = $0", title).asFlow().map { it.list }
     }
 
-    fun getBooksByTitleAsCommonFlow(title: String): CFlow<RealmResults<Book>> {
-        return realm.query<Book>("title = $0", title).asFlow().wrap()
+    fun getBooksByTitleAsCommonFlow(title: String): CFlow<List<Book>> {
+        return getBooksByTitleAsFlow(title).wrap()
     }
 
     fun addBook(book: Book) {
@@ -66,15 +66,14 @@ class RealmDatabase {
             query<Book>("title = $0", title)
                 .first()
                 .find()
-                ?.let { findLatest(it) }
-                ?.delete()
+                ?.let { delete(it) }
                 ?: throw IllegalStateException("Book not found.")
         }
     }
 
     fun clearAllBooks() {
         realm.writeBlocking {
-            query<Book>().find().delete()
+            delete(query<Book>())
         }
     }
 }
