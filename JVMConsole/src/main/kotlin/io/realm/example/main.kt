@@ -17,8 +17,10 @@ fun main(args: Array<String>) {
 }
 
 class Author : RealmObject {
-    var firstName: String? = ""
-    var lastName: String? = ""
+    var firstName: String? = "firstName constructor value"
+        get() = "firstName overridden value"
+
+    var lastName: String? = "lastName constructor value"
     var age: Int? = 0
 }
 
@@ -63,7 +65,9 @@ class AuthorsREPL(private val realm: Realm) {
         val headers = arrayOf("First Name", "Last Name", "Age")
         val authors: RealmResults<Author> = realm.query<Author>().find()
         if (authors.isNotEmpty()) {
-           val persistedAuthors =  mutableListOf<Array<String>>().also { data ->
+            val managedAuthor = authors.first()
+            // Add a breaking point on the next line
+            val persistedAuthors = mutableListOf<Array<String>>().also { data ->
                 authors.map { author ->
                     arrayOf(author.firstName ?: "N/A", author.lastName ?: "N/A", author.age?.toString() ?: "N/A").also {
                         data.add(it)
