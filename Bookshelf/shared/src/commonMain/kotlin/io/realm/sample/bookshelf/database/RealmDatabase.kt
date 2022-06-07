@@ -16,10 +16,10 @@
 
 package io.realm.sample.bookshelf.database
 
-import io.realm.Realm
-import io.realm.RealmConfiguration
-import io.realm.RealmResults
-import io.realm.query
+import io.realm.kotlin.Realm
+import io.realm.kotlin.RealmConfiguration
+import io.realm.kotlin.query.RealmResults
+import io.realm.kotlin.ext.query
 import io.realm.sample.bookshelf.model.Book
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -27,7 +27,7 @@ import kotlinx.coroutines.flow.map
 class RealmDatabase {
 
     val realm: Realm by lazy {
-        val configuration = RealmConfiguration.with(schema = setOf(Book::class))
+        val configuration = RealmConfiguration.create(schema = setOf(Book::class))
         Realm.open(configuration)
     }
 

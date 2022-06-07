@@ -15,19 +15,20 @@
  */
 package io.realm.kotlin.demo.model
 
-import io.realm.Realm
-import io.realm.internal.platform.runBlocking
+import io.realm.kotlin.Realm
+import io.realm.kotlin.internal.platform.runBlocking
 import io.realm.kotlin.demo.model.entity.Counter
 import io.realm.kotlin.demo.util.Constants.MONGODB_REALM_APP_ID
 import io.realm.kotlin.demo.util.Constants.MONGODB_REALM_APP_PASSWORD
 import io.realm.kotlin.demo.util.Constants.MONGODB_REALM_APP_USER
-import io.realm.log.LogLevel
-import io.realm.mongodb.App
-import io.realm.mongodb.AppConfiguration
-import io.realm.mongodb.Credentials
-import io.realm.mongodb.SyncConfiguration
-import io.realm.notifications.SingleQueryChange
-import io.realm.query
+import io.realm.kotlin.log.LogLevel
+import io.realm.kotlin.mongodb.App
+import io.realm.kotlin.mongodb.AppConfiguration
+import io.realm.kotlin.mongodb.Credentials
+import io.realm.kotlin.mongodb.sync.SyncConfiguration
+import io.realm.kotlin.mongodb.syncSession
+import io.realm.kotlin.notifications.SingleQueryChange
+import io.realm.kotlin.ext.query
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -41,7 +42,7 @@ class CounterRepository {
     private var realm: Realm
     private val counterObj: Counter
 
-    private val app: App = App.create(AppConfiguration.Builder(MONGODB_REALM_APP_ID).build())
+    private val app: App = App.create(AppConfiguration.Builder(MONGODB_REALM_APP_ID).log(LogLevel.ALL).build())
 
     init {
         realm = runBlocking {

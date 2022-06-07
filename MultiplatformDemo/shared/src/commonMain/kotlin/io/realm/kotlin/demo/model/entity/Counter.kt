@@ -15,10 +15,10 @@
  */
 package io.realm.kotlin.demo.model.entity
 
-import io.realm.RealmList
-import io.realm.RealmObject
-import io.realm.annotations.PrimaryKey
-import io.realm.realmListOf
+import io.realm.kotlin.types.RealmList
+import io.realm.kotlin.types.RealmObject
+import io.realm.kotlin.types.annotations.PrimaryKey
+import io.realm.kotlin.ext.realmListOf
 
 class Counter: RealmObject {
     @PrimaryKey

@@ -17,17 +17,16 @@
 
 package io.realm.example.kmmsample
 
-import io.realm.Realm
-import io.realm.RealmConfiguration
-import io.realm.RealmResults
-import io.realm.query
+import io.realm.kotlin.Realm
+import io.realm.kotlin.RealmConfiguration
+import io.realm.kotlin.ext.query
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class ExpressionRepository {
 
     val realm: Realm by lazy {
-        val configuration = RealmConfiguration.with(schema = setOf(Expression::class))
+        val configuration = RealmConfiguration.create(schema = setOf(Expression::class))
         Realm.open(configuration)
     }
 

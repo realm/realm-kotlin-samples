@@ -15,11 +15,11 @@
  */
 package io.realm.kotlin.demo.model
 
-import io.realm.Realm
-import io.realm.RealmConfiguration
+import io.realm.kotlin.Realm
+import io.realm.kotlin.RealmConfiguration
 import io.realm.kotlin.demo.model.entity.Counter
-import io.realm.notifications.SingleQueryChange
-import io.realm.query
+import io.realm.kotlin.notifications.SingleQueryChange
+import io.realm.kotlin.ext.query
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

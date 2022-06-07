@@ -16,7 +16,7 @@
 
 package io.realm.sample.bookshelf.network
 
-import io.realm.realmListOf
+import io.realm.kotlin.ext.realmListOf
 import io.realm.sample.bookshelf.model.Book
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

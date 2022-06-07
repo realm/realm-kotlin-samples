@@ -8,10 +8,10 @@ plugins {
 // marker interface so would need to be added to the classpath manually anyway.
 buildscript {
     dependencies {
-        classpath("io.realm.kotlin:gradle-plugin:0.10.0")
+        classpath("io.realm.kotlin:gradle-plugin:1.0.0")
     }
 }
-rootProject.extra["realmVersion"] = "0.10.0"
+rootProject.extra["realmVersion"] = "1.0.0"
 
 group = "io.realm.example"
-version = "0.10.0"
+version = "1.0.0"
