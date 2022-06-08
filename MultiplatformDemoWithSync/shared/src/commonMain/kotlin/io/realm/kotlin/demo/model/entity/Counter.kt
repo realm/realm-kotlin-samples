@@ -23,6 +23,5 @@ import io.realm.kotlin.ext.realmListOf
 class Counter: RealmObject {
     @PrimaryKey
     var _id: String = "primary"
-    var realm_id: String? = "demo-parition"
     var operations: RealmList<Int> = realmListOf()
 }

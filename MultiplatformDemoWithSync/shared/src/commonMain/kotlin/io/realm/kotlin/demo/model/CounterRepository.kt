@@ -42,7 +42,7 @@ class CounterRepository {
     private var realm: Realm
     private val counterObj: Counter
 
-    private val app: App = App.create(AppConfiguration.Builder(MONGODB_REALM_APP_ID).log(LogLevel.ALL).build())
+    private val app: App = App.create(AppConfiguration.Builder(MONGODB_REALM_APP_ID).build())
 
     init {
         realm = runBlocking {
@@ -51,7 +51,7 @@ class CounterRepository {
             val config = SyncConfiguration.Builder(
                 schema = setOf(Counter::class),
                 user = user,
-                partitionValue = "demo-parition",
+                partitionValue = "demo-partition",
             )
                 .log(LogLevel.ALL)
                 .build()

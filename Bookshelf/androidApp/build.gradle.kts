@@ -16,7 +16,7 @@ dependencies {
     implementation(project(":shared"))
     implementation("androidx.constraintlayout:constraintlayout:2.1.2")
     implementation("androidx.compose.compiler:compiler:$compose_version")
-    compileOnly("io.realm.kotlin:library-base:1.0.0")
+    compileOnly("io.realm.kotlin:library-base:${rootProject.extra["realmVersion"]}")
 
     implementation("androidx.core:core-ktx:1.7.0")
     implementation("androidx.appcompat:appcompat:1.4.0")
