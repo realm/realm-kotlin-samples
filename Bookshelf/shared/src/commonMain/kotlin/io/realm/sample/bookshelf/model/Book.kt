@@ -16,9 +16,9 @@
 
 package io.realm.sample.bookshelf.model
 
-import io.realm.RealmList
-import io.realm.RealmObject
-import io.realm.realmListOf
+import io.realm.kotlin.types.RealmList
+import io.realm.kotlin.types.RealmObject
+import io.realm.kotlin.ext.realmListOf
 
 class Book : RealmObject {
 

@@ -8,13 +8,15 @@ val compose_version = "1.2.0-alpha01"
 repositories {
     google()
     mavenCentral()
+    // Only required for realm-kotlin snapshots
+    maven("https://oss.sonatype.org/content/repositories/snapshots")
 }
 
 dependencies {
     implementation(project(":shared"))
     implementation("androidx.constraintlayout:constraintlayout:2.1.2")
     implementation("androidx.compose.compiler:compiler:$compose_version")
-    compileOnly("io.realm.kotlin:library:0.4.1")
+    compileOnly("io.realm.kotlin:library-base:${rootProject.extra["realmVersion"]}")
 
     implementation("androidx.core:core-ktx:1.7.0")
     implementation("androidx.appcompat:appcompat:1.4.0")

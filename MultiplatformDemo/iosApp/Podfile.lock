@@ -1,5 +1,5 @@
 PODS:
-  - shared (0.10.0)
+  - shared (1.0.0)
 
 DEPENDENCIES:
   - shared (from `../shared`)

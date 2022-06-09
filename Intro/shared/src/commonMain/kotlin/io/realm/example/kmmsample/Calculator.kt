@@ -18,7 +18,7 @@
 
 package io.realm.example.kmmsample
 
-import io.realm.RealmResults
+import io.realm.kotlin.query.RealmResults
 import kotlinx.coroutines.flow.Flow
 
 class Calculator private constructor() {

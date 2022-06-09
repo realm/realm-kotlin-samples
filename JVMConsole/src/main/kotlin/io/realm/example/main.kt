@@ -1,15 +1,15 @@
 package io.realm.example
 
 import com.jakewharton.fliptables.FlipTableConverters
-import io.realm.Realm
-import io.realm.RealmConfiguration
-import io.realm.RealmObject
-import io.realm.query
-import io.realm.RealmResults
+import io.realm.kotlin.Realm
+import io.realm.kotlin.RealmConfiguration
+import io.realm.kotlin.types.RealmObject
+import io.realm.kotlin.ext.query
+import io.realm.kotlin.query.RealmResults
 import kotlin.system.exitProcess
 
 fun main(args: Array<String>) {
-    val realmConfiguration = RealmConfiguration.with(schema = setOf(Author::class))
+    val realmConfiguration = RealmConfiguration.create(schema = setOf(Author::class))
     val realm = Realm.open(realmConfiguration)
     AuthorsREPL(realm).start()
     realm.close()
