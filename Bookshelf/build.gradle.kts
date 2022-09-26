@@ -11,7 +11,7 @@ buildscript {
         classpath("io.realm.kotlin:gradle-plugin:1.0.0")
     }
 }
-rootProject.extra["realmVersion"] = "1.0.0"
+rootProject.extra["realmVersion"] = "1.1.0"
 
 allprojects {
     group = "io.realm.sample.bookshelf"
