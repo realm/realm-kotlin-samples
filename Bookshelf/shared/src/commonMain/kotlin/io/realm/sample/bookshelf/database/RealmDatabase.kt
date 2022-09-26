@@ -39,7 +39,7 @@ class RealmDatabase {
         return realm.query<Book>().asFlow().map { it.list }
     }
 
-    fun getAllBooksAsCommonFlow(): CFlow<List<Book>> {
+    fun getAllBooksAsCommonFlow(): Flow<List<Book>> {
         return getAllBooksAsFlow().wrap()
     }
 
