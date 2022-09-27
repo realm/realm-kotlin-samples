@@ -18,7 +18,7 @@ package io.realm.kotlin.demo.util
 /**
  * Replace with your own App's credentials to enable Sync.
  * To setup the Realm Sync App on MongoDB Atlas follow the steps here
- * https://docs.mongodb.com/realm/tutorial/realm-app/ or watch the video tutorial https://www.youtube.com/watch?v=lqo0Yf7lnyg
+ * https://www.mongodb.com/docs/atlas/tutorial/create-atlas-account/ or watch the video tutorial https://www.youtube.com/watch?v=lqo0Yf7lnyg
  */
 object Constants {
     val MONGODB_REALM_APP_ID = "[REPLACE ME]"

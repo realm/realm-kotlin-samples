@@ -8,7 +8,7 @@ The demo demonstrates [Sync](https://www.mongodb.com/realm/mobile/sync) capabili
 
 ## 1 - Create a Realm Sync App on MongoDB Atlas
 
-- Follow the tutorial at https://docs.mongodb.com/realm/tutorial/realm-app/#a.-create-an-atlas-account or watch the screencast https://www.youtube.com/watch?v=lqo0Yf7lnyg
+- Follow the tutorial at https://www.mongodb.com/docs/atlas/tutorial/create-atlas-account/ or watch the screencast https://www.youtube.com/watch?v=lqo0Yf7lnyg
 
 - Replace the App identifier and the created user/password in [shared/src/commonMain/kotlin/io/realm/kotlin/demo/util/Constants.kt](./shared/src/commonMain/kotlin/io/realm/kotlin/demo/util/Constants.kt)
 
