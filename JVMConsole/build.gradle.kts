@@ -10,7 +10,7 @@ buildscript {
         classpath("io.realm.kotlin:gradle-plugin:1.0.0")
     }
 }
-rootProject.extra["realmVersion"] = "1.0.0"
+rootProject.extra["realmVersion"] = "1.1.0"
 
 apply(plugin = "io.realm.kotlin")
 
