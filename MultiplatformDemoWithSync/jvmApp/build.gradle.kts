@@ -2,7 +2,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm")
-    id("org.jetbrains.compose") version "1.0.1-rc2"
+    // JetBrains Compose Version: https://plugins.gradle.org/plugin/org.jetbrains.compose
+    id("org.jetbrains.compose") version "1.2.0-beta01"
     application
 }
 
@@ -15,7 +16,7 @@ repositories {
 dependencies {
     implementation(compose.desktop.currentOs)
     implementation(project(":shared"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0-native-mt") {
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3-native-mt") {
         version {
             strictly("1.6.0-native-mt")
         }

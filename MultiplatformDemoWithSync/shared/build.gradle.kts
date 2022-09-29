@@ -10,15 +10,15 @@ plugins {
 version = "1.0"
 
 kotlin {
+    // iosSimulatorArm64, iosArm64 and macosArm64 are disabled because they are not supported
+    // by Ktor 1.*. This means that Apple Silicon machines must run the x86_64 variant with
+    // Rosetta enabled.
     android()
-
-    val iosTarget: (String, KotlinNativeTarget.() -> Unit) -> KotlinNativeTarget = when {
-        System.getenv("SDK_NAME")?.startsWith("iphoneos") == true -> ::iosArm64
-        else -> ::iosX64
-    }
-
-    iosTarget("ios") {}
-    macosX64("macos") {}
+    iosX64()
+    // iosArm64()
+    // iosSimulatorArm64()
+    macosX64()
+    // macosArm64()
     jvm {}
 
     cocoapods {
@@ -26,7 +26,9 @@ kotlin {
         homepage = "https://github.com/realm/realm-kotlin"
         ios.deploymentTarget = "14.1"
         osx.deploymentTarget = "11.0"
-        frameworkName = "shared"
+        framework {
+            baseName = "shared"
+        }
     }
 
     sourceSets {
@@ -43,28 +45,40 @@ kotlin {
             }
         }
         val androidMain by getting
-        val androidAndroidTestRelease by getting
-        val androidTest by getting {
-            dependsOn(androidAndroidTestRelease)
-            dependencies {
-                implementation(kotlin("test-junit"))
-                implementation("junit:junit:4.13.2")
-            }
+        val androidTest by getting
+        val iosX64Main by getting
+        // val iosArm64Main by getting
+        // val iosSimulatorArm64Main by getting
+        val iosMain by creating {
+            dependsOn(commonMain)
+            iosX64Main.dependsOn(this)
+            // iosArm64Main.dependsOn(this)
+            // iosSimulatorArm64Main.dependsOn(this)
         }
-
-        val iosMain by getting
-        val iosTest by getting
-        val macosMain by getting
-        val macosTest by getting
-        val jvmMain by getting
+        val iosX64Test by getting
+        // val iosArm64Test by getting
+        // val iosSimulatorArm64Test by getting
+        val iosTest by creating {
+            dependsOn(commonTest)
+            iosX64Test.dependsOn(this)
+            // iosArm64Test.dependsOn(this)
+            // iosSimulatorArm64Test.dependsOn(this)
+        }
+        val macosX64Main by getting
+        // val macosArm64Main by getting
+        val macosMain by creating {
+            dependsOn(commonMain)
+            macosX64Main.dependsOn(this)
+            // macosArm64Main.dependsOn(this)
+        }
     }
 }
 
 android {
-    compileSdk= 30
+    compileSdk= 33
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
         minSdk = 21
-        targetSdk = 30
+        targetSdk = 33
     }
 }

@@ -27,6 +27,23 @@ pod install
 open iosApp.xcworkspace
 ```
 
+If running on Apple Silicon, Rosetta 2 is currently required. It can be installed by running this
+from the terminal:
+
+```
+softwareupdate -–install-rosetta -–agree-to-license
+```
+
+You will also need to change the architecture of the ios app. This is done this way:
+
+1. Open `iosApp.xcworkspace`.
+2. Select `iosApp` in the project view.
+3. Select `Build Settings`
+4. Change the `architectures` field from `$(ARCHS_STANDARD)` to `x86_64` 
+
+It will also be impossible to run the iosApp from Android Studio. Instead it should be launched
+from XCode. 
+
 ## 4 - Build and run for macOS
 
 ```
@@ -35,6 +52,17 @@ cd macosApp
 pod install
 open macosApp.xcworkspace
 ```
+
+If running on Apple Silicon, Rosetta 2 is currently required. It can be installed by running this
+from the terminal:
+
+```
+softwareupdate -–install-rosetta -–agree-to-license
+```
+
+You will also need to select the `My Mac (Rosetta)` run target instead of the default `My Mac` in
+XCode.
+
 
 ## 5 - Build and run for JVM
 

@@ -16,19 +16,18 @@
 package io.realm.kotlin.demo.model
 
 import io.realm.kotlin.Realm
-import io.realm.kotlin.internal.platform.runBlocking
 import io.realm.kotlin.demo.model.entity.Counter
 import io.realm.kotlin.demo.util.Constants.MONGODB_REALM_APP_ID
 import io.realm.kotlin.demo.util.Constants.MONGODB_REALM_APP_PASSWORD
 import io.realm.kotlin.demo.util.Constants.MONGODB_REALM_APP_USER
+import io.realm.kotlin.ext.query
+import io.realm.kotlin.internal.platform.runBlocking
 import io.realm.kotlin.log.LogLevel
 import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.mongodb.AppConfiguration
 import io.realm.kotlin.mongodb.Credentials
 import io.realm.kotlin.mongodb.sync.SyncConfiguration
-import io.realm.kotlin.mongodb.syncSession
 import io.realm.kotlin.notifications.SingleQueryChange
-import io.realm.kotlin.ext.query
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -36,38 +35,37 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 /**
- * Repository class. Responsible for storing the io.realm.kotlin.demo.model.entity.Counter and expose updates to it.
+ * Repository class. Responsible for storing the io.realm.kotlin.demo.model.entity.Counter and
+ * expose updates to it.
  */
 class CounterRepository {
-    private var realm: Realm
-    private val counterObj: Counter
 
-    private val app: App = App.create(AppConfiguration.Builder(MONGODB_REALM_APP_ID).build())
+    private var realm: Realm
+
+    private val appConfiguration = AppConfiguration.Builder(MONGODB_REALM_APP_ID)
+        .log(level = LogLevel.ALL)
+        .build()
+    private val app: App = App.create(appConfiguration)
 
     init {
+        // TODO Bad practise to use runBlocking here
         realm = runBlocking {
             // Enable Realm with Sync support
             val user = app.login(Credentials.emailPassword(MONGODB_REALM_APP_USER, MONGODB_REALM_APP_PASSWORD))
-            val config = SyncConfiguration.Builder(
-                schema = setOf(Counter::class),
-                user = user,
-                partitionValue = "demo-partition",
-            )
-                .log(LogLevel.ALL)
+            val config = SyncConfiguration.Builder(schema = setOf(Counter::class), user = user)
+                .initialSubscriptions { realm: Realm ->
+                    // We only subscribe to a single object.
+                    // The Counter object will have the _id of the user.
+                    add(realm.query<Counter>("_id = $0", user.id))
+                }
+                .initialData {
+                    // Create the initial counter object if needed. This allow the Realm to be
+                    // opened and used while the device is offline.
+                    copyToRealm(Counter(user.id))
+                }
+                .log(level = LogLevel.ALL)
                 .build()
-
             Realm.open(config)
-        }
-
-        // With no support for setting up initial values, we just do it manually.
-        // WARNING: Writing directly on the UI thread is not encouraged.
-        counterObj = realm.writeBlocking {
-            val objects = query<Counter>().find()
-            when (objects.size) {
-                0 -> copyToRealm(Counter())
-                1 -> objects.first()
-                else -> throw IllegalStateException("Too many counters: ${objects.size}")
-            }
         }
     }
 
@@ -77,8 +75,9 @@ class CounterRepository {
     fun adjust(change: Int) {
         CoroutineScope(Dispatchers.Default).launch {
             realm.write {
-                findLatest(counterObj)?.run {
-                    operations.add(change)
+                val userId = app.currentUser?.id ?: throw IllegalStateException("No user found")
+                query<Counter>("_id = $0", userId).first().find()?.run {
+                    value.increment(change)
                 } ?: println("Could not update io.realm.kotlin.demo.model.entity.Counter")
             }
         }
@@ -88,9 +87,10 @@ class CounterRepository {
      * Listen to changes to the counter.
      */
     fun observeCounter(): Flow<Long> {
-        return realm.query<Counter>("_id = 'primary'").first().asFlow()
-            .map { it: SingleQueryChange<Counter> ->
-                it.obj?.operations!!.fold(0L,) { sum, el -> sum + el }
+        val userId = app.currentUser?.id ?: throw IllegalStateException("No user found")
+        return realm.query<Counter>("_id = $0", userId).first().asFlow()
+            .map { change: SingleQueryChange<Counter> ->
+                change.obj?.value?.toLong() ?: 0
             }
     }
 }
