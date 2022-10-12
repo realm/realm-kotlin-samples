@@ -16,26 +16,36 @@
 
 package io.realm.sample.bookshelf.network
 
-import io.ktor.client.*
-import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.features.json.serializer.*
-import io.ktor.client.request.*
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.HttpRequestBuilder
+import io.ktor.client.request.get
+import io.ktor.client.request.request
+import io.ktor.client.statement.HttpResponse
+import io.ktor.http.HttpMethod
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.serializer
 
 class OpenLibraryApi {
 
     private val httpClient by lazy {
         HttpClient {
-            install(JsonFeature) {
-                val json =
-                    Json { ignoreUnknownKeys = true; isLenient = true; useAlternativeNames = false }
-                serializer = KotlinxSerializer(json)
+            install(ContentNegotiation) {
+                json(Json {
+                    ignoreUnknownKeys = true
+                    prettyPrint = true
+                    isLenient = true
+                    useAlternativeNames = true
+                })
             }
         }
     }
 
     suspend fun findBook(title: String): SearchResult {
-        return httpClient.get("$BOOK_SEARCH_ENDPOINT${title}&limit=10")
+        return httpClient.get("$BOOK_SEARCH_ENDPOINT${title}&limit=10").body()
     }
 
     companion object {
