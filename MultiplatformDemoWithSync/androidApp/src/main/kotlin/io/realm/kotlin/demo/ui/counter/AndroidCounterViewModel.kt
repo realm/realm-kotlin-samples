@@ -17,10 +17,14 @@ package io.realm.kotlin.demo.ui.counter
 
 import androidx.lifecycle.ViewModel
 import io.realm.kotlin.demo.util.CommonFlow
+import io.realm.kotlin.demo.util.CommonStateFlow
 
 class AndroidCounterViewModel: CounterViewModel, ViewModel() {
     private val vm = SharedCounterViewModel()
     override fun observeCounter(): CommonFlow<String> = vm.observeCounter()
+    override fun observeWifiState(): CommonStateFlow<Boolean> = vm.observeWifiState()
+    override fun enableWifi() = vm.enableWifi()
+    override fun disableWifi() = vm.disableWifi()
     override fun increment() = vm.increment()
     override fun decrement() = vm.decrement()
 

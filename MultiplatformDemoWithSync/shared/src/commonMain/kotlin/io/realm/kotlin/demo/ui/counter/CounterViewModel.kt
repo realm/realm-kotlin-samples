@@ -17,6 +17,7 @@ package io.realm.kotlin.demo.ui.counter
 
 import io.realm.kotlin.demo.ui.SharedViewModel
 import io.realm.kotlin.demo.util.CommonFlow
+import io.realm.kotlin.demo.util.CommonStateFlow
 
 /**
  * Interface describing the ViewModel on both the `shared` and `platform` side.
@@ -27,4 +28,7 @@ interface CounterViewModel: SharedViewModel {
     fun observeCounter(): CommonFlow<String>
     fun increment()
     fun decrement()
+    fun observeWifiState(): CommonStateFlow<Boolean>
+    fun enableWifi()
+    fun disableWifi()
 }

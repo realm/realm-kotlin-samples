@@ -25,10 +25,13 @@ import io.realm.kotlin.internal.platform.runBlocking
 import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.mongodb.Credentials
 import io.realm.kotlin.mongodb.sync.SyncConfiguration
+import io.realm.kotlin.mongodb.syncSession
 import io.realm.kotlin.notifications.SingleQueryChange
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
@@ -40,6 +43,7 @@ class CounterRepository {
 
     private var realm: Realm
     private val app: App = App.create(MONGODB_REALM_APP_ID)
+    private var syncEnabled: MutableStateFlow<Boolean> = MutableStateFlow(true)
 
     init {
         // It is bad practise to use runBlocking here. Instead we should have a dedicated login
@@ -87,5 +91,22 @@ class CounterRepository {
             .map { change: SingleQueryChange<Counter> ->
                 change.obj?.value?.toLong() ?: 0
             }
+    }
+
+    fun observeSyncConnection(): StateFlow<Boolean> {
+        return syncEnabled
+    }
+
+    fun enableSync(enabled: Boolean) {
+        when(enabled) {
+            false -> {
+                realm.syncSession.pause()
+                syncEnabled.value = false
+            }
+            true -> {
+                realm.syncSession.resume()
+                syncEnabled.value = true
+            }
+        }
     }
 }

@@ -2,8 +2,6 @@
 //  ViewModel.swift
 //  macosApp
 //
-//  Created by Christian Melchior on 24/09/2021.
-//
 import Foundation
 import Combine
 import shared
@@ -24,8 +22,20 @@ class ObservableViewModel {
 
 class MacOSCounterViewModel: ObservableViewModel, ObservableObject {
     @Published var counter: String = "-"
-    private let vm: SharedCounterViewModel = SharedCounterViewModel()
+    @Published var wifiEnabled: Bool = true
 
+    private let vm: SharedCounterViewModel = SharedCounterViewModel()
+        
+    override init() {
+        super.init()
+        start()
+    }
+    
+    deinit {
+        super.stop()
+        vm.close()
+    }
+    
     func platform() -> String {
         return vm.platform
     }
@@ -38,14 +48,24 @@ class MacOSCounterViewModel: ObservableViewModel, ObservableObject {
         vm.decrement()
     }
     
+    func disableWifi() {
+        vm.disableWifi()
+    }
+    
+    func enableWifi() {
+        vm.enableWifi()
+    }
+    
     func start() {
         addObserver(observer: vm.observeCounter().watch { counterValue in
             self.counter = counterValue! as String
         })
-    }
-    
-    override func stop() {
-        super.stop()
-        vm.close()
+        addObserver(observer: vm.observeWifiState().watch { wifiEnabled in
+            if (wifiEnabled!.boolValue) {
+                self.wifiEnabled = true
+            } else {
+                self.wifiEnabled = false
+            }
+        })
     }
 }

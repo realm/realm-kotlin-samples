@@ -15,16 +15,23 @@
  */
 package io.realm.kotlin.demo
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
@@ -51,6 +58,9 @@ fun main() {
                             vm.decrement()
                         }
                     }
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                        ConnectionButton(vm)
+                    }
                     Box(Modifier.fillMaxSize()) {
                         val state: String by vm.observeCounter()
                             .collectAsState(initial = "-")
@@ -75,4 +85,36 @@ private fun CounterButton(modifier: Modifier = Modifier, action: () -> Unit) {
             action()
         }
     )
+}
+
+@Composable
+fun ConnectionButton(vm: SharedCounterViewModel) {
+    val wifiEnabled: Boolean by vm.observeWifiState().collectAsState()
+    val data: Pair<String, String> by remember {
+        derivedStateOf {
+            when (wifiEnabled) {
+                true -> Pair("wifi.xml", "Wifi enabled. Click to disable.")
+                false -> Pair("wifi_off.xml", "Wifi disabled. Click to enabled.")
+            }
+        }
+    }
+    Box(modifier = Modifier
+        .clip(CircleShape)
+        .clickable {
+            if (wifiEnabled) {
+                vm.disableWifi()
+            } else {
+                vm.enableWifi()
+            }
+        }) {
+        Image(
+            modifier = Modifier
+                .width(80.dp)
+                .height(80.dp)
+                .padding(16.dp),
+            contentScale = ContentScale.FillBounds,
+            painter = painterResource(resourcePath = data.first),
+            contentDescription = data.second
+        )
+    }
 }

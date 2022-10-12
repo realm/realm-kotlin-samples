@@ -2,8 +2,6 @@
 //  ContentView.swift
 //  macosApp
 //
-//  Created by Christian Melchior on 24/09/2021.
-//
 import SwiftUI
 import shared
 
@@ -22,7 +20,7 @@ struct ContentView: View {
                     minWidth: screen.width,
                     minHeight: screen.height
                 )
-
+            
             VStack(spacing: 0) {
                 CounterButton(screen: screen, action:{
                     viewModel.increment()
@@ -39,13 +37,22 @@ struct ContentView: View {
             Text(viewModel.counter)
                 .fontWeight(.bold)
                 .font(.system(size: 150))
-
-        }
-        .onAppear {
-            viewModel.start()
-        }
-        .onDisappear {
-            viewModel.stop()
+            
+            ZStack(alignment: .topTrailing) {
+                Button {
+                    if (viewModel.wifiEnabled) {
+                        viewModel.disableWifi()
+                    } else {
+                        viewModel.enableWifi()
+                    }
+                } label: {
+                    var image: String = viewModel.wifiEnabled ? "wifi_on": "wifi_off"
+                    Image(image)
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 48, height: 48)
+                }.padding(EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)).buttonStyle(BorderlessButtonStyle())
+            }.frame(minWidth: screen.width, minHeight: screen.height, alignment: .topTrailing)
         }
     }
 }
