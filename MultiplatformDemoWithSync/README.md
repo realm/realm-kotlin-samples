@@ -12,6 +12,8 @@ running between an Android, iOS, macOS and JVM app.
 - Follow the tutorial at https://www.mongodb.com/docs/atlas/tutorial/create-atlas-account/ or watch 
   the screencast https://www.youtube.com/watch?v=lqo0Yf7lnyg.
 
+- The App must be configured for Flexible Sync with Dev Mode enabled.
+
 - Replace the App identifier and the created user/password in 
   [shared/src/commonMain/kotlin/io/realm/kotlin/demo/util/Constants.kt](./shared/src/commonMain/kotlin/io/realm/kotlin/demo/util/Constants.kt)
 

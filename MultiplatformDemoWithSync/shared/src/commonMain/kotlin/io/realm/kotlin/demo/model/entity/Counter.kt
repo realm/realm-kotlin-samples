@@ -15,13 +15,17 @@
  */
 package io.realm.kotlin.demo.model.entity
 
-import io.realm.kotlin.types.RealmList
+import io.realm.kotlin.types.MutableRealmInt
 import io.realm.kotlin.types.RealmObject
 import io.realm.kotlin.types.annotations.PrimaryKey
-import io.realm.kotlin.ext.realmListOf
 
-class Counter: RealmObject {
+class Counter(userId: String): RealmObject {
+
+    // No-arg constructor required by Realm
+    @Suppress("unused")
+    constructor(): this("")
+
     @PrimaryKey
-    var _id: String = "primary"
-    var operations: RealmList<Int> = realmListOf()
+    var _id: String = userId
+    var value: MutableRealmInt = MutableRealmInt.create(0)
 }
