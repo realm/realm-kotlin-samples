@@ -17,7 +17,7 @@ dependencyResolutionManagement {
         maven("https://oss.sonatype.org/content/repositories/snapshots")
     }
 }
-rootProject.name = "Realm Kotlin Multiplatform Demo"
+rootProject.name = "Realm Kotlin Multiplatform Sync Demo"
 include(":androidApp")
 include(":jvmApp")
 include(":shared")

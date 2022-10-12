@@ -32,7 +32,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0-native-mt")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
                 implementation("io.realm.kotlin:library-sync:${rootProject.extra["realmVersion"]}")
             }
         }
@@ -43,9 +43,7 @@ kotlin {
             }
         }
         val androidMain by getting
-        val androidAndroidTestRelease by getting
         val androidTest by getting {
-            dependsOn(androidAndroidTestRelease)
             dependencies {
                 implementation(kotlin("test-junit"))
                 implementation("junit:junit:4.13.2")
@@ -61,10 +59,10 @@ kotlin {
 }
 
 android {
-    compileSdk= 30
+    compileSdk= 33
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
         minSdk = 21
-        targetSdk = 30
+        targetSdk = 33
     }
 }
