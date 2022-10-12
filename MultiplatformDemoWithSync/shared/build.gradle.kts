@@ -14,11 +14,15 @@ kotlin {
 
     val iosTarget: (String, KotlinNativeTarget.() -> Unit) -> KotlinNativeTarget = when {
         System.getenv("SDK_NAME")?.startsWith("iphoneos") == true -> ::iosArm64
+        System.getenv("NATIVE_ARCH")?.startsWith("arm") == true -> ::iosSimulatorArm64
         else -> ::iosX64
     }
-
     iosTarget("ios") {}
-    macosX64("macos") {}
+    val macosTarget: (String, KotlinNativeTarget.() -> Unit) -> KotlinNativeTarget = when {
+        System.getenv("NATIVE_ARCH")?.startsWith("arm") == true -> ::macosArm64
+        else -> ::macosX64
+    }
+    macosTarget("macos") {}
     jvm {}
 
     cocoapods {
