@@ -55,6 +55,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import io.realm.kotlin.demo.R
 import io.realm.kotlin.demo.theme.RealmColor
 import io.realm.kotlin.demo.theme.MyApplicationTheme
@@ -93,7 +94,8 @@ class CounterActivity : ComponentActivity() {
                         text = value,
                         modifier = Modifier.align(Alignment.Center),
                         style = MaterialTheme.typography.h1,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 150.sp
                     )
                 }
             }

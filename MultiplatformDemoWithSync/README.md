@@ -14,7 +14,9 @@ running between an Android, iOS, macOS and JVM app.
 
 - The App must be configured for Flexible Sync with Dev Mode enabled.
 
-- Replace the App identifier and the created user/password in 
+- A user must be created  under "App Users > Add New User". A fake email and password like "foo@bar.com" and "123456" can be used.
+
+- Insert the app identifier and the created user/password in 
   [shared/src/commonMain/kotlin/io/realm/kotlin/demo/util/Constants.kt](./shared/src/commonMain/kotlin/io/realm/kotlin/demo/util/Constants.kt)
 
 ## 2 - Build and run for Android
