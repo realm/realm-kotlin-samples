@@ -9,8 +9,7 @@ https://github.com/Kotlin/kmm-sample/blob/master/README.md
 ## Requirements
 
 - JDK 11
-- Android Studio [Bumblebee (2021.1.1) Beta 5](https://developer.android.com/studio/preview)
-- NOTE: The SDK doesn't currently support `x86` - Please use an `x86_64` or `arm64` emulator/device
+- Android Studio [Dolphin (2021.3.1)](https://developer.android.com/studio)
 
 ## Overview
 

@@ -3,7 +3,10 @@ plugins {
     kotlin("android")
 }
 
-val compose_version = "1.2.0-alpha01"
+// https://maven.google.com/web/index.html?q=compiler#androidx.compose.compiler:compiler
+val compose_compiler_version = "1.3.2"
+// https://maven.google.com/web/index.html?q=ui#androidx.compose.ui:ui
+val compose_ui_version = "1.3.0-rc01"
 
 repositories {
     google()
@@ -14,21 +17,21 @@ repositories {
 
 dependencies {
     implementation(project(":shared"))
-    implementation("androidx.constraintlayout:constraintlayout:2.1.2")
-    implementation("androidx.compose.compiler:compiler:$compose_version")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.compose.compiler:compiler:${compose_compiler_version}")
     compileOnly("io.realm.kotlin:library-base:${rootProject.extra["realmVersion"]}")
 
-    implementation("androidx.core:core-ktx:1.7.0")
-    implementation("androidx.appcompat:appcompat:1.4.0")
-    implementation("com.google.android.material:material:1.4.0")
-    implementation("androidx.compose.ui:ui:$compose_version")
-    implementation("androidx.compose.material:material:$compose_version")
-    implementation("androidx.compose.ui:ui-tooling:$compose_version")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0")
-    implementation("androidx.activity:activity-compose:1.4.0")
-    implementation("androidx.navigation:navigation-runtime-ktx:2.3.5")
-    implementation("androidx.navigation:navigation-compose:2.4.0-rc01")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.4.0")
+    implementation("androidx.core:core-ktx:1.9.0")
+    implementation("androidx.appcompat:appcompat:1.5.1")
+    implementation("com.google.android.material:material:1.6.1")
+    implementation("androidx.compose.ui:ui:$compose_ui_version")
+    implementation("androidx.compose.material:material:$compose_ui_version")
+    implementation("androidx.compose.ui:ui-tooling:$compose_ui_version")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")
+    implementation("androidx.activity:activity-compose:1.6.0")
+    implementation("androidx.navigation:navigation-runtime-ktx:2.5.2")
+    implementation("androidx.navigation:navigation-compose:2.6.0-alpha02")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.5.1")
 }
 
 android {
@@ -47,11 +50,11 @@ android {
 //            storePassword = "my keystore password"
 //        }
     }
-    compileSdk = 31
+    compileSdk = 33
     defaultConfig {
         applicationId = "io.realm.sample.bookshelf.android"
         minSdk = 21
-        targetSdk = 31
+        targetSdk = 33
         versionCode = 1
         versionName = "1.0"
     }
@@ -75,6 +78,6 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = compose_version
+        kotlinCompilerExtensionVersion = compose_compiler_version
     }
 }

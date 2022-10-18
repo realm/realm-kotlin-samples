@@ -88,9 +88,9 @@ fun BottomNavigation(
                     selected = currentScreen.name == screen.name,
                     onClick = {
                         // Detect patterns like "A-B-C-B" and pop to and get to A
-                        val immediateLoop = navController.backQueue.map { it.destination.route }
-                            .let { routes -> routes[routes.size - 2] }
-                            .equals(screen.name)
+                        val immediateLoop = navController.currentBackStack.value.map {
+                            it.destination.route
+                        }.let { routes -> routes[routes.size - 2] }.equals(screen.name)
 
                         navController.navigate(screen.name) {
                             if (immediateLoop) {

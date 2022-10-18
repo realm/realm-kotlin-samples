@@ -38,7 +38,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation("io.realm.kotlin:library-base:${rootProject.extra["realmVersion"]}")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0-native-mt")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
             }
         }
         val commonTest by getting {
@@ -49,13 +49,15 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
-                implementation("com.google.android.material:material:1.4.0")
+                implementation("com.google.android.material:material:1.6.1")
             }
         }
         val androidTest by getting {
             dependencies {
                 implementation(kotlin("test-junit"))
                 implementation("junit:junit:4.13.2")
+                implementation("androidx.test:runner:1.4.0")
+                implementation("androidx.test.ext:junit-ktx:1.1.3")
             }
         }
         val iosX64Main by getting
@@ -79,11 +81,12 @@ kotlin {
     }
 }
 android {
-    compileSdk = 31
+    compileSdk = 33
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
-        minSdk = 16
-        targetSdk = 31
+        minSdk = 21
+        targetSdk = 33
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     // FIXME connectedAndroidTest does not trigger any test.
     // https://youtrack.jetbrains.com/issue/KT-35016

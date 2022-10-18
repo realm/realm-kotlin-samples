@@ -4,8 +4,7 @@ plugins {
     kotlin("multiplatform")
     kotlin("native.cocoapods")
     id("com.android.library")
-    id("kotlin-android-extensions")
-    kotlin("plugin.serialization") version "1.5.31"
+    kotlin("plugin.serialization") version "1.7.20"
     id("io.realm.kotlin")
 }
 
@@ -27,16 +26,16 @@ kotlin {
         frameworkName = "shared"
     }
 
-    val ktorVersion = "1.6.1"
-    val serializationVersion = "1.2.1"
-    val coroutinesVersion = "1.6.0-native-mt"
+    val ktorVersion = "2.1.2"
+    val coroutinesVersion = "1.6.4"
 
     sourceSets {
         val commonMain  by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion")
+                implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+                implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
                 implementation("io.ktor:ktor-client-serialization:$ktorVersion")
                 implementation("io.realm.kotlin:library-base:${rootProject.extra["realmVersion"]}")
             }
@@ -74,10 +73,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
-    compileSdk = 31
+    compileSdk = 33
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
         minSdk = 21
-        targetSdk =31
+        targetSdk = 33
     }
 }
