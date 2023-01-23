@@ -7,10 +7,10 @@ plugins {
 
 buildscript {
     dependencies {
-        classpath("io.realm.kotlin:gradle-plugin:1.4.0")
+        classpath("io.realm.kotlin:gradle-plugin:1.6.0-SNAPSHOT")
     }
 }
-rootProject.extra["realmVersion"] = "1.4.0"
+rootProject.extra["realmVersion"] = "1.6.0-SNAPSHOT"
 
 apply(plugin = "io.realm.kotlin")
 
