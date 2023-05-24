@@ -4,9 +4,9 @@ plugins {
 }
 
 // https://maven.google.com/web/index.html?q=compiler#androidx.compose.compiler:compiler
-val compose_compiler_version = "1.3.2"
+val compose_compiler_version = "1.4.6"
 // https://maven.google.com/web/index.html?q=ui#androidx.compose.ui:ui
-val compose_ui_version = "1.3.0-rc01"
+val compose_ui_version = "1.4.3"
 
 repositories {
     google()
