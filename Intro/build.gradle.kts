@@ -1,5 +1,5 @@
 plugins {
-    kotlin("multiplatform") version "1.7.20" apply false
+    kotlin("multiplatform") version "1.8.20" apply false
     id("com.android.library") version "7.3.0" apply false
 }
 
@@ -8,10 +8,10 @@ plugins {
 // marker interface so would need to be added to the classpath manually anyway.
 buildscript {
     dependencies {
-        classpath("io.realm.kotlin:gradle-plugin:1.6.0")
+        classpath("io.realm.kotlin:gradle-plugin:1.9.0")
     }
 }
-rootProject.extra["realmVersion"] = "1.6.0"
+rootProject.extra["realmVersion"] = "1.9.0"
 
 group = "io.realm.example"
 version = "1.0.0"

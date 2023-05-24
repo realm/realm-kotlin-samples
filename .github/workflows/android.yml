@@ -36,6 +36,12 @@ jobs:
       run: |
         chmod +x gradlew
         ./gradlew assemble  
+
+    - name: Building KMP Sync Demo
+      working-directory: ./MultiplatformDemoWithSync
+      run: |
+        chmod +x gradlew
+        ./gradlew assemble  
         
     - name: JVM Console
       working-directory: ./JVMConsole
