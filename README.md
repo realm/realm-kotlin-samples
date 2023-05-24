@@ -6,7 +6,7 @@ Each sample demonstrates different use cases.
 💻 Requirements
 ------------
 To try out these sample apps, clone the repository then import each project as an existing Android Studio project.
-Samples are based on Kotlin `1.7.20`.
+Samples are based on Kotlin `1.8.20`.
 
 🧬 Samples
 ------------
