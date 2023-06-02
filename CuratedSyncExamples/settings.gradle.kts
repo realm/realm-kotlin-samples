@@ -14,4 +14,3 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Curated sync examples"
 include(":app")
-include(":keystore")
