@@ -6,7 +6,6 @@ import io.realm.kotlin.types.annotations.PrimaryKey
 import org.mongodb.kbson.BsonObjectId
 import java.security.Key
 
-
 class Dog : RealmObject {
     @PersistedName("owner_id")
     var ownerId: String = ""

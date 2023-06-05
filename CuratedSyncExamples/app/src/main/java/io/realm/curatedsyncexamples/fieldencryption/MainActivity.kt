@@ -4,17 +4,31 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -25,6 +39,9 @@ import io.realm.curatedsyncexamples.fieldencryption.models.Dog
 import io.realm.curatedsyncexamples.fieldencryption.models.EncryptedStringField
 import io.realm.curatedsyncexamples.fieldencryption.models.cipherSpec
 import io.realm.curatedsyncexamples.fieldencryption.models.key
+import io.realm.curatedsyncexamples.fieldencryption.ui.LoginScreen
+import io.realm.curatedsyncexamples.fieldencryption.ui.NavGraph
+import io.realm.curatedsyncexamples.fieldencryption.ui.dogs.DogsViewModel
 import io.realm.curatedsyncexamples.ui.theme.CuratedSyncExamplesTheme
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
@@ -42,7 +59,7 @@ const val ANDROID_KEY_STORE_PROVIDER = "AndroidKeyStore"
 class MainActivity : ComponentActivity() {
     private lateinit var app: App
 
-    private val model: DogListViewModel by viewModels()
+    private val model: DogsViewModel by viewModels()
 
     private suspend fun getFieldLevelEncryptionKey(user: User, password: String) =
         AndroidKeyStoreHelper
@@ -64,16 +81,12 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             CuratedSyncExamplesTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    DogsScreen(model.dogs)
-                }
+                NavGraph()
             }
         }
+    }
 
+    private fun init() {
         app = application.app()
 
         runBlocking {
@@ -125,61 +138,5 @@ class MainActivity : ComponentActivity() {
                 }
             })
         }
-    }
-}
-
-class DogListViewModel : ViewModel() {
-    val dogs: MutableLiveData<List<Dog>> by lazy {
-        MutableLiveData<List<Dog>>()
-    }
-}
-
-@Composable
-fun DogsScreen(
-    dogsModel: LiveData<List<Dog>>
-) {
-    val dogs by dogsModel.observeAsState(emptyList())
-
-//    DogList(dogList = dogs)
-    LazyColumn {
-        items(
-            dogs,
-            key = {
-                it._id.toHexString()
-            }
-        ) { dog ->
-            Text(
-                text = dog.name!!.value
-            )
-        }
-    }
-}
-
-@Composable
-fun DogList(dogList: List<Dog>, modifier: Modifier = Modifier) {
-    LazyColumn(modifier = modifier) {
-        items(
-            dogList
-        ) { dog ->
-            Text(
-                text = dog.name!!.value,
-                modifier = modifier
-            )
-        }
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun DogListPreview() {
-    CuratedSyncExamplesTheme {
-        DogList(
-            listOf(
-                Dog().apply { name!!.value = "Tobby sdfasdfasdfas" },
-                Dog().apply { name!!.value = "Tango sdfasdfasdfas" },
-                Dog().apply { name!!.value = "Bobby sdfasdfasdfas" },
-            )
-        )
     }
 }
