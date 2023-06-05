@@ -2,7 +2,6 @@ package io.realm.curatedsyncexamples.fieldencryption.models
 
 import io.realm.kotlin.types.EmbeddedRealmObject
 import io.realm.kotlin.types.annotations.Ignore
-import java.nio.charset.StandardCharsets
 import java.security.Key
 import kotlin.reflect.KProperty
 
@@ -22,8 +21,7 @@ class EncryptedStringField : EmbeddedRealmObject {
     inner class DecryptionDelegate {
         operator fun getValue(thisRef: EncryptedStringField, property: KProperty<*>): String =
             String(
-                bytes = cipherSpec.decrypt(thisRef.encryptedValue, key),
-                charset = StandardCharsets.UTF_8
+                bytes = cipherSpec.decrypt(thisRef.encryptedValue, key)
             )
 
         operator fun setValue(
@@ -32,7 +30,7 @@ class EncryptedStringField : EmbeddedRealmObject {
             value: String
         ) {
             thisRef.encryptedValue = cipherSpec.encrypt(
-                input = value.toByteArray(StandardCharsets.UTF_8),
+                input = value.toByteArray(),
                 key = key
             )
         }

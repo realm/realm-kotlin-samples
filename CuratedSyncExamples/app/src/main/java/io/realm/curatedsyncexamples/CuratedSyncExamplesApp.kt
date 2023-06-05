@@ -9,7 +9,6 @@ class CuratedSyncExamplesApp: Application() {
 
     override fun onCreate() {
         super.onCreate()
-
         app = App.create("cypher-scjvs")
     }
 }

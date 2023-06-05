@@ -3,16 +3,18 @@ package io.realm.curatedsyncexamples
 import android.security.keystore.KeyProperties
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.realm.curatedsyncexamples.fieldencryption.ANDROID_KEY_STORE_PROVIDER
-import io.realm.curatedsyncexamples.fieldencryption.AndroidKeyStoreHelper
-import io.realm.curatedsyncexamples.fieldencryption.CipherSpec
-import io.realm.curatedsyncexamples.fieldencryption.EncryptionKeySpec
-import io.realm.curatedsyncexamples.fieldencryption.UserKeyStore
 import io.realm.curatedsyncexamples.fieldencryption.getKeyOrGenerate
+import io.realm.curatedsyncexamples.fieldencryption.models.AndroidKeyStoreHelper
+import io.realm.curatedsyncexamples.fieldencryption.models.CipherSpec
+import io.realm.curatedsyncexamples.fieldencryption.models.Dog
+import io.realm.curatedsyncexamples.fieldencryption.models.EncryptionKeySpec
+import io.realm.curatedsyncexamples.fieldencryption.models.UserKeyStore
+import io.realm.curatedsyncexamples.fieldencryption.models.key
+import io.realm.curatedsyncexamples.fieldencryption.models.cipherSpec as modelsCipherSpec
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.lang.IllegalArgumentException
 import java.security.KeyStore
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
@@ -31,7 +33,9 @@ const val ALGORITHM = "AES"
 
 @RunWith(AndroidJUnit4::class)
 class KeyHelperTests {
-    private val keyGenerator = KeyGenerator.getInstance(ALGORITHM)
+    private val keyGenerator = KeyGenerator.getInstance(ALGORITHM).apply {
+        init(128)
+    }
     private val keyStore = KeyStore.getInstance(ANDROID_KEY_STORE_PROVIDER).apply {
         load(null)
     }
@@ -63,12 +67,17 @@ class KeyHelperTests {
 
     @Test
     fun useAndroidKeyStoreKeyToEncryptDecrypt() = runTest {
-        val key = AndroidKeyStoreHelper
+        key = AndroidKeyStoreHelper
             .getKeyFromAndroidKeyStore(KEY_ALIAS) {
                 keyGenerator.generateKey()
             }
+        modelsCipherSpec = cipherSpec
 
-        cipherSpec.encrypt("helloworld".toByteArray(), key)
+        val dog = Dog().apply {
+            name!!.value = "testing a string"
+        }
+
+        assertEquals("testing a string", dog.name!!.value)
     }
 
     private val keySpec = EncryptionKeySpec(
@@ -82,7 +91,7 @@ class KeyHelperTests {
         algorithm = KeyProperties.KEY_ALGORITHM_AES,
         block = KeyProperties.BLOCK_MODE_CBC,
         padding = KeyProperties.ENCRYPTION_PADDING_PKCS7,
-        keyLength = 256
+        keyLength = 128
     )
 
     val userKeyStore = UserKeyStore(

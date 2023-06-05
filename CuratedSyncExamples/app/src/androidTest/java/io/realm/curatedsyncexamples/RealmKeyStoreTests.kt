@@ -1,7 +1,7 @@
 package io.realm.curatedsyncexamples
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import io.realm.curatedsyncexamples.fieldencryption.EncryptionKeySpec
+import io.realm.curatedsyncexamples.fieldencryption.models.EncryptionKeySpec
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith

@@ -3,6 +3,7 @@ package io.realm.curatedsyncexamples.fieldencryption.models
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import java.lang.Exception
 import java.security.Key
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
@@ -33,10 +34,15 @@ data class CipherSpec(
                 /* key = */ key,
                 /* params = */ IvParameterSpec(encryptedData, 0, IV_SIZE)
             )
-            doFinal(
-                /* input = */ encryptedData,
-                /* inputOffset = */ IV_SIZE,
-                /* inputLen = */ encryptedData.size - IV_SIZE
-            )
+            try {
+                doFinal(
+                    /* input = */ encryptedData,
+                    /* inputOffset = */ IV_SIZE,
+                    /* inputLen = */ encryptedData.size - IV_SIZE
+                )
+            } catch (e: Exception) {
+                byteArrayOf()
+            }
+
         }
 }

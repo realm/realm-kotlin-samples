@@ -68,7 +68,7 @@ fun MessageList(examplesList: Array<ExampleEntry>) {
 fun Greeting(name: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
     Button(onClick = onClick) {
         Text(
-            text = "$name",
+            text = name,
             modifier = modifier
         )
     }
