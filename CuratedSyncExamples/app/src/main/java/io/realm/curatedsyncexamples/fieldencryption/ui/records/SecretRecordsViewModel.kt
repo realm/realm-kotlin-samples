@@ -41,38 +41,40 @@ class SecretRecordsViewModel(
 
     init {
         viewModelScope.launch {
-            user = app.currentUser!!
-            cipherSpec = user.fieldEncryptionCipherSpec()
-            runBlocking {
-                key = getFieldLevelEncryptionKey(user, "password")
-            }
-
-            val syncConfig = SyncConfiguration
-                .Builder(app.currentUser!!, setOf(SecretRecord::class, EncryptedStringField::class))
-                .initialSubscriptions {
-                    // Subscribe to all secret records
-                    add(it.query<SecretRecord>())
+            app.currentUser?.let {
+                user = app.currentUser!!
+                cipherSpec = user.fieldEncryptionCipherSpec()
+                runBlocking {
+                    key = getFieldLevelEncryptionKey(user, "password")
                 }
-                .waitForInitialRemoteData()
-                .build()
 
-            realm = Realm.open(syncConfig)
-
-            val job = async {
-                realm.query<SecretRecord>()
-                    .asFlow()
-                    .collect {
-                        records.value = it.list
+                val syncConfig = SyncConfiguration
+                    .Builder(app.currentUser!!, setOf(SecretRecord::class, EncryptedStringField::class))
+                    .initialSubscriptions {
+                        // Subscribe to all secret records
+                        add(it.query<SecretRecord>())
                     }
-            }
+                    .waitForInitialRemoteData()
+                    .build()
 
-            addCloseable {
-                job.cancel()
-                realm.close()
-            }
+                realm = Realm.open(syncConfig)
 
-            _uiState.update {
-                it.copy(loading = false)
+                val job = async {
+                    realm.query<SecretRecord>()
+                        .asFlow()
+                        .collect {
+                            records.value = it.list
+                        }
+                }
+
+                addCloseable {
+                    job.cancel()
+                    realm.close()
+                }
+
+                _uiState.update {
+                    it.copy(loading = false)
+                }
             }
         }
     }

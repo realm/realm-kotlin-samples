@@ -3,9 +3,8 @@ package io.realm.curatedsyncexamples.fieldencryption
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
+import androidx.lifecycle.ViewModelProvider
 import io.realm.curatedsyncexamples.fieldencryption.ui.NavGraph
-import io.realm.curatedsyncexamples.fieldencryption.ui.records.SecretRecordsViewModel
 import io.realm.curatedsyncexamples.ui.theme.CuratedSyncExamplesTheme
 import io.realm.kotlin.mongodb.App
 

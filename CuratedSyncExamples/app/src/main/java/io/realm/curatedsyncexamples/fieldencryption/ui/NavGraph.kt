@@ -31,7 +31,6 @@ fun NavGraph(
     app: App,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    coroutineScope: CoroutineScope = rememberCoroutineScope(),
     startDestination: String =
         when {
             app.currentUser == null -> Screens.LOGIN_SCREEN
