@@ -1,4 +1,4 @@
-package io.realm.curatedsyncexamples.fieldencryption.ui
+package io.realm.curatedsyncexamples.fieldencryption.ui.login
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,6 +12,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,21 +21,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-
-@Preview(showBackground = true)
-@Composable
-fun LoginScreenPreview() {
-    LoginScreen {}
-}
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
 fun LoginScreen(
-    onLogin: ()->Unit
+    viewModel: LoginViewModel,
+    onLoggedIn: () -> Unit
 ) {
-    var text by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Surface(
         modifier = Modifier
@@ -42,6 +39,11 @@ fun LoginScreen(
             .verticalScroll(rememberScrollState()),
         color = MaterialTheme.colorScheme.background
     ) {
+        LaunchedEffect(uiState.loggedIn) {
+            if (uiState.loggedIn) {
+                onLoggedIn()
+            }
+        }
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(48.dp)
@@ -49,19 +51,25 @@ fun LoginScreen(
             Text(text = "Field level encryption Demo")
 
             OutlinedTextField(
-                value = text,
-                onValueChange = { text = it },
+                value = email,
+                isError = uiState.errorMessage != null,
+                onValueChange = { email = it },
                 placeholder = { Text("your@email.com") },
-                label = { Text("Email") }
+                label = { Text("Email") },
             )
+
             OutlinedTextField(
                 value = password,
+                isError = uiState.errorMessage != null,
                 onValueChange = { password = it },
                 label = { Text("Password") },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
             )
-            ElevatedButton(onClick = onLogin) {
+            ElevatedButton(
+                onClick = { viewModel.login(email, password) },
+                enabled = !uiState.loggingIn
+            ) {
                 Text(text = "Login")
             }
         }

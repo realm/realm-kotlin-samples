@@ -6,7 +6,7 @@ import io.realm.curatedsyncexamples.fieldencryption.ANDROID_KEY_STORE_PROVIDER
 import io.realm.curatedsyncexamples.fieldencryption.getKeyOrGenerate
 import io.realm.curatedsyncexamples.fieldencryption.models.AndroidKeyStoreHelper
 import io.realm.curatedsyncexamples.fieldencryption.models.CipherSpec
-import io.realm.curatedsyncexamples.fieldencryption.models.Dog
+import io.realm.curatedsyncexamples.fieldencryption.models.SecretRecord
 import io.realm.curatedsyncexamples.fieldencryption.models.EncryptionKeySpec
 import io.realm.curatedsyncexamples.fieldencryption.models.UserKeyStore
 import io.realm.curatedsyncexamples.fieldencryption.models.key
@@ -73,11 +73,11 @@ class KeyHelperTests {
             }
         modelsCipherSpec = cipherSpec
 
-        val dog = Dog().apply {
-            name!!.value = "testing a string"
+        val record = SecretRecord().apply {
+            content!!.value = "testing a string"
         }
 
-        assertEquals("testing a string", dog.name!!.value)
+        assertEquals("testing a string", record.content!!.value)
     }
 
     private val keySpec = EncryptionKeySpec(

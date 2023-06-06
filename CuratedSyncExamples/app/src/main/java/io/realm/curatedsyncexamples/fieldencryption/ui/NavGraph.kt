@@ -9,23 +9,35 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import io.realm.curatedsyncexamples.fieldencryption.ui.dogs.DogsScreen
-import io.realm.curatedsyncexamples.fieldencryption.ui.dogs.DogsViewModel
+import io.realm.curatedsyncexamples.fieldencryption.FIELD_LEVEL_ENCRYPTION_KEY_ALIAS
+import io.realm.curatedsyncexamples.fieldencryption.models.AndroidKeyStoreHelper
+import io.realm.curatedsyncexamples.fieldencryption.ui.records.SecretRecordScreen
+import io.realm.curatedsyncexamples.fieldencryption.ui.records.SecretRecordsViewModel
 import io.realm.curatedsyncexamples.fieldencryption.ui.keystore.KeyStoreScreen
+import io.realm.curatedsyncexamples.fieldencryption.ui.keystore.KeyStoreViewModel
+import io.realm.curatedsyncexamples.fieldencryption.ui.login.LoginScreen
+import io.realm.curatedsyncexamples.fieldencryption.ui.login.LoginViewModel
+import io.realm.kotlin.mongodb.App
 import kotlinx.coroutines.CoroutineScope
 
 object Screens {
     const val LOGIN_SCREEN = "LOGIN_SCREEN"
     const val KEYSTORE_PASSWORD_SCREEN = "KEYSTORE_PASSWORD"
-    const val DOGS_SCREEN = "DOGS_SCREEN"
+    const val SECRET_RECORDS_SCREEN = "SECRET_RECORDS_SCREEN"
 }
 
 @Composable
 fun NavGraph(
+    app: App,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
-    startDestination: String = Screens.LOGIN_SCREEN,
+    startDestination: String =
+        when {
+            app.currentUser == null -> Screens.LOGIN_SCREEN
+            !AndroidKeyStoreHelper.containsKey(FIELD_LEVEL_ENCRYPTION_KEY_ALIAS) -> Screens.KEYSTORE_PASSWORD_SCREEN
+            else -> Screens.SECRET_RECORDS_SCREEN
+        },
     navActions: NavigationActions = remember(navController) {
         NavigationActions(navController)
     }
@@ -38,21 +50,23 @@ fun NavGraph(
         composable(
             Screens.LOGIN_SCREEN,
         ) {
-            LoginScreen {
+            LoginScreen(
+                LoginViewModel(app)
+            ) {
                 navActions.navigateToKeyStoreUnlockScreen()
             }
         }
         composable(
             Screens.KEYSTORE_PASSWORD_SCREEN,
         ) {
-            KeyStoreScreen {
-                navActions.navigateToDogsScreen()
+            KeyStoreScreen(KeyStoreViewModel(app)) {
+                navActions.navigateToSecretRecordsScreen()
             }
         }
         composable(
-            Screens.DOGS_SCREEN,
+            Screens.SECRET_RECORDS_SCREEN,
         ) {
-            DogsScreen(DogsViewModel()) {
+            SecretRecordScreen(SecretRecordsViewModel(app)) {
                 navActions.navigateToLogin()
             }
         }
@@ -62,22 +76,15 @@ fun NavGraph(
 class NavigationActions(private val navController: NavHostController) {
     fun navigateToKeyStoreUnlockScreen() {
         navController.navigate(Screens.KEYSTORE_PASSWORD_SCREEN) {
-            // Pop up to the start destination of the graph to
-            // avoid building up a large stack of destinations
-            // on the back stack as users select items
             popUpTo(navController.graph.findStartDestination().id) {
                 saveState = true
             }
-            // Avoid multiple copies of the same destination when
-            // reselecting the same item
             launchSingleTop = true
-            // Restore state when reselecting a previously selected item
-            restoreState = true
         }
     }
 
-    fun navigateToDogsScreen() {
-        navController.navigate(Screens.DOGS_SCREEN) {
+    fun navigateToSecretRecordsScreen() {
+        navController.navigate(Screens.SECRET_RECORDS_SCREEN) {
             // Pop up to the start destination of the graph to
             // avoid building up a large stack of destinations
             // on the back stack as users select items
@@ -85,28 +92,17 @@ class NavigationActions(private val navController: NavHostController) {
                 saveState = true
                 inclusive = true
             }
-
-            // Avoid multiple copies of the same destination when
-            // reselecting the same item
             launchSingleTop = true
-            // Restore state when reselecting a previously selected item
-            restoreState = true
         }
     }
 
     fun navigateToLogin() {
         navController.navigate(Screens.LOGIN_SCREEN) {
-            // Pop up to the start destination of the graph to
-            // avoid building up a large stack of destinations
-            // on the back stack as users select items
-            popUpTo(navController.graph.findStartDestination().id) {
+            popUpTo(Screens.SECRET_RECORDS_SCREEN) {
+                inclusive = true
                 saveState = true
             }
-            // Avoid multiple copies of the same destination when
-            // reselecting the same item
             launchSingleTop = true
-            // Restore state when reselecting a previously selected item
-            restoreState = true
         }
     }
 }
