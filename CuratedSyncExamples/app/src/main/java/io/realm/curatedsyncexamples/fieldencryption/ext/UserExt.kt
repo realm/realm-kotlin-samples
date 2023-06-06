@@ -1,4 +1,4 @@
-package io.realm.curatedsyncexamples.fieldencryption
+package io.realm.curatedsyncexamples.fieldencryption.ext
 
 import io.realm.curatedsyncexamples.fieldencryption.models.CipherSpec
 import io.realm.curatedsyncexamples.fieldencryption.models.CustomData

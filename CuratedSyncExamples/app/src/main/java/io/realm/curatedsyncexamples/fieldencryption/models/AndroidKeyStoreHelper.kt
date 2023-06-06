@@ -2,14 +2,13 @@ package io.realm.curatedsyncexamples.fieldencryption.models
 
 import android.security.keystore.KeyProperties
 import android.security.keystore.KeyProtection
-import io.realm.curatedsyncexamples.fieldencryption.generateKey
-import io.realm.curatedsyncexamples.fieldencryption.getKeyOrGenerate
-import io.realm.curatedsyncexamples.fieldencryption.keyStore
-import io.realm.curatedsyncexamples.fieldencryption.updateKeyStore
+import io.realm.curatedsyncexamples.fieldencryption.ext.generateKey
+import io.realm.curatedsyncexamples.fieldencryption.ext.getKeyOrGenerate
+import io.realm.curatedsyncexamples.fieldencryption.ext.keyStore
+import io.realm.curatedsyncexamples.fieldencryption.ext.updateKeyStore
 import io.realm.kotlin.mongodb.User
 import java.security.Key
 import java.security.KeyStore
-import javax.crypto.SecretKey
 
 private const val ANDROID_KEY_STORE_PROVIDER = "AndroidKeyStore"
 
@@ -26,7 +25,7 @@ object AndroidKeyStoreHelper {
 
     suspend fun getKeyFromAndroidKeyStore(
         keyAlias: String,
-        generateKey: suspend AndroidKeyStoreHelper.() -> SecretKey
+        generateKey: suspend AndroidKeyStoreHelper.() -> SerializableSecretKey
     ): Key {
         if (!keyStore.isKeyEntry(keyAlias))
             storeKeyInAndroidKeyStore(keyAlias, generateKey())
@@ -37,17 +36,17 @@ object AndroidKeyStoreHelper {
 
     private fun storeKeyInAndroidKeyStore(
         keyAlias: String,
-        key: SecretKey
+        key: SerializableSecretKey
     ) {
         keyStore.setEntry(
             keyAlias,
-            KeyStore.SecretKeyEntry(key),
+            KeyStore.SecretKeyEntry(key.asSecretKey()),
             KeyProtection
                 .Builder(
                     /* purposes = */ KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
                 )
-                .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
-                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7)
+                .setBlockModes(key.cipherSpec.block)
+                .setEncryptionPaddings(key.cipherSpec.padding)
                 .build()
         )
     }

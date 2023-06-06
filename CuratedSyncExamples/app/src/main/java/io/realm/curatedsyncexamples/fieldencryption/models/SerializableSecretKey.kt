@@ -6,13 +6,13 @@ import javax.crypto.spec.SecretKeySpec
 
 @Serializable
 class SerializableSecretKey(
-    val encoded: ByteArray,
-    val algorithm: String,
+    private val encoded: ByteArray,
+    val cipherSpec: CipherSpec
 ) {
-    constructor(key: SecretKey) : this(
+    constructor(key: SecretKey, cipherSpec: CipherSpec) : this(
         encoded = key.encoded,
-        algorithm = key.algorithm
+        cipherSpec = cipherSpec
     )
 
-    fun asSecretKey(): SecretKey = SecretKeySpec(encoded, algorithm)
+    fun asSecretKey(): SecretKey = SecretKeySpec(encoded, cipherSpec.algorithm)
 }

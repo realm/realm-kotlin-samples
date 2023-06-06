@@ -27,6 +27,7 @@ class NavGraphViewModel(
     private val keyAlias: String
 ) : ViewModel() {
     fun isUserLoggedIn(): Boolean = app.currentUser != null
+
     fun isFieldEncryptionKeyAvailable(): Boolean = AndroidKeyStoreHelper.containsKey(keyAlias)
 }
 

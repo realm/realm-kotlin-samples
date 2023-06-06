@@ -1,6 +1,6 @@
 package io.realm.curatedsyncexamples.fieldencryption.models
 
-import io.realm.curatedsyncexamples.fieldencryption.computeHash
+import io.realm.curatedsyncexamples.fieldencryption.ext.computeHash
 import io.realm.kotlin.internal.platform.runBlocking
 import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.SerialName
@@ -11,8 +11,6 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.nio.charset.StandardCharsets
 import java.security.Key
-import javax.crypto.SecretKey
-
 
 @Serializable
 class UserKeyStore(
@@ -23,7 +21,7 @@ class UserKeyStore(
     val encryptionKeySpec: EncryptionKeySpec,
 
     /**
-     * Cipher spec used to encrypt the keys
+     * Cipher spec used to encrypt the key store contents
      */
     @SerialName("cipher_spec")
     val cipherSpec: CipherSpec,
@@ -41,11 +39,14 @@ class UserKeyStore(
     @SerialName("key_hash")
     var keyHash: ByteArray?,
 
+    /**
+     * Indicates if the keystore has been modified.
+     */
     @Transient
     var hasChanges: Boolean = false
 ) {
 
-    private fun loadContents(key: Key): MutableMap<String, SecretKey> =
+    private fun loadContents(key: Key): MutableMap<String, SerializableSecretKey> =
         secureContents?.let { byteArray ->
             keyHash?.let {
                 require(keyHash.contentEquals(key.computeHash())) { "Wrong password" }
@@ -57,16 +58,11 @@ class UserKeyStore(
             )
 
             Json.decodeFromString<Map<String, SerializableSecretKey>>(serializedKeyStore)
-                .map { entry -> entry.key to entry.value.asSecretKey() }
-                .toMap()
                 .toMutableMap()
         } ?: mutableMapOf()
 
-    private fun saveContents(contents: MutableMap<String, SecretKey>, key: Key) {
-        val serializableContents =
-            contents.map { entry -> entry.key to SerializableSecretKey(entry.value) }
-                .toMap()
-        val updatedKeyStore = Json.encodeToString(serializableContents)
+    private fun saveContents(contents: MutableMap<String, SerializableSecretKey>, key: Key) {
+        val updatedKeyStore = Json.encodeToString(contents)
             .toByteArray(StandardCharsets.UTF_8)
 
         keyHash = key.computeHash()
@@ -76,7 +72,7 @@ class UserKeyStore(
 
     suspend fun <T> use(
         password: String,
-        update: suspend MutableMap<String, SecretKey>.() -> T
+        update: suspend MutableMap<String, SerializableSecretKey>.() -> T
     ): T =
         // Encryption/decryption can take a while
         runBlocking(Dispatchers.IO) {

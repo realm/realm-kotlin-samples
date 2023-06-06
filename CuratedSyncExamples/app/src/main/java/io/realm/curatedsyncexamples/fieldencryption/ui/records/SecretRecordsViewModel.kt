@@ -3,7 +3,7 @@ package io.realm.curatedsyncexamples.fieldencryption.ui.records
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.realm.curatedsyncexamples.fieldencryption.fieldEncryptionCipherSpec
+import io.realm.curatedsyncexamples.fieldencryption.ext.fieldEncryptionCipherSpec
 import io.realm.curatedsyncexamples.fieldencryption.models.AndroidKeyStoreHelper
 import io.realm.curatedsyncexamples.fieldencryption.models.SecretRecord
 import io.realm.curatedsyncexamples.fieldencryption.models.EncryptedStringField

@@ -2,7 +2,7 @@ package io.realm.curatedsyncexamples.fieldencryption.ui.keystore
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.realm.curatedsyncexamples.fieldencryption.fieldEncryptionCipherSpec
+import io.realm.curatedsyncexamples.fieldencryption.ext.fieldEncryptionCipherSpec
 import io.realm.curatedsyncexamples.fieldencryption.models.cipherSpec
 import io.realm.curatedsyncexamples.fieldencryption.models.getFieldLevelEncryptionKey
 import io.realm.curatedsyncexamples.fieldencryption.models.key

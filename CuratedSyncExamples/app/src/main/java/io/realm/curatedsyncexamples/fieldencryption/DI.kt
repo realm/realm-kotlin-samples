@@ -8,14 +8,15 @@ import io.realm.kotlin.mongodb.App
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-const val FIELD_LEVEL_ENCRYPTION_KEY_ALIAS = "fieldLevelEncryptionKey"
 
 val fieldEncryptionModule = module {
-    viewModel { KeyStoreViewModel(get(), FIELD_LEVEL_ENCRYPTION_KEY_ALIAS) }
-    viewModel { LoginViewModel(get()) }
-    viewModel { SecretRecordsViewModel(get(), FIELD_LEVEL_ENCRYPTION_KEY_ALIAS) }
+    val keyAlias = "fieldLevelEncryptionKey"
 
-    viewModel { NavGraphViewModel(get(), FIELD_LEVEL_ENCRYPTION_KEY_ALIAS) }
+    viewModel { KeyStoreViewModel(get(), keyAlias) }
+    viewModel { LoginViewModel(get()) }
+    viewModel { SecretRecordsViewModel(get(), keyAlias) }
+
+    viewModel { NavGraphViewModel(get(), keyAlias) }
 
     single { App.create("cypher-scjvs") }
 }

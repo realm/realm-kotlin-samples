@@ -1,7 +1,9 @@
-package io.realm.curatedsyncexamples.fieldencryption
+package io.realm.curatedsyncexamples.fieldencryption.ext
 
 import io.realm.curatedsyncexamples.fieldencryption.models.CipherSpec
+import io.realm.curatedsyncexamples.fieldencryption.models.SerializableSecretKey
 import io.realm.curatedsyncexamples.fieldencryption.models.UserKeyStore
+import io.realm.curatedsyncexamples.fieldencryption.models.cipherSpec
 import io.realm.kotlin.mongodb.User
 import java.security.Key
 import java.security.MessageDigest
@@ -16,8 +18,8 @@ fun Key.computeHash(): ByteArray =
 suspend fun UserKeyStore.getKeyOrGenerate(
     alias: String,
     password: String,
-    generateNewKey: suspend () -> SecretKey
-): SecretKey = use(password) {
+    generateNewKey: suspend () -> SerializableSecretKey
+): SerializableSecretKey = use(password) {
     if (!contains(alias)) {
         set(alias, generateNewKey())
             .also {
@@ -28,7 +30,7 @@ suspend fun UserKeyStore.getKeyOrGenerate(
     get(alias)!!
 }
 
-fun CipherSpec.newKey(): SecretKey =
+fun CipherSpec.newKey(): SerializableSecretKey =
     KeyGenerator
         .getInstance(
             /* algorithm = */ algorithm
@@ -36,5 +38,11 @@ fun CipherSpec.newKey(): SecretKey =
             init(keyLength)
         }
         .generateKey()
+        .let { key->
+            SerializableSecretKey(
+                key = key,
+                cipherSpec = this@newKey
+            )
+        }
 
-fun User.generateKey(): SecretKey = fieldEncryptionCipherSpec().newKey()
+fun User.generateKey(): SerializableSecretKey = fieldEncryptionCipherSpec().newKey()
