@@ -61,6 +61,8 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.1.0")
     androidTestImplementation(kotlin("test"))
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.0")
+    implementation("io.insert-koin:koin-android:3.4.2")
+    implementation("io.insert-koin:koin-androidx-compose:3.4.5")
     // Android Studio Preview support
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")

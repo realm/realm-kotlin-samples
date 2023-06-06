@@ -2,16 +2,10 @@ package io.realm.curatedsyncexamples.fieldencryption.ui.keystore
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.realm.curatedsyncexamples.fieldencryption.FIELD_LEVEL_ENCRYPTION_KEY_ALIAS
 import io.realm.curatedsyncexamples.fieldencryption.fieldEncryptionCipherSpec
-import io.realm.curatedsyncexamples.fieldencryption.generateKey
-import io.realm.curatedsyncexamples.fieldencryption.getKeyOrGenerate
-import io.realm.curatedsyncexamples.fieldencryption.keyStore
-import io.realm.curatedsyncexamples.fieldencryption.models.AndroidKeyStoreHelper
 import io.realm.curatedsyncexamples.fieldencryption.models.cipherSpec
 import io.realm.curatedsyncexamples.fieldencryption.models.getFieldLevelEncryptionKey
 import io.realm.curatedsyncexamples.fieldencryption.models.key
-import io.realm.curatedsyncexamples.fieldencryption.updateKeyStore
 import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.mongodb.User
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,7 +21,8 @@ data class KeyStoreUiState(
 )
 
 class KeyStoreViewModel(
-    app: App
+    app: App,
+    private val keyAlias: String
 ) : ViewModel() {
     private var user: User
 
@@ -35,17 +30,17 @@ class KeyStoreViewModel(
     val uiState: StateFlow<KeyStoreUiState> = _uiState.asStateFlow()
 
     init {
-        user  = app.currentUser!!
+        user = app.currentUser!!
         cipherSpec = user.fieldEncryptionCipherSpec()
     }
 
     fun unlock(password: String) {
+        _uiState.update {
+            it.copy(unlocking = true, unlocked = false, errorMessage = null)
+        }
         viewModelScope.launch {
-            _uiState.update {
-                it.copy(unlocking = true, unlocked = false, errorMessage = null)
-            }
             try {
-                key = getFieldLevelEncryptionKey(user, password)
+                key = getFieldLevelEncryptionKey(keyAlias, user, password)
 
                 _uiState.update {
                     it.copy(unlocked = true)

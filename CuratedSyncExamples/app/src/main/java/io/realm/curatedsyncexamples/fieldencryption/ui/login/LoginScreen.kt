@@ -1,6 +1,7 @@
 package io.realm.curatedsyncexamples.fieldencryption.ui.login
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -23,10 +24,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import org.koin.compose.koinInject
 
 @Composable
 fun LoginScreen(
-    viewModel: LoginViewModel,
+    viewModel: LoginViewModel = koinInject(),
     onLoggedIn: () -> Unit
 ) {
     var email by remember { mutableStateOf("") }
@@ -53,24 +55,37 @@ fun LoginScreen(
             OutlinedTextField(
                 value = email,
                 isError = uiState.errorMessage != null,
+                enabled = !uiState.loggingIn,
                 onValueChange = { email = it },
                 placeholder = { Text("your@email.com") },
                 label = { Text("Email") },
             )
-
             OutlinedTextField(
                 value = password,
                 isError = uiState.errorMessage != null,
+                enabled = !uiState.loggingIn,
                 onValueChange = { password = it },
                 label = { Text("Password") },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
             )
-            ElevatedButton(
-                onClick = { viewModel.login(email, password) },
-                enabled = !uiState.loggingIn
-            ) {
-                Text(text = "Login")
+            Row {
+                ElevatedButton(
+                    onClick = { viewModel.login(email, password, true) },
+                    enabled = !uiState.loggingIn
+                ) {
+                    Text(text = "Register")
+                }
+                ElevatedButton(
+                    onClick = { viewModel.login(email, password) },
+                    enabled = !uiState.loggingIn
+                ) {
+                    Text(text = "Login")
+                }
+            }
+
+            uiState.errorMessage?.let {
+                Text(text = it)
             }
         }
     }

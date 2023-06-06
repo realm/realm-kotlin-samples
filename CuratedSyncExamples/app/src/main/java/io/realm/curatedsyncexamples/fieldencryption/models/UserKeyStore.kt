@@ -65,6 +65,7 @@ class UserKeyStore(
     private fun saveContents(contents: MutableMap<String, SecretKey>, key: Key) {
         val serializableContents =
             contents.map { entry -> entry.key to SerializableSecretKey(entry.value) }
+                .toMap()
         val updatedKeyStore = Json.encodeToString(serializableContents)
             .toByteArray(StandardCharsets.UTF_8)
 

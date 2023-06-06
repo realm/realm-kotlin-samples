@@ -2,23 +2,19 @@ package io.realm.curatedsyncexamples.fieldencryption.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import io.realm.curatedsyncexamples.fieldencryption.FIELD_LEVEL_ENCRYPTION_KEY_ALIAS
 import io.realm.curatedsyncexamples.fieldencryption.models.AndroidKeyStoreHelper
-import io.realm.curatedsyncexamples.fieldencryption.ui.records.SecretRecordScreen
-import io.realm.curatedsyncexamples.fieldencryption.ui.records.SecretRecordsViewModel
 import io.realm.curatedsyncexamples.fieldencryption.ui.keystore.KeyStoreScreen
-import io.realm.curatedsyncexamples.fieldencryption.ui.keystore.KeyStoreViewModel
 import io.realm.curatedsyncexamples.fieldencryption.ui.login.LoginScreen
-import io.realm.curatedsyncexamples.fieldencryption.ui.login.LoginViewModel
+import io.realm.curatedsyncexamples.fieldencryption.ui.records.SecretRecordScreen
 import io.realm.kotlin.mongodb.App
-import kotlinx.coroutines.CoroutineScope
+import org.koin.compose.koinInject
 
 object Screens {
     const val LOGIN_SCREEN = "LOGIN_SCREEN"
@@ -26,15 +22,23 @@ object Screens {
     const val SECRET_RECORDS_SCREEN = "SECRET_RECORDS_SCREEN"
 }
 
+class NavGraphViewModel(
+    private val app: App,
+    private val keyAlias: String
+) : ViewModel() {
+    fun isUserLoggedIn(): Boolean = app.currentUser != null
+    fun isFieldEncryptionKeyAvailable(): Boolean = AndroidKeyStoreHelper.containsKey(keyAlias)
+}
+
 @Composable
 fun NavGraph(
-    app: App,
+    viewModel: NavGraphViewModel = koinInject(),
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     startDestination: String =
         when {
-            app.currentUser == null -> Screens.LOGIN_SCREEN
-            !AndroidKeyStoreHelper.containsKey(FIELD_LEVEL_ENCRYPTION_KEY_ALIAS) -> Screens.KEYSTORE_PASSWORD_SCREEN
+            !viewModel.isUserLoggedIn() -> Screens.LOGIN_SCREEN
+            !viewModel.isFieldEncryptionKeyAvailable() -> Screens.KEYSTORE_PASSWORD_SCREEN
             else -> Screens.SECRET_RECORDS_SCREEN
         },
     navActions: NavigationActions = remember(navController) {
@@ -49,23 +53,21 @@ fun NavGraph(
         composable(
             Screens.LOGIN_SCREEN,
         ) {
-            LoginScreen(
-                LoginViewModel(app)
-            ) {
+            LoginScreen {
                 navActions.navigateToKeyStoreUnlockScreen()
             }
         }
         composable(
             Screens.KEYSTORE_PASSWORD_SCREEN,
         ) {
-            KeyStoreScreen(KeyStoreViewModel(app)) {
+            KeyStoreScreen {
                 navActions.navigateToSecretRecordsScreen()
             }
         }
         composable(
             Screens.SECRET_RECORDS_SCREEN,
         ) {
-            SecretRecordScreen(SecretRecordsViewModel(app)) {
+            SecretRecordScreen {
                 navActions.navigateToLogin()
             }
         }

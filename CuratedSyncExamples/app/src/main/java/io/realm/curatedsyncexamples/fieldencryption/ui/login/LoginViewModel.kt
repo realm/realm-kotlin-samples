@@ -24,14 +24,17 @@ class LoginViewModel(
     private val _uiState = MutableStateFlow(LoginUiState(false))
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
-    fun login(email: String, password: String) {
+    fun login(email: String, password: String, register: Boolean = false) {
         _uiState.update {
             it.copy(loggingIn = true, errorMessage = null)
         }
 
         viewModelScope.launch {
             try {
-                app.emailPasswordAuth.registerUser(email, password)
+                if (register) {
+                    app.emailPasswordAuth.registerUser(email, password)
+                }
+
                 app.login(Credentials.emailPassword(email, password))
                 _uiState.update {
                     it.copy(loggedIn = true)

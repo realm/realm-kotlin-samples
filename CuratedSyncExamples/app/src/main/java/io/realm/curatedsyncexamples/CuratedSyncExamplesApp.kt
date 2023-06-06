@@ -1,16 +1,22 @@
 package io.realm.curatedsyncexamples
 
 import android.app.Application
-import io.realm.kotlin.mongodb.App
+import io.realm.curatedsyncexamples.fieldencryption.fieldEncryptionModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.GlobalContext.startKoin
 
 class CuratedSyncExamplesApp: Application() {
-
-    lateinit var app: App
-
     override fun onCreate() {
         super.onCreate()
-        app = App.create("cypher-scjvs")
+
+        startKoin {
+            // Log Koin into Android logger
+            androidLogger()
+            // Reference Android context
+            androidContext(this@CuratedSyncExamplesApp)
+            // Load modules
+            modules(fieldEncryptionModule)
+        }
     }
 }
-
-fun Application.app(): App = (this as CuratedSyncExamplesApp).app

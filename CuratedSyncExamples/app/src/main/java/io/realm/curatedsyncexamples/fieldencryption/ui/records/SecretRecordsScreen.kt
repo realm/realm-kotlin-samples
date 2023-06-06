@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.realm.curatedsyncexamples.fieldencryption.models.SecretRecord
+import org.koin.compose.koinInject
 
 @Composable
 fun NewRecord(
@@ -37,6 +38,7 @@ fun NewRecord(
     ) {
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
+            enabled = !uiState.loading && !uiState.loggingOut,
             value = name,
             onValueChange = { name = it },
             label = { Text("Record content") },
@@ -85,7 +87,7 @@ fun SecretRecordView(
 
 @Composable
 fun SecretRecordScreen(
-    viewModel: SecretRecordsViewModel,
+    viewModel: SecretRecordsViewModel = koinInject(),
     onLogout: () -> Unit
 ) {
     val records by viewModel.records.observeAsState(emptyList())

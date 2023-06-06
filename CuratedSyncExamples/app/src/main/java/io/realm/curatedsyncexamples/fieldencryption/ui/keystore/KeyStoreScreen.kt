@@ -23,10 +23,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import org.koin.compose.koinInject
 
 @Composable
 fun KeyStoreScreen(
-    viewModel: KeyStoreViewModel,
+    viewModel: KeyStoreViewModel = koinInject(),
     onUnlocked: () -> Unit
 ) {
     var password by remember { mutableStateOf("") }
@@ -51,6 +52,7 @@ fun KeyStoreScreen(
 
             OutlinedTextField(
                 value = password,
+                enabled = !uiState.unlocking,
                 isError = uiState.errorMessage != null,
                 onValueChange = { password = it },
                 label = { Text("Password") },
@@ -61,6 +63,9 @@ fun KeyStoreScreen(
                 enabled = !uiState.unlocking,
                 onClick = { viewModel.unlock(password) }) {
                 Text(text = "Continue")
+            }
+            uiState.errorMessage?.let {
+                Text(text = it)
             }
         }
     }

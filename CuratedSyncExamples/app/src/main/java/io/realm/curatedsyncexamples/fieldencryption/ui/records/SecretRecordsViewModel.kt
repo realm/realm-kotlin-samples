@@ -3,7 +3,6 @@ package io.realm.curatedsyncexamples.fieldencryption.ui.records
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.realm.curatedsyncexamples.fieldencryption.FIELD_LEVEL_ENCRYPTION_KEY_ALIAS
 import io.realm.curatedsyncexamples.fieldencryption.fieldEncryptionCipherSpec
 import io.realm.curatedsyncexamples.fieldencryption.models.AndroidKeyStoreHelper
 import io.realm.curatedsyncexamples.fieldencryption.models.SecretRecord
@@ -32,6 +31,7 @@ data class SecretRecordsUiState(
 
 class SecretRecordsViewModel(
     private val app: App,
+    private val keyAlias: String
 ) : ViewModel() {
     private lateinit var realm: Realm
     private lateinit var user: User
@@ -41,40 +41,38 @@ class SecretRecordsViewModel(
 
     init {
         viewModelScope.launch {
-            app.currentUser?.let {
-                user = app.currentUser!!
-                cipherSpec = user.fieldEncryptionCipherSpec()
-                runBlocking {
-                    key = getFieldLevelEncryptionKey(user, "password")
-                }
+            user = app.currentUser!!
+            cipherSpec = user.fieldEncryptionCipherSpec()
+            runBlocking {
+                key = getFieldLevelEncryptionKey(keyAlias, user, "password")
+            }
 
-                val syncConfig = SyncConfiguration
-                    .Builder(app.currentUser!!, setOf(SecretRecord::class, EncryptedStringField::class))
-                    .initialSubscriptions {
-                        // Subscribe to all secret records
-                        add(it.query<SecretRecord>())
+            val syncConfig = SyncConfiguration
+                .Builder(app.currentUser!!, setOf(SecretRecord::class, EncryptedStringField::class))
+                .initialSubscriptions {
+                    // Subscribe to all secret records
+                    add(it.query<SecretRecord>())
+                }
+                .waitForInitialRemoteData()
+                .build()
+
+            realm = Realm.open(syncConfig)
+
+            val job = async {
+                realm.query<SecretRecord>()
+                    .asFlow()
+                    .collect {
+                        records.value = it.list
                     }
-                    .waitForInitialRemoteData()
-                    .build()
+            }
 
-                realm = Realm.open(syncConfig)
+            addCloseable {
+                job.cancel()
+                realm.close()
+            }
 
-                val job = async {
-                    realm.query<SecretRecord>()
-                        .asFlow()
-                        .collect {
-                            records.value = it.list
-                        }
-                }
-
-                addCloseable {
-                    job.cancel()
-                    realm.close()
-                }
-
-                _uiState.update {
-                    it.copy(loading = false)
-                }
+            _uiState.update {
+                it.copy(loading = false)
             }
         }
     }
@@ -89,13 +87,14 @@ class SecretRecordsViewModel(
         }
         viewModelScope.launch {
             user.logOut()
-            AndroidKeyStoreHelper.removeKey(FIELD_LEVEL_ENCRYPTION_KEY_ALIAS)
+            AndroidKeyStoreHelper.removeKey(keyAlias)
 
             _uiState.update {
                 it.copy(loggedOut = true)
             }
         }
     }
+
     fun addRecord(content: String) {
         viewModelScope.launch {
             realm.write {
