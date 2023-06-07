@@ -1,16 +1,31 @@
+/*
+ * Copyright 2023 Realm Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.realm.curatedsyncexamples
 
 import android.security.keystore.KeyProperties
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import io.realm.curatedsyncexamples.fieldencryption.ANDROID_KEY_STORE_PROVIDER
-import io.realm.curatedsyncexamples.fieldencryption.getKeyOrGenerate
+import io.realm.curatedsyncexamples.fieldencryption.ext.getKeyOrGenerate
 import io.realm.curatedsyncexamples.fieldencryption.models.AndroidKeyStoreHelper
 import io.realm.curatedsyncexamples.fieldencryption.models.CipherSpec
-import io.realm.curatedsyncexamples.fieldencryption.models.SecretRecord
 import io.realm.curatedsyncexamples.fieldencryption.models.EncryptionKeySpec
+import io.realm.curatedsyncexamples.fieldencryption.models.SecretRecord
+import io.realm.curatedsyncexamples.fieldencryption.models.SerializableSecretKey
 import io.realm.curatedsyncexamples.fieldencryption.models.UserKeyStore
 import io.realm.curatedsyncexamples.fieldencryption.models.key
-import io.realm.curatedsyncexamples.fieldencryption.models.cipherSpec as modelsCipherSpec
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
 import org.junit.Test
@@ -21,6 +36,7 @@ import javax.crypto.SecretKey
 import kotlin.random.Random
 import kotlin.test.BeforeTest
 import kotlin.test.assertFailsWith
+import io.realm.curatedsyncexamples.fieldencryption.models.cipherSpec as modelsCipherSpec
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -31,6 +47,8 @@ import kotlin.test.assertFailsWith
 const val KEY_ALIAS = "Testing"
 const val ALGORITHM = "AES"
 
+private const val ANDROID_KEY_STORE_PROVIDER = "AndroidKeyStore"
+
 @RunWith(AndroidJUnit4::class)
 class KeyHelperTests {
     private val keyGenerator = KeyGenerator.getInstance(ALGORITHM).apply {
@@ -39,6 +57,27 @@ class KeyHelperTests {
     private val keyStore = KeyStore.getInstance(ANDROID_KEY_STORE_PROVIDER).apply {
         load(null)
     }
+
+    private val keySpec = EncryptionKeySpec(
+        algorithm = "PBKDF2WithHmacSHA256",
+        salt = Random.nextBytes(16),
+        iterationsCount = 100000,
+        keyLength = 128,
+    )
+
+    private val cipherSpec = CipherSpec(
+        algorithm = KeyProperties.KEY_ALGORITHM_AES,
+        block = KeyProperties.BLOCK_MODE_CBC,
+        padding = KeyProperties.ENCRYPTION_PADDING_PKCS7,
+        keyLength = 128
+    )
+
+    private val userKeyStore = UserKeyStore(
+        encryptionKeySpec = keySpec,
+        cipherSpec = cipherSpec,
+        secureContents = null,
+        keyHash = null,
+    )
 
     @BeforeTest
     fun begin() {
@@ -50,7 +89,10 @@ class KeyHelperTests {
         // Store a key
         AndroidKeyStoreHelper
             .getKeyFromAndroidKeyStore(KEY_ALIAS) {
-                keyGenerator.generateKey()
+                SerializableSecretKey(
+                    key = keyGenerator.generateKey(),
+                    cipherSpec = cipherSpec
+                )
             }
 
         // The key exists
@@ -69,7 +111,10 @@ class KeyHelperTests {
     fun useAndroidKeyStoreKeyToEncryptDecrypt() = runTest {
         key = AndroidKeyStoreHelper
             .getKeyFromAndroidKeyStore(KEY_ALIAS) {
-                keyGenerator.generateKey()
+                SerializableSecretKey(
+                    key = keyGenerator.generateKey(),
+                    cipherSpec = cipherSpec
+                )
             }
         modelsCipherSpec = cipherSpec
 
@@ -80,27 +125,6 @@ class KeyHelperTests {
         assertEquals("testing a string", record.content!!.value)
     }
 
-    private val keySpec = EncryptionKeySpec(
-        algorithm = "PBKDF2WithHmacSHA256",
-        salt = Random.nextBytes(16),
-        iterationsCount = 100000,
-        keyLength = 128,
-    )
-
-    private val cipherSpec = CipherSpec(
-        algorithm = KeyProperties.KEY_ALGORITHM_AES,
-        block = KeyProperties.BLOCK_MODE_CBC,
-        padding = KeyProperties.ENCRYPTION_PADDING_PKCS7,
-        keyLength = 128
-    )
-
-    val userKeyStore = UserKeyStore(
-        encryptionKeySpec = keySpec,
-        cipherSpec = cipherSpec,
-        secureContents = null,
-        keyHash = null,
-    )
-
     @Test
     fun storeUserKeyStore() = runTest {
         val key: SecretKey = keyGenerator.generateKey()
@@ -109,11 +133,13 @@ class KeyHelperTests {
 
         val retrievedKey = userKeyStore
             .getKeyOrGenerate(KEY_ALIAS, "password") {
-                key
+                SerializableSecretKey(
+                    key = key,
+                    cipherSpec = cipherSpec
+                )
             }
 
-        assertEquals(key.algorithm, retrievedKey.algorithm)
-        assertEquals(key.format, retrievedKey.format)
+        assertEquals(key.algorithm, retrievedKey.cipherSpec.algorithm)
         assertArrayEquals(key.encoded, retrievedKey.encoded)
 
         assertTrue(userKeyStore.hasChanges)
@@ -123,13 +149,19 @@ class KeyHelperTests {
     fun userKeyStore_wrongPasswordThrows() = runTest {
         userKeyStore
             .getKeyOrGenerate(KEY_ALIAS, "password") {
-                keyGenerator.generateKey()
+                SerializableSecretKey(
+                    key = keyGenerator.generateKey(),
+                    cipherSpec = cipherSpec
+                )
             }
 
         assertFailsWith<IllegalArgumentException> {
             userKeyStore
                 .getKeyOrGenerate(KEY_ALIAS, "password2") {
-                    keyGenerator.generateKey()
+                    SerializableSecretKey(
+                        key = keyGenerator.generateKey(),
+                        cipherSpec = cipherSpec
+                    )
                 }
         }
     }

@@ -22,7 +22,7 @@ import javax.crypto.spec.SecretKeySpec
 
 @Serializable
 class SerializableSecretKey(
-    private val encoded: ByteArray,
+    val encoded: ByteArray,
     val cipherSpec: CipherSpec
 ) {
     constructor(key: SecretKey, cipherSpec: CipherSpec) : this(

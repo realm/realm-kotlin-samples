@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.mongodb.Credentials
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -44,7 +45,7 @@ class LoginViewModel(
             it.copy(loggingIn = true, errorMessage = null)
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 if (register) {
                     app.emailPasswordAuth.registerUser(email, password)

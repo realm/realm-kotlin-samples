@@ -32,6 +32,7 @@ import io.realm.kotlin.internal.platform.runBlocking
 import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.mongodb.User
 import io.realm.kotlin.mongodb.sync.SyncConfiguration
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -56,7 +57,7 @@ class SecretRecordsViewModel(
     val uiState: StateFlow<SecretRecordsUiState> = _uiState.asStateFlow()
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             user = app.currentUser!!
             cipherSpec = user.fieldEncryptionCipherSpec()
             runBlocking {
@@ -78,7 +79,7 @@ class SecretRecordsViewModel(
                 realm.query<SecretRecord>()
                     .asFlow()
                     .collect {
-                        records.value = it.list
+                        records.postValue(it.list)
                     }
             }
 
@@ -101,7 +102,7 @@ class SecretRecordsViewModel(
         _uiState.update {
             it.copy(loggingOut = true)
         }
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             user.logOut()
             AndroidKeyStoreHelper.removeKey(keyAlias)
 
@@ -112,7 +113,7 @@ class SecretRecordsViewModel(
     }
 
     fun addRecord(content: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             realm.write {
                 copyToRealm(
                     SecretRecord().apply {

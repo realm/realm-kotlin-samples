@@ -24,6 +24,7 @@ import io.realm.curatedsyncexamples.fieldencryption.models.getFieldLevelEncrypti
 import io.realm.curatedsyncexamples.fieldencryption.models.key
 import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.mongodb.User
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -54,7 +55,7 @@ class KeyStoreViewModel(
         _uiState.update {
             it.copy(unlocking = true, unlocked = false, errorMessage = null)
         }
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 key = getFieldLevelEncryptionKey(keyAlias, user, password)
 

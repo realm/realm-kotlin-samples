@@ -1,8 +1,8 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("io.realm.kotlin") version "1.9.0"
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.8.21"
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.realm.kotlin)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -41,10 +41,12 @@ android {
         sourceCompatibility(JavaVersion.VERSION_1_8)
         targetCompatibility(JavaVersion.VERSION_1_8)
     }
+
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    packagingOptions {
+
+    packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
@@ -52,44 +54,34 @@ android {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.10.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.9.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0")
-    // Material Design 3
-    implementation("androidx.compose.material3:material3:1.1.0")
+    implementation(libs.androidx.appcompat)
+    implementation(libs.kotlinx.serialization.json)
+
+    val composeBom = platform(libs.androidx.compose.bom)
+
+    implementation(composeBom)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.runtime.livedata)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+
+    implementation(libs.androidx.navigation.compose)
+
+    implementation(libs.androidx.lifecycle.runtimeCompose)
+    implementation(libs.androidx.lifecycle.viewModelCompose)
+
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
+
+    implementation(libs.realm.library.sync)
+
+    debugImplementation(composeBom)
+    debugImplementation(libs.androidx.compose.ui.tooling.core)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    testImplementation(libs.junit4)
+
     androidTestImplementation(kotlin("test"))
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.0")
-    implementation("io.insert-koin:koin-android:3.4.2")
-    implementation("io.insert-koin:koin-androidx-compose:3.4.5")
-    // Android Studio Preview support
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
-    implementation(platform("androidx.compose:compose-bom:2022.10.00"))
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-graphics")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2022.10.00"))
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-    debugImplementation("androidx.compose.ui:ui-tooling")
-
-    val nav_version = "2.5.3"
-    implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
-    implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
-    implementation("androidx.navigation:navigation-compose:$nav_version")
-
-    // Optional - Integration with activities
-    implementation("androidx.activity:activity-compose:1.6.1")
-    // Optional - Integration with ViewModels
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
-    // Optional - Integration with LiveData
-    implementation("androidx.compose.runtime:runtime-livedata")
-
-    // Realm
-    implementation("io.realm.kotlin:library-sync:1.9.0")
-
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.ext)
+    androidTestImplementation(libs.kotlinx.coroutines.test)
 }
