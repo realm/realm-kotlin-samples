@@ -19,7 +19,7 @@ package io.realm.curatedsyncexamples
 import android.security.keystore.KeyProperties
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.realm.curatedsyncexamples.fieldencryption.ext.getKeyOrGenerate
-import io.realm.curatedsyncexamples.fieldencryption.models.AndroidKeyStoreHelper
+import io.realm.curatedsyncexamples.fieldencryption.models.SystemKeyStore
 import io.realm.curatedsyncexamples.fieldencryption.models.CipherSpec
 import io.realm.curatedsyncexamples.fieldencryption.models.EncryptionKeySpec
 import io.realm.curatedsyncexamples.fieldencryption.models.SecretRecord
@@ -87,8 +87,8 @@ class KeyHelperTests {
     @Test
     fun storeAndRetrieveKeyInAndroidKeystore() = runTest {
         // Store a key
-        AndroidKeyStoreHelper
-            .getKeyFromAndroidKeyStore(KEY_ALIAS) {
+        SystemKeyStore
+            .getKey(KEY_ALIAS) {
                 SerializableSecretKey(
                     key = keyGenerator.generateKey(),
                     cipherSpec = cipherSpec
@@ -109,8 +109,8 @@ class KeyHelperTests {
 
     @Test
     fun useAndroidKeyStoreKeyToEncryptDecrypt() = runTest {
-        key = AndroidKeyStoreHelper
-            .getKeyFromAndroidKeyStore(KEY_ALIAS) {
+        key = SystemKeyStore
+            .getKey(KEY_ALIAS) {
                 SerializableSecretKey(
                     key = keyGenerator.generateKey(),
                     cipherSpec = cipherSpec

@@ -20,7 +20,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.realm.curatedsyncexamples.fieldencryption.ext.fieldEncryptionCipherSpec
-import io.realm.curatedsyncexamples.fieldencryption.models.AndroidKeyStoreHelper
+import io.realm.curatedsyncexamples.fieldencryption.models.SystemKeyStore
 import io.realm.curatedsyncexamples.fieldencryption.models.EncryptedStringField
 import io.realm.curatedsyncexamples.fieldencryption.models.SecretRecord
 import io.realm.curatedsyncexamples.fieldencryption.models.cipherSpec
@@ -104,7 +104,7 @@ class SecretRecordsViewModel(
         }
         viewModelScope.launch(Dispatchers.IO) {
             user.logOut()
-            AndroidKeyStoreHelper.removeKey(keyAlias)
+            SystemKeyStore.removeKey(keyAlias)
 
             _uiState.update {
                 it.copy(loggedOut = true)

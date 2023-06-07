@@ -26,11 +26,9 @@ import io.realm.kotlin.mongodb.User
 import java.security.Key
 import java.security.KeyStore
 
-private const val ANDROID_KEY_STORE_PROVIDER = "AndroidKeyStore"
-
-object AndroidKeyStoreHelper {
+object SystemKeyStore {
     private val keyStore: KeyStore =
-        KeyStore.getInstance(ANDROID_KEY_STORE_PROVIDER)
+        KeyStore.getInstance("AndroidKeyStore")
             .apply {
                 load(null)
             }
@@ -39,18 +37,21 @@ object AndroidKeyStoreHelper {
 
     fun removeKey(keyAlias: String) = keyStore.deleteEntry(keyAlias)
 
-    suspend fun getKeyFromAndroidKeyStore(
+    /**
+     * Suspend as it key computation can take some time.
+     */
+    suspend fun getKey(
         keyAlias: String,
-        generateKey: suspend AndroidKeyStoreHelper.() -> SerializableSecretKey
+        generateKey: suspend SystemKeyStore.() -> SerializableSecretKey
     ): Key {
         if (!keyStore.isKeyEntry(keyAlias))
-            storeKeyInAndroidKeyStore(keyAlias, generateKey())
+            storeKey(keyAlias, generateKey())
 
         return keyStore
             .getKey(keyAlias, null)
     }
 
-    private fun storeKeyInAndroidKeyStore(
+    private fun storeKey(
         keyAlias: String,
         key: SerializableSecretKey
     ) {
@@ -69,8 +70,8 @@ object AndroidKeyStoreHelper {
 }
 
 suspend fun getFieldLevelEncryptionKey(keyAlias: String, user: User, password: String) =
-    AndroidKeyStoreHelper
-        .getKeyFromAndroidKeyStore(keyAlias) {
+    SystemKeyStore
+        .getKey(keyAlias) {
             // Key is missing in the Android keystore, retrieve it from the keystore
             val keyStore = user.keyStore()
 

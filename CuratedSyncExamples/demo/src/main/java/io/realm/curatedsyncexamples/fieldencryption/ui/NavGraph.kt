@@ -20,12 +20,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import io.realm.curatedsyncexamples.fieldencryption.models.AndroidKeyStoreHelper
+import io.realm.curatedsyncexamples.fieldencryption.models.SystemKeyStore
 import io.realm.curatedsyncexamples.fieldencryption.ui.keystore.KeyStoreScreen
 import io.realm.curatedsyncexamples.fieldencryption.ui.login.LoginScreen
 import io.realm.curatedsyncexamples.fieldencryption.ui.records.SecretRecordScreen
@@ -44,7 +43,7 @@ class NavGraphViewModel(
 ) : ViewModel() {
     fun isUserLoggedIn(): Boolean = app.currentUser != null
 
-    fun isFieldEncryptionKeyAvailable(): Boolean = AndroidKeyStoreHelper.containsKey(keyAlias)
+    fun isFieldEncryptionKeyAvailable(): Boolean = SystemKeyStore.containsKey(keyAlias)
 }
 
 @Composable
