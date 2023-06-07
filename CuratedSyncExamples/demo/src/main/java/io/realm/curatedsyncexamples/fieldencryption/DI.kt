@@ -34,5 +34,5 @@ val fieldEncryptionModule = module {
 
     viewModel { NavGraphViewModel(get(), keyAlias) }
 
-    single { App.create("cypher-scjvs") }
+    single { App.create("field-encryption-fjrvt") }
 }

@@ -1,0 +1,10 @@
+[
+    {
+        "name": "initializeEncryptionKey",
+        "private": false
+    },
+    {
+        "name": "updateKeyStore",
+        "private": false
+    }
+]

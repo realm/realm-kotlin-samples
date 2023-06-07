@@ -30,12 +30,9 @@ koin-android = { group = "io.insert-koin", name = "koin-android",version.ref = "
 koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose" ,version.ref = "koinCompose"}
 realm-library-sync = { group = "io.realm.kotlin", name = "library-sync" ,version.ref = "realm"}
 junit4 = { group = "junit", name = "junit", version.ref = "junit4" }
-androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidxEspresso" }
 androidx-test-ext = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "androidxTestExt" }
-
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
 androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidxTestRunner" }
-
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }

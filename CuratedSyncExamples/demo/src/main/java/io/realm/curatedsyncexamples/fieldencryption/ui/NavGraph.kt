@@ -94,32 +94,21 @@ fun NavGraph(
 class NavigationActions(private val navController: NavHostController) {
     fun navigateToKeyStoreUnlockScreen() {
         navController.navigate(Screens.KEYSTORE_PASSWORD_SCREEN) {
-            popUpTo(navController.graph.findStartDestination().id) {
-                saveState = true
-            }
+            navController.popBackStack()
             launchSingleTop = true
         }
     }
 
     fun navigateToSecretRecordsScreen() {
         navController.navigate(Screens.SECRET_RECORDS_SCREEN) {
-            // Pop up to the start destination of the graph to
-            // avoid building up a large stack of destinations
-            // on the back stack as users select items
-            popUpTo(navController.graph.findStartDestination().id) {
-                saveState = true
-                inclusive = true
-            }
+            navController.popBackStack()
             launchSingleTop = true
         }
     }
 
     fun navigateToLogin() {
         navController.navigate(Screens.LOGIN_SCREEN) {
-            popUpTo(Screens.SECRET_RECORDS_SCREEN) {
-                inclusive = true
-                saveState = true
-            }
+            navController.popBackStack()
             launchSingleTop = true
         }
     }
