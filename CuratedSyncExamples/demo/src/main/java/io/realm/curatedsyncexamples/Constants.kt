@@ -16,20 +16,4 @@
  */
 package io.realm.curatedsyncexamples
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import io.realm.curatedsyncexamples.ui.ExamplesScreen
-import io.realm.curatedsyncexamples.ui.theme.CuratedSyncExamplesTheme
-
-class ExampleSelectorActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setContent {
-            CuratedSyncExamplesTheme {
-                ExamplesScreen()
-            }
-        }
-    }
-}
+const val FIELD_ENCRYPTION_APP_ID = "field-encryption-fjrvt"

@@ -16,11 +16,11 @@
  */
 package io.realm.curatedsyncexamples.fieldencryption
 
+import io.realm.curatedsyncexamples.Apps
 import io.realm.curatedsyncexamples.fieldencryption.ui.NavGraphViewModel
 import io.realm.curatedsyncexamples.fieldencryption.ui.keystore.KeyStoreViewModel
 import io.realm.curatedsyncexamples.fieldencryption.ui.login.LoginViewModel
 import io.realm.curatedsyncexamples.fieldencryption.ui.records.SecretRecordsViewModel
-import io.realm.kotlin.mongodb.App
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -28,11 +28,8 @@ import org.koin.dsl.module
 val fieldEncryptionModule = module {
     val keyAlias = "fieldLevelEncryptionKey"
 
-    viewModel { KeyStoreViewModel(get(), keyAlias) }
-    viewModel { LoginViewModel(get()) }
-    viewModel { SecretRecordsViewModel(get(), keyAlias) }
-
-    viewModel { NavGraphViewModel(get(), keyAlias) }
-
-    single { App.create("field-encryption-fjrvt") }
+    viewModel { KeyStoreViewModel(get(qualifier = Apps.FIELD_ENCRYPTION_APP.qualifier), keyAlias) }
+    viewModel { LoginViewModel(get(qualifier = Apps.FIELD_ENCRYPTION_APP.qualifier)) }
+    viewModel { SecretRecordsViewModel(get(qualifier = Apps.FIELD_ENCRYPTION_APP.qualifier), keyAlias) }
+    viewModel { NavGraphViewModel(get(qualifier = Apps.FIELD_ENCRYPTION_APP.qualifier), keyAlias) }
 }
