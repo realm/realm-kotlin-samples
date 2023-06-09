@@ -19,42 +19,42 @@ package io.realm.curatedsyncexamples.ui
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.realm.curatedsyncexamples.fieldencryption.FieldEncryptionActivity
+import io.realm.curatedsyncexamples.DemoWithApp
+import io.realm.curatedsyncexamples.Demos
 import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.mongodb.Credentials
 import io.realm.kotlin.mongodb.exceptions.ServiceException
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class ExamplesScreenViewModel(private val apps: List<App>) : ViewModel() {
+typealias DemoWithStatus = Pair<Demos, Boolean>
+
+class ExamplesScreenViewModel(private val apps: List<DemoWithApp>) : ViewModel() {
     private val loading = MutableStateFlow(true)
     val loadingState: StateFlow<Boolean> = loading.asStateFlow()
 
-    val unavailableApps: MutableLiveData<List<App>> by lazy { MutableLiveData<List<App>>() }
+    val demoEntriesWithStatus: MutableLiveData<List<DemoWithStatus>> by lazy { MutableLiveData<List<DemoWithStatus>>() }
 
-    val examplesList = arrayOf(
-        ExampleEntry(
-            name = "Field level encryption",
-            activity = FieldEncryptionActivity::class.java
-        ),
-    )
+    private suspend fun App.isAvailable() =
+        try {
+            login(Credentials.anonymous())
+            true
+        } catch (e: ServiceException) {
+            e.message?.startsWith("[Service][Unknown(4351)]") != true
+        }
 
-    private suspend fun getUnavailableApps() =
-        apps.filterNot { app ->
-            try {
-                app.login(Credentials.anonymous())
-                true
-            } catch (e: ServiceException) {
-                e.message?.startsWith("[Service][Unknown(4351)]") != true
-            }
+    private suspend fun getDemoEntriesWithStatus() =
+        apps.map { demoWithApp ->
+            DemoWithStatus(demoWithApp.first, demoWithApp.second.isAvailable())
         }
 
     init {
-        viewModelScope.launch {
-            unavailableApps.postValue(getUnavailableApps())
+        viewModelScope.launch(Dispatchers.IO) {
+            demoEntriesWithStatus.postValue(getDemoEntriesWithStatus())
             loading.update { false }
         }
     }

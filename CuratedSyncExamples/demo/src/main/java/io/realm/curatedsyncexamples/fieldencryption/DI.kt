@@ -16,7 +16,7 @@
  */
 package io.realm.curatedsyncexamples.fieldencryption
 
-import io.realm.curatedsyncexamples.Apps
+import io.realm.curatedsyncexamples.Demos
 import io.realm.curatedsyncexamples.fieldencryption.ui.NavGraphViewModel
 import io.realm.curatedsyncexamples.fieldencryption.ui.keystore.KeyStoreViewModel
 import io.realm.curatedsyncexamples.fieldencryption.ui.login.LoginViewModel
@@ -28,8 +28,8 @@ import org.koin.dsl.module
 val fieldEncryptionModule = module {
     val keyAlias = "fieldLevelEncryptionKey"
 
-    viewModel { KeyStoreViewModel(get(qualifier = Apps.FIELD_ENCRYPTION_APP.qualifier), keyAlias) }
-    viewModel { LoginViewModel(get(qualifier = Apps.FIELD_ENCRYPTION_APP.qualifier)) }
-    viewModel { SecretRecordsViewModel(get(qualifier = Apps.FIELD_ENCRYPTION_APP.qualifier), keyAlias) }
-    viewModel { NavGraphViewModel(get(qualifier = Apps.FIELD_ENCRYPTION_APP.qualifier), keyAlias) }
+    viewModel { KeyStoreViewModel(get(qualifier = Demos.FIELD_ENCRYPTION_APP.qualifier), keyAlias) }
+    viewModel { LoginViewModel(get(qualifier = Demos.FIELD_ENCRYPTION_APP.qualifier)) }
+    viewModel { SecretRecordsViewModel(get(qualifier = Demos.FIELD_ENCRYPTION_APP.qualifier), keyAlias) }
+    viewModel { NavGraphViewModel(get(qualifier = Demos.FIELD_ENCRYPTION_APP.qualifier), keyAlias) }
 }

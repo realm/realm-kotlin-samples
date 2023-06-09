@@ -16,32 +16,53 @@
  */
 package io.realm.curatedsyncexamples
 
+import io.realm.curatedsyncexamples.fieldencryption.FieldEncryptionActivity
 import io.realm.curatedsyncexamples.ui.ExamplesScreenViewModel
 import io.realm.kotlin.mongodb.App
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import kotlin.reflect.KClass
 
 /**
  * Enum with all the required App Services App.
  */
-enum class Apps(val appId: String) {
-    FIELD_ENCRYPTION_APP(FIELD_ENCRYPTION_APP_ID);
+enum class Demos(
+    val title: String,
+    val activity: Class<*>,
+    val appId: String,
+) {
+    FIELD_ENCRYPTION_APP(
+        "Field level encryption",
+        FieldEncryptionActivity::class.java,
+        FIELD_ENCRYPTION_APP_ID
+    ),
+    FIELD_ENCRYPTION_APP1(
+        "Field level encryption",
+        FieldEncryptionActivity::class.java,
+        "FIELD_ENCRYPTION_APP_ID"
+    );
 
     val qualifier = named(appId)
 }
 
+typealias DemoWithApp = Pair<Demos, App>
+
 val appsModule = module {
-    for (app in Apps.values()) {
+    // Create singletons for each app.
+    for (app in Demos.values()) {
         single(app.qualifier) { App.create(app.appId) }
     }
 
     viewModel {
-        val apps = Apps.values()
-            .map { appEntry ->
-                get<App>(appEntry.qualifier)
-            }
-
-        ExamplesScreenViewModel(apps)
+        ExamplesScreenViewModel(
+            apps = Demos.values()
+                .map { demo ->
+                    DemoWithApp(
+                        first = demo,
+                        second = get(demo.qualifier)
+                    )
+                }
+        )
     }
 }

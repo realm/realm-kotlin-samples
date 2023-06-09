@@ -40,6 +40,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.realm.curatedsyncexamples.fieldencryption.models.SecretRecord
 import org.koin.compose.koinInject
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -79,6 +81,7 @@ fun NewRecord(
     }
 }
 
+@OptIn(ExperimentalEncodingApi::class)
 @Composable
 fun SecretRecordView(
     record: SecretRecord
@@ -97,7 +100,7 @@ fun SecretRecordView(
             )
             Text(
                 fontFamily = FontFamily.Monospace,
-                text = "Encrypted: ${String(record.content!!.encryptedValue)}"
+                text = "Encrypted: ${Base64.encode(record.content!!.encryptedValue)}"
             )
         }
     }

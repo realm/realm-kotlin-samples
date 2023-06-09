@@ -45,7 +45,7 @@ import org.koin.compose.koinInject
 fun ExamplesScreen(
     viewModel: ExamplesScreenViewModel = koinInject()
 ) {
-    val unavailableApps by viewModel.unavailableApps.observeAsState(emptyList())
+    val demoEntriesWithStatus by viewModel.demoEntriesWithStatus.observeAsState(emptyList())
     val loading by viewModel.loadingState.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
@@ -70,7 +70,13 @@ fun ExamplesScreen(
                 textAlign = TextAlign.Center
             )
             if (!loading) {
-                if (unavailableApps.isNotEmpty()) {
+                demoEntriesWithStatus.filter { it.second }.map { it.first }.forEach {
+                    ExampleEntry(it.title) {
+                        context.startActivity(Intent(context, it.activity))
+                    }
+                }
+
+                if (demoEntriesWithStatus.any { !it.second }) {
                     Column(modifier = Modifier.fillMaxWidth()) {
                         Text(
                             modifier = Modifier.fillMaxWidth(),
@@ -78,14 +84,13 @@ fun ExamplesScreen(
                             textAlign = TextAlign.Center
                         )
                         Text(
-                            text = "Some App Services Apps are not available. Please enable then using the Readme instructions.",
+                            text = "One or more App Services Apps required for this demo app are not available. Please follow the Readme instructions on how to set them up.",
                             textAlign = TextAlign.Center
                         )
-                    }
-                } else {
-                    viewModel.examplesList.forEach { example ->
-                        ExampleEntry(example.name) {
-                            context.startActivity(Intent(context, example.activity))
+                        demoEntriesWithStatus.filter { !it.second }.map { it.first }.forEach {
+                            ExampleEntry(it.title, enabled = false) {
+                                context.startActivity(Intent(context, it.activity))
+                            }
                         }
                     }
                 }
@@ -95,9 +100,15 @@ fun ExamplesScreen(
 }
 
 @Composable
-fun ExampleEntry(name: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
+fun ExampleEntry(
+    name: String,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    onClick: () -> Unit
+) {
     ElevatedButton(
         onClick = onClick,
+        enabled = enabled,
         modifier = modifier
     ) {
         Text(
