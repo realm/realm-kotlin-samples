@@ -16,16 +16,20 @@
  */
 package io.realm.curatedsyncexamples.fieldencryption.ui
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import io.realm.curatedsyncexamples.fieldencryption.models.SystemKeyStore
-import io.realm.curatedsyncexamples.fieldencryption.ui.keystore.KeyStoreScreen
+import io.realm.curatedsyncexamples.fieldencryption.ui.keystore.UnlockUserKeyStoreScreen
 import io.realm.curatedsyncexamples.fieldencryption.ui.login.LoginScreen
 import io.realm.curatedsyncexamples.fieldencryption.ui.records.SecretRecordScreen
 import io.realm.kotlin.mongodb.App
@@ -69,21 +73,27 @@ fun NavGraph(
         composable(
             Screens.LOGIN_SCREEN,
         ) {
-            LoginScreen {
+            LoginScreen(
+                modifier = modifier.verticalScroll(rememberScrollState())
+            ) {
                 navActions.navigateToKeyStoreUnlockScreen()
             }
         }
         composable(
             Screens.KEYSTORE_PASSWORD_SCREEN,
         ) {
-            KeyStoreScreen {
+            UnlockUserKeyStoreScreen(
+                modifier = modifier.verticalScroll(rememberScrollState())
+            ) {
                 navActions.navigateToSecretRecordsScreen()
             }
         }
         composable(
             Screens.SECRET_RECORDS_SCREEN,
         ) {
-            SecretRecordScreen {
+            SecretRecordScreen(
+                modifier = modifier.padding(horizontal = 16.dp)
+            ) {
                 navActions.navigateToLogin()
             }
         }

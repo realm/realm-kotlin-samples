@@ -18,12 +18,9 @@ package io.realm.curatedsyncexamples.fieldencryption.ui.keystore
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.realm.curatedsyncexamples.fieldencryption.ext.fieldEncryptionCipherSpec
-import io.realm.curatedsyncexamples.fieldencryption.models.cipherSpec
 import io.realm.curatedsyncexamples.fieldencryption.models.getFieldLevelEncryptionKey
 import io.realm.curatedsyncexamples.fieldencryption.models.key
 import io.realm.kotlin.mongodb.App
-import io.realm.kotlin.mongodb.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -32,39 +29,37 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class KeyStoreUiState(
-    val unlocking: Boolean = false,
-    val unlocked: Boolean = false,
+    val isInitialized: Boolean = false,
+    val isUnlocking: Boolean = false,
+    val isUnlocked: Boolean = false,
     val errorMessage: String? = null,
 )
 
 class KeyStoreViewModel(
-    app: App,
-    private val keyAlias: String
+    val app: App? = null,
+    private val keyAlias: String,
+    uiState: KeyStoreUiState = KeyStoreUiState(),
 ) : ViewModel() {
-    private var user: User
-
-    private val _uiState = MutableStateFlow(KeyStoreUiState())
+    private val _uiState = MutableStateFlow(uiState)
     val uiState: StateFlow<KeyStoreUiState> = _uiState.asStateFlow()
 
     init {
-        user = app.currentUser!!
-        cipherSpec = user.fieldEncryptionCipherSpec()
-    }
 
+    }
     fun unlock(password: String) {
         _uiState.update {
-            it.copy(unlocking = true, unlocked = false, errorMessage = null)
+            it.copy(isUnlocking = true, isUnlocked = false, errorMessage = null)
         }
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                key = getFieldLevelEncryptionKey(keyAlias, user, password)
+                key = getFieldLevelEncryptionKey(keyAlias, app!!.currentUser!!, password)
 
                 _uiState.update {
-                    it.copy(unlocked = true)
+                    it.copy(isUnlocked = true)
                 }
             } catch (e: Exception) {
                 _uiState.update {
-                    it.copy(unlocking = false, errorMessage = e.message)
+                    it.copy(isUnlocking = false, errorMessage = e.message)
                 }
             }
         }

@@ -28,7 +28,7 @@ import org.koin.dsl.module
 val fieldEncryptionModule = module {
     val keyAlias = "fieldLevelEncryptionKey"
 
-    viewModel { KeyStoreViewModel(get(qualifier = Demos.FIELD_ENCRYPTION.qualifier), keyAlias) }
+    viewModel { KeyStoreViewModel(get(qualifier = Demos.FIELD_ENCRYPTION.qualifier), keyAlias = keyAlias) }
     viewModel { LoginViewModel(get(qualifier = Demos.FIELD_ENCRYPTION.qualifier)) }
     viewModel { SecretRecordsViewModel(get(qualifier = Demos.FIELD_ENCRYPTION.qualifier), keyAlias) }
     viewModel { NavGraphViewModel(get(qualifier = Demos.FIELD_ENCRYPTION.qualifier), keyAlias) }

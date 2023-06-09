@@ -19,6 +19,10 @@ package io.realm.curatedsyncexamples.fieldencryption
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.Modifier
 import io.realm.curatedsyncexamples.fieldencryption.ui.NavGraph
 import io.realm.curatedsyncexamples.ui.theme.CuratedSyncExamplesTheme
 
@@ -29,7 +33,10 @@ class FieldEncryptionActivity : ComponentActivity() {
 
         setContent {
             CuratedSyncExamplesTheme {
-                NavGraph()
+                NavGraph(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                )
             }
         }
     }

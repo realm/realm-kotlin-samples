@@ -16,8 +16,10 @@
  */
 package io.realm.curatedsyncexamples.fieldencryption.ui.keystore
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -38,53 +40,134 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.compose.koinInject
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun KeyStoreScreen(
+fun UnlockUserKeyStoreScreen(
     viewModel: KeyStoreViewModel = koinInject(),
+    modifier: Modifier = Modifier,
     onUnlocked: () -> Unit
 ) {
-    var password by remember { mutableStateOf("") }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Surface(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
+        modifier = modifier,
         color = MaterialTheme.colorScheme.background
     ) {
-        LaunchedEffect(uiState.unlocked) {
-            if (uiState.unlocked) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            UserKeyUnlocker(
+                state = uiState,
+                modifier = Modifier.padding(48.dp)
+            ) { password ->
+                viewModel.unlock(password)
+            }
+        }
+        LaunchedEffect(uiState.isUnlocked) {
+            if (uiState.isUnlocked) {
                 onUnlocked()
             }
         }
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(48.dp)
-        ) {
-            Text(text = "Unlock your keystore to decrypt data")
+    }
+}
 
-            OutlinedTextField(
-                value = password,
-                enabled = !uiState.unlocking,
-                isError = uiState.errorMessage != null,
-                onValueChange = { password = it },
-                label = { Text("Password") },
-                visualTransformation = PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-            )
-            ElevatedButton(
-                enabled = !uiState.unlocking,
-                onClick = { viewModel.unlock(password) }) {
-                Text(text = "Continue")
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun UserKeyUnlocker(
+    state: KeyStoreUiState,
+    modifier: Modifier = Modifier,
+    onUnlock: (String) -> Unit = {}
+) {
+    var password: String by remember { mutableStateOf("") }
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+    ) {
+        Text(
+            fontSize = 24.sp,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(bottom = 8.dp),
+            text = if (state.isInitialized) {
+                "Unlocking user's keystore"
+            } else {
+                "Initializing user's keystore"
             }
-            uiState.errorMessage?.let {
-                Text(text = it)
+        )
+        Text(
+            textAlign = TextAlign.Justify,
+            text = if (state.isInitialized) {
+                """
+                |The user's keystore is securely stored in Atlas and linked to your account. It can be accessed from any device. 
+                |
+                |Please introduced the password used to protect your user keystore.
+        """.trimMargin()
+            } else {
+                """
+                |The user's keystore is securely stored in Atlas and linked to your account. It can be accessed from any device. 
+                |
+                |For added security, please create a password to protect your user keystore.
+        """.trimMargin()
             }
+        )
+
+        OutlinedTextField(
+            value = password,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
+            enabled = !state.isUnlocking,
+            isError = state.errorMessage != null,
+            onValueChange = { password = it },
+            label = { Text("Password") },
+            visualTransformation = PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+        )
+        ElevatedButton(
+            modifier = Modifier.padding(top = 4.dp),
+            enabled = !state.isUnlocking,
+            onClick = { onUnlock(password) }) {
+            Text(text = "Continue")
         }
+        state.errorMessage?.let {
+            Text(text = it)
+        }
+
+    }
+}
+
+@Preview
+@Composable
+fun UninitializedState() {
+    Surface(
+        color = MaterialTheme.colorScheme.background
+    ) {
+        UserKeyUnlocker(
+            state = KeyStoreUiState(
+                isInitialized = false
+            )
+        )
+    }
+}
+
+@Preview
+@Composable
+fun InitializedState() {
+    Surface(
+        color = MaterialTheme.colorScheme.background
+    ) {
+        UserKeyUnlocker(
+            state = KeyStoreUiState(
+                isInitialized = true
+            )
+        )
     }
 }
