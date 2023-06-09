@@ -22,7 +22,7 @@ import androidx.activity.compose.setContent
 import io.realm.curatedsyncexamples.ui.ExamplesScreen
 import io.realm.curatedsyncexamples.ui.theme.CuratedSyncExamplesTheme
 
-class ExampleSelectorActivity : ComponentActivity() {
+class DemoSelectorActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

@@ -14,7 +14,7 @@
         android:theme="@style/Theme.CuratedSyncExamples"
         tools:targetApi="31">
         <activity
-            android:name=".ExampleSelectorActivity"
+            android:name=".DemoSelectorActivity"
             android:exported="true"
             android:label="@string/title_activity_example_selector"
             android:theme="@style/Theme.CuratedSyncExamples">

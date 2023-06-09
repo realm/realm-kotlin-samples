@@ -22,7 +22,6 @@ import io.realm.kotlin.mongodb.App
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import kotlin.reflect.KClass
 
 /**
  * Enum with all the required App Services App.
@@ -32,15 +31,35 @@ enum class Demos(
     val activity: Class<*>,
     val appId: String,
 ) {
-    FIELD_ENCRYPTION_APP(
+    FIELD_ENCRYPTION(
         "Field level encryption",
         FieldEncryptionActivity::class.java,
         FIELD_ENCRYPTION_APP_ID
     ),
-    FIELD_ENCRYPTION_APP1(
-        "Field level encryption",
-        FieldEncryptionActivity::class.java,
-        "FIELD_ENCRYPTION_APP_ID"
+    USER_PRESENCE(
+        "User presence",
+        DemoSelectorActivity::class.java,
+        "<insert-demo-app-id>"
+    ),
+    OFFLINE_LOGIN(
+        "Offline login",
+        DemoSelectorActivity::class.java,
+        "<insert-demo-app-id>"
+    ),
+    ERROR_HANDLING(
+        "Error handling",
+        DemoSelectorActivity::class.java,
+        "<insert-demo-app-id>"
+    ),
+    BUSINESS_LOGIC(
+        "Business logic",
+        DemoSelectorActivity::class.java,
+        "<insert-demo-app-id>"
+    ),
+    PURCHASE_VERIFICATION(
+        "Purchase verification",
+        DemoSelectorActivity::class.java,
+        "<insert-demo-app-id>"
     );
 
     val qualifier = named(appId)
