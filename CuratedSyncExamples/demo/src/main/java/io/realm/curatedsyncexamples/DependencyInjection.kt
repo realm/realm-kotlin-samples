@@ -39,27 +39,27 @@ enum class Demos(
     USER_PRESENCE(
         "User presence",
         DemoSelectorActivity::class.java,
-        "<insert-demo-app-id>"
+        USER_PRESENCE_APP_ID,
     ),
     OFFLINE_LOGIN(
         "Offline login",
         DemoSelectorActivity::class.java,
-        "<insert-demo-app-id>"
+        OFFLINE_LOGIN_APP_ID,
     ),
     ERROR_HANDLING(
         "Error handling",
         DemoSelectorActivity::class.java,
-        "<insert-demo-app-id>"
+        ERROR_HANDLING_APP_ID,
     ),
     BUSINESS_LOGIC(
         "Business logic",
         DemoSelectorActivity::class.java,
-        "<insert-demo-app-id>"
+        BUSINESS_LOGIC_APP_ID,
     ),
     PURCHASE_VERIFICATION(
         "Purchase verification",
         DemoSelectorActivity::class.java,
-        "<insert-demo-app-id>"
+        PURCHASE_VERIFICATION_APP_ID,
     );
 
     val qualifier = named(appId)
