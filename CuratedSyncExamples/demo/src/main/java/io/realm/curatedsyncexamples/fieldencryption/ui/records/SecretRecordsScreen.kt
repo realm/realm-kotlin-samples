@@ -159,25 +159,28 @@ fun SecretRecordScreen(
                 it._id.toHexString()
             }
         ) { record ->
-            with(record.content!!) {
-                SecretRecordCard(
-                    content = value,
-                    encryptedContent = Base64.encode(encryptedValue),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp, horizontal = 16.dp),
-                )
-            }
+            SecretRecordCard(
+                content = record.content,
+                encryptedContent = Base64.encode(record.securedContent),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp, horizontal = 16.dp),
+            )
+
         }
         item {
             Box(
-                modifier = Modifier.padding(16.dp).height(144.dp)
+                modifier = Modifier
+                    .padding(16.dp)
+                    .height(144.dp)
             )
         }
     }
     Box(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
-        contentAlignment= Alignment.BottomCenter
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        contentAlignment = Alignment.BottomCenter
     ) {
         AddSecretRecordCard(
             uiState,

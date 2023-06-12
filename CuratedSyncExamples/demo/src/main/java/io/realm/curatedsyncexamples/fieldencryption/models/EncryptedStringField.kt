@@ -19,6 +19,7 @@ package io.realm.curatedsyncexamples.fieldencryption.models
 import io.realm.kotlin.types.EmbeddedRealmObject
 import io.realm.kotlin.types.annotations.Ignore
 import java.security.Key
+import kotlin.reflect.KMutableProperty0
 import kotlin.reflect.KProperty
 
 /**
@@ -35,39 +36,29 @@ lateinit var cipherSpec: SerializableCipherSpec
  */
 lateinit var key: Key
 
+
 /**
- * Helper object that encapsulates the logic to encrypt/decrypt a String in an EmbeddedObject.
+ * Delegates that encapsulates the logic to encrypt/decrypt a String.
  *
- * The data is accessible with [value], that would use [cipherSpec] and [key] to encrypt/decrypt the
- * contents that are stored in [encryptedValue].
+ * It uses the global variables [cipherSpec] and [key] to encrypt/decrypt the
+ * contents from [backingProperty].
  */
-class EncryptedStringField : EmbeddedRealmObject {
-    /**
-     * Contains the encrypted contents.
-     */
-    var encryptedValue: ByteArray = byteArrayOf()
+class SecureStringDelegate(private val backingProperty: KMutableProperty0<ByteArray>) {
+    operator fun getValue(
+        thisRef: Any,
+        property: KProperty<*>
+    ): String = String(bytes = cipherSpec.decrypt(backingProperty.get(), key))
 
-    /**
-     * Delegated property to provide seamless access to the encrypted data.
-     */
-    @Ignore
-    var value: String by DecryptionDelegate()
-
-    inner class DecryptionDelegate {
-        operator fun getValue(thisRef: EncryptedStringField, property: KProperty<*>): String =
-            String(
-                bytes = cipherSpec.decrypt(thisRef.encryptedValue, key)
-            )
-
-        operator fun setValue(
-            thisRef: EncryptedStringField,
-            property: KProperty<*>,
-            value: String
-        ) {
-            thisRef.encryptedValue = cipherSpec.encrypt(
+    operator fun setValue(
+        thisRef: Any,
+        property: KProperty<*>,
+        value: String
+    ) {
+        backingProperty.set(
+            cipherSpec.encrypt(
                 input = value.toByteArray(),
                 key = key
             )
-        }
+        )
     }
 }

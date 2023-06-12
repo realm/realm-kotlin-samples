@@ -4,7 +4,7 @@ Reference app that show cases different design patterns and examples of Realm Ko
 
 ## Samples
 
-### [Field level encryption](LINK_TO_README)
+### [Field level encryption](https://github.com/realm/realm-kotlin-samples/blob/main/CuratedSyncExamples/apps/field-encryption/README.md)
 
 This demo shows the process of protecting users sensitive data by employing encryption techniques while guaranteeing the access from any users device.
 

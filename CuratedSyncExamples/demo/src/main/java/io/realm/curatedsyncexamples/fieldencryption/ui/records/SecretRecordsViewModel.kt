@@ -20,9 +20,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.realm.curatedsyncexamples.fieldencryption.ext.fieldEncryptionCipherSpec
-import io.realm.curatedsyncexamples.fieldencryption.models.SystemKeyStore
-import io.realm.curatedsyncexamples.fieldencryption.models.EncryptedStringField
 import io.realm.curatedsyncexamples.fieldencryption.models.SecretRecord
+import io.realm.curatedsyncexamples.fieldencryption.models.SystemKeyStore
 import io.realm.curatedsyncexamples.fieldencryption.models.cipherSpec
 import io.realm.curatedsyncexamples.fieldencryption.models.getFieldLevelEncryptionKey
 import io.realm.curatedsyncexamples.fieldencryption.models.key
@@ -66,7 +65,7 @@ class SecretRecordsViewModel(
             }
 
             val syncConfig = SyncConfiguration
-                .Builder(app.currentUser!!, setOf(SecretRecord::class, EncryptedStringField::class))
+                .Builder(app.currentUser!!, setOf(SecretRecord::class))
                 .initialSubscriptions {
                     // Subscribe to all secret records
                     add(it.query<SecretRecord>())
@@ -120,7 +119,7 @@ class SecretRecordsViewModel(
                 copyToRealm(
                     SecretRecord().apply {
                         this.ownerId = user.id
-                        this.content!!.value = content
+                        this.content = content
                     }
                 )
             }

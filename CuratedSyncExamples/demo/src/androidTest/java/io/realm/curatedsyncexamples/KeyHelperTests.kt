@@ -119,10 +119,10 @@ class KeyHelperTests {
         modelsCipherSpec = cipherSpec
 
         val record = SecretRecord().apply {
-            content!!.value = "testing a string"
+            content = "testing a string"
         }
 
-        assertEquals("testing a string", record.content!!.value)
+        assertEquals("testing a string", record.content)
     }
 
     @Test

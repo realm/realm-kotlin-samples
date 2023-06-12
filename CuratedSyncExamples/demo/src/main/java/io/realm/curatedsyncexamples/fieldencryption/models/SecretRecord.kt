@@ -17,6 +17,7 @@
 package io.realm.curatedsyncexamples.fieldencryption.models
 
 import io.realm.kotlin.types.RealmObject
+import io.realm.kotlin.types.annotations.Ignore
 import io.realm.kotlin.types.annotations.PersistedName
 import io.realm.kotlin.types.annotations.PrimaryKey
 import org.mongodb.kbson.BsonObjectId
@@ -30,5 +31,8 @@ class SecretRecord : RealmObject {
     var ownerId: String = ""
     @PrimaryKey
     var _id: BsonObjectId = BsonObjectId()
-    var content: EncryptedStringField? = EncryptedStringField()
+
+    var securedContent: ByteArray = byteArrayOf()
+    @Ignore
+    var content: String by SecureStringDelegate(::securedContent)
 }
