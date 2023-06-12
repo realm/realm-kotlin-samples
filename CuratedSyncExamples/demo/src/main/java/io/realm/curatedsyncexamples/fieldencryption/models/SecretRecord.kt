@@ -21,6 +21,9 @@ import io.realm.kotlin.types.annotations.PersistedName
 import io.realm.kotlin.types.annotations.PrimaryKey
 import org.mongodb.kbson.BsonObjectId
 
+/**
+ * Object that contains an encrypted field.
+ */
 @PersistedName("secret_record")
 class SecretRecord : RealmObject {
     @PersistedName("owner_id")

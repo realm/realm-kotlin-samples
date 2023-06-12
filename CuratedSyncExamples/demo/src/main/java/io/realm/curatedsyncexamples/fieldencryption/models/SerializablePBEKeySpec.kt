@@ -22,8 +22,12 @@ import javax.crypto.SecretKey
 import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.PBEKeySpec
 
+/**
+ * Class that contains all the information required to instantiate a [PBEKeySpec]. It contains a
+ * helper method to generate keys.
+ */
 @Serializable
-class EncryptionKeySpec(
+class SerializablePBEKeySpec(
     val algorithm: String,
     val salt: ByteArray,
     @SerialName("iterations_count")

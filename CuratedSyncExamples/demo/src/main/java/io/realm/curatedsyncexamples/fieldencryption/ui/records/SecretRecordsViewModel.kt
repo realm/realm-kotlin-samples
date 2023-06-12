@@ -32,6 +32,7 @@ import io.realm.kotlin.internal.platform.runBlocking
 import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.mongodb.User
 import io.realm.kotlin.mongodb.sync.SyncConfiguration
+import io.realm.kotlin.query.Sort
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -77,6 +78,7 @@ class SecretRecordsViewModel(
 
             val job = async {
                 realm.query<SecretRecord>()
+                    .sort("_id", Sort.DESCENDING)
                     .asFlow()
                     .collect {
                         records.postValue(it.list)

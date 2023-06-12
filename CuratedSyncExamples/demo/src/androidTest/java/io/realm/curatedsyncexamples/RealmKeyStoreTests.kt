@@ -17,7 +17,7 @@
 package io.realm.curatedsyncexamples
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import io.realm.curatedsyncexamples.fieldencryption.models.EncryptionKeySpec
+import io.realm.curatedsyncexamples.fieldencryption.models.SerializablePBEKeySpec
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -30,7 +30,7 @@ import kotlin.random.Random
  */
 @RunWith(AndroidJUnit4::class)
 class EncryptionKeySpecTests {
-    private val keySpec = EncryptionKeySpec(
+    private val keySpec = SerializablePBEKeySpec(
         algorithm = "PBKDF2WithHmacSHA256",
         salt = Random.nextBytes(16),
         iterationsCount = 100000,

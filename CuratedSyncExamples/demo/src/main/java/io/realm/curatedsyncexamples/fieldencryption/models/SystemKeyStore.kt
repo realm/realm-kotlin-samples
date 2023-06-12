@@ -26,6 +26,9 @@ import io.realm.kotlin.mongodb.User
 import java.security.Key
 import java.security.KeyStore
 
+/**
+ * Helper for communicating with the Android KeyStore.
+ */
 object SystemKeyStore {
     private val keyStore: KeyStore =
         KeyStore.getInstance("AndroidKeyStore")
@@ -69,6 +72,12 @@ object SystemKeyStore {
     }
 }
 
+/**
+ * Helper method that retrieves the key that would be used to access field level encrypted data.
+ *
+ * This function would first try to retrieve the key from the system keystore, if it not available
+ * it would then retrieve it from the user keystore.
+ */
 suspend fun getFieldLevelEncryptionKey(keyAlias: String, user: User, password: String) =
     SystemKeyStore
         .getKey(keyAlias) {

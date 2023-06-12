@@ -16,7 +16,7 @@
  */
 package io.realm.curatedsyncexamples.fieldencryption.ext
 
-import io.realm.curatedsyncexamples.fieldencryption.models.CipherSpec
+import io.realm.curatedsyncexamples.fieldencryption.models.SerializableCipherSpec
 import io.realm.curatedsyncexamples.fieldencryption.models.CustomData
 import io.realm.curatedsyncexamples.fieldencryption.models.UserKeyStore
 import io.realm.kotlin.annotations.ExperimentalRealmSerializerApi
@@ -37,6 +37,6 @@ suspend fun User.updateKeyStore(keyStore: UserKeyStore) {
 }
 
 @OptIn(ExperimentalRealmSerializerApi::class)
-fun User.fieldEncryptionCipherSpec(): CipherSpec {
+fun User.fieldEncryptionCipherSpec(): SerializableCipherSpec {
     return customData<CustomData>()?.fieldEncryptionCipherSpec!!
 }

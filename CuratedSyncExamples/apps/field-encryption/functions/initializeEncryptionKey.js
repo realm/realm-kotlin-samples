@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 
-// Executing this function would generate a new encryption key and store it in the user custom data
+// This function initializes an empty user password protected keystore and defines the algorithm that
+// would be used to encrypt any fields.
 exports = async function (user) {
     const salt = crypto.randomBytes(16);
 
@@ -11,29 +12,34 @@ exports = async function (user) {
 
     try {
         await customUserDataCollection.insertOne({
-            // Save the user's account ID to your configured user_id_field
+            // Binds this custom data to the user.
             owner_id: user.id,
-            // Store any other user data you want
+            // Defines the field level encryption algorithm.
             field_encryption_cipher_spec: {
                 algorithm: "AES",
                 block: "CBC",
                 padding: "PKCS7Padding",
                 key_length: 128
             },
+            // User keystore
             key_store: {
+                // Password based key specs
                 encryption_key_spec: {
                     algorithm: "PBKDF2WithHmacSHA256",
                     salt: BSON.Binary.fromHex(salt.toString('hex')),
                     iterations_count: 100000,
                     key_length: 128,
                 },
+                // Encryption cipher spec to secure keystore contents.
                 cipher_spec: {
                     algorithm: "AES",
                     block: "CBC",
                     padding: "PKCS7Padding",
                     key_length: 128
                 },
+                // Secured contents, being null would tell the client that it has to initialize them.
                 secure_contents: null,
+                // Null as no contents exists yet.
                 key_hash: null,
             }
         });

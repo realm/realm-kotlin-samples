@@ -28,22 +28,25 @@ import kotlinx.serialization.json.Json
 import java.nio.charset.StandardCharsets
 import java.security.Key
 
+/**
+ * Serializable class that models a password protected key store.
+ */
 @Serializable
 class UserKeyStore(
     /**
-     * Spec to generate the keystore encryption key
+     * Specifies the algorithm used to generate the key that would secure this keystore contents.
      */
     @SerialName("encryption_key_spec")
-    val encryptionKeySpec: EncryptionKeySpec,
+    val encryptionKeySpec: SerializablePBEKeySpec,
 
     /**
-     * Cipher spec used to encrypt the key store contents
+     * Cipher algorithm used to secure this keystore contents.
      */
     @SerialName("cipher_spec")
-    val cipherSpec: CipherSpec,
+    val cipherSpec: SerializableCipherSpec,
 
     /**
-     * Contents
+     * Encrypted contents. The type of the unencrypted data is a Map<String, SerializableSecretKey>.
      */
     @SerialName("secure_contents")
     var secureContents: ByteArray?,

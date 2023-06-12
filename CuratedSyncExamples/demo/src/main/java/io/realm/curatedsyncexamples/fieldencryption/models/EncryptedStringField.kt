@@ -21,15 +21,34 @@ import io.realm.kotlin.types.annotations.Ignore
 import java.security.Key
 import kotlin.reflect.KProperty
 
+/**
+ * Cipher spec that will be used to encrypt/decrypt fields.
+ *
+ * It is a global variable because we cannot reference the user out from a RealmObject yet.
+ */
+lateinit var cipherSpec: SerializableCipherSpec
 
-lateinit var cipherSpec: CipherSpec
+/**
+ * Key that will be used to encrypt/decrypt fields.
+ *
+ * It is a global variable because we cannot reference the user out from a RealmObject yet.
+ */
 lateinit var key: Key
 
+/**
+ * Helper object that encapsulates the logic to encrypt/decrypt a String in an EmbeddedObject.
+ *
+ * The data is accessible with [value], that would use [cipherSpec] and [key] to encrypt/decrypt the
+ * contents that are stored in [encryptedValue].
+ */
 class EncryptedStringField : EmbeddedRealmObject {
+    /**
+     * Contains the encrypted contents.
+     */
     var encryptedValue: ByteArray = byteArrayOf()
 
     /**
-     * This delegated property provides seamless access to the encrypted data.
+     * Delegated property to provide seamless access to the encrypted data.
      */
     @Ignore
     var value: String by DecryptionDelegate()

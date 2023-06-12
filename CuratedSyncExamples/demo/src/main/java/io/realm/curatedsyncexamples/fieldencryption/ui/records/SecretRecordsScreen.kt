@@ -19,10 +19,13 @@ package io.realm.curatedsyncexamples.fieldencryption.ui.records
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ButtonDefaults
@@ -71,6 +74,7 @@ fun AddSecretRecordCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     OutlinedTextField(
+                        modifier = Modifier.weight(1f),
                         enabled = !state.loading && !state.loggingOut,
                         value = name,
                         onValueChange = { name = it },
@@ -78,7 +82,7 @@ fun AddSecretRecordCard(
                     )
                     IconButton(
                         enabled = !state.loading && !state.loggingOut,
-                        modifier = Modifier.padding(start = 8.dp, top = 8.dp),
+                        modifier = Modifier.padding(start = 4.dp, top = 8.dp),
                         onClick = { onAddNewRecord(name) }) {
                         Icon(
                             Icons.Filled.Add,
@@ -91,7 +95,7 @@ fun AddSecretRecordCard(
                     enabled = !state.loading && !state.loggingOut,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 4.dp),
+                        .padding(top = 8.dp),
                     onClick = onLogout
                 ) {
                     Text(text = "Logout")
@@ -136,38 +140,47 @@ fun SecretRecordScreen(
 ) {
     val records by viewModel.records.observeAsState(emptyList())
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val listState = rememberLazyListState()
 
-    Column(
-        modifier = modifier
+    LaunchedEffect(uiState.loggedOut) {
+        if (uiState.loggedOut) {
+            onLogout()
+        }
+    }
+    LaunchedEffect(key1 = records) {
+        listState.scrollToItem(0)
+    }
+    LazyColumn(
+        state = listState
     ) {
-        LaunchedEffect(uiState.loggedOut) {
-            if (uiState.loggedOut) {
-                onLogout()
+        items(
+            records,
+            key = {
+                it._id.toHexString()
+            }
+        ) { record ->
+            with(record.content!!) {
+                SecretRecordCard(
+                    content = value,
+                    encryptedContent = Base64.encode(encryptedValue),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp, horizontal = 16.dp),
+                )
             }
         }
-        LazyColumn(
-            modifier = Modifier.weight(1f)
-        ) {
-            items(
-                records,
-                key = {
-                    it._id.toHexString()
-                }
-            ) { record ->
-                with(record.content!!) {
-                    SecretRecordCard(
-                        content = value,
-                        encryptedContent = Base64.encode(encryptedValue),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp),
-                    )
-                }
-            }
+        item {
+            Box(
+                modifier = Modifier.padding(16.dp).height(144.dp)
+            )
         }
+    }
+    Box(
+        modifier = Modifier.fillMaxSize().padding(16.dp),
+        contentAlignment= Alignment.BottomCenter
+    ) {
         AddSecretRecordCard(
             uiState,
-            modifier = Modifier.padding(bottom = 16.dp),
             onLogout = { viewModel.logout() }
         ) {
             viewModel.addRecord(it)

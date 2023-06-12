@@ -32,7 +32,7 @@ class CuratedSyncExamplesApp: Application() {
             // Reference Android context
             androidContext(this@CuratedSyncExamplesApp)
             // Load modules
-            modules(appsModule, fieldEncryptionModule)
+            modules(mainModule, fieldEncryptionModule)
         }
     }
 }

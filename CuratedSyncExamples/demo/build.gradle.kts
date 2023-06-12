@@ -11,7 +11,10 @@ android {
 
     defaultConfig {
         applicationId = "io.realm.curatedsyncexamples"
-        minSdk = 28
+
+        // Field encryption key algorithms require minSdk 26
+        // https://developer.android.com/reference/javax/crypto/SecretKeyFactory
+        minSdk = 26
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"

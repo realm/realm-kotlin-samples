@@ -20,8 +20,8 @@ import android.security.keystore.KeyProperties
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.realm.curatedsyncexamples.fieldencryption.ext.getKeyOrGenerate
 import io.realm.curatedsyncexamples.fieldencryption.models.SystemKeyStore
-import io.realm.curatedsyncexamples.fieldencryption.models.CipherSpec
-import io.realm.curatedsyncexamples.fieldencryption.models.EncryptionKeySpec
+import io.realm.curatedsyncexamples.fieldencryption.models.SerializableCipherSpec
+import io.realm.curatedsyncexamples.fieldencryption.models.SerializablePBEKeySpec
 import io.realm.curatedsyncexamples.fieldencryption.models.SecretRecord
 import io.realm.curatedsyncexamples.fieldencryption.models.SerializableSecretKey
 import io.realm.curatedsyncexamples.fieldencryption.models.UserKeyStore
@@ -58,14 +58,14 @@ class KeyHelperTests {
         load(null)
     }
 
-    private val keySpec = EncryptionKeySpec(
+    private val keySpec = SerializablePBEKeySpec(
         algorithm = "PBKDF2WithHmacSHA256",
         salt = Random.nextBytes(16),
         iterationsCount = 100000,
         keyLength = 128,
     )
 
-    private val cipherSpec = CipherSpec(
+    private val cipherSpec = SerializableCipherSpec(
         algorithm = KeyProperties.KEY_ALGORITHM_AES,
         block = KeyProperties.BLOCK_MODE_CBC,
         padding = KeyProperties.ENCRYPTION_PADDING_PKCS7,

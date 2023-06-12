@@ -91,9 +91,7 @@ fun NavGraph(
         composable(
             Screens.SECRET_RECORDS_SCREEN,
         ) {
-            SecretRecordScreen(
-                modifier = modifier.padding(horizontal = 16.dp)
-            ) {
+            SecretRecordScreen {
                 navActions.navigateToLogin()
             }
         }

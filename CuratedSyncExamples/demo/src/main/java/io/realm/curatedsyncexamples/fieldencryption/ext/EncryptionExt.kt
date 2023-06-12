@@ -16,7 +16,7 @@
  */
 package io.realm.curatedsyncexamples.fieldencryption.ext
 
-import io.realm.curatedsyncexamples.fieldencryption.models.CipherSpec
+import io.realm.curatedsyncexamples.fieldencryption.models.SerializableCipherSpec
 import io.realm.curatedsyncexamples.fieldencryption.models.SerializableSecretKey
 import io.realm.curatedsyncexamples.fieldencryption.models.UserKeyStore
 import io.realm.kotlin.mongodb.User
@@ -44,7 +44,7 @@ suspend fun UserKeyStore.getKeyOrGenerate(
     get(alias)!!
 }
 
-fun CipherSpec.newKey(): SerializableSecretKey =
+fun SerializableCipherSpec.newKey(): SerializableSecretKey =
     KeyGenerator
         .getInstance(
             /* algorithm = */ algorithm

@@ -1,3 +1,4 @@
+// This function would replace the users keystore contents.
 exports = async function (arg) {
     const customUserDataCollection = context.services
         .get("mongodb-atlas")

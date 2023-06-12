@@ -20,12 +20,15 @@ import kotlinx.serialization.Serializable
 import javax.crypto.SecretKey
 import javax.crypto.spec.SecretKeySpec
 
+/**
+ * Class that contains the information required to instantiate a [SecretKey].
+ */
 @Serializable
 class SerializableSecretKey(
     val encoded: ByteArray,
-    val cipherSpec: CipherSpec
+    val cipherSpec: SerializableCipherSpec
 ) {
-    constructor(key: SecretKey, cipherSpec: CipherSpec) : this(
+    constructor(key: SecretKey, cipherSpec: SerializableCipherSpec) : this(
         encoded = key.encoded,
         cipherSpec = cipherSpec
     )

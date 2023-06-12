@@ -26,8 +26,12 @@ import javax.crypto.spec.IvParameterSpec
 
 private const val IV_SIZE: Int = 16  // should be ok for most of the cases
 
+/**
+ * Class that contains all the information required to instantiate a [Cipher], it also provides
+ * with methods to encrypt/decrypt data.
+ */
 @Serializable
-data class CipherSpec(
+data class SerializableCipherSpec(
     val algorithm: String,
     val block: String,
     val padding: String,
@@ -37,12 +41,17 @@ data class CipherSpec(
     @Transient
     private val transformation = "$algorithm/$block/$padding"
 
+    /**
+     * Encrypts [input] using [key]
+     */
     fun encrypt(input: ByteArray, key: Key): ByteArray =
         with(Cipher.getInstance(transformation)) {
             init(Cipher.ENCRYPT_MODE, key)
             iv + doFinal(input)
         }
-
+    /**
+     * Decrypts [encryptedData] using [key]
+     */
     fun decrypt(encryptedData: ByteArray, key: Key): ByteArray =
         with(Cipher.getInstance(transformation)) {
             init(
@@ -59,6 +68,5 @@ data class CipherSpec(
             } catch (e: Exception) {
                 byteArrayOf()
             }
-
         }
 }

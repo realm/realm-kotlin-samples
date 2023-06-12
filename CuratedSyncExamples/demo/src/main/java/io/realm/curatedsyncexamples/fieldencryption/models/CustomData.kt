@@ -19,10 +19,22 @@ package io.realm.curatedsyncexamples.fieldencryption.models
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+/**
+ * App services user custom data. It contains the resources required to achieve field level encryption:
+ * 1. Encryption key, it is stored in a password protected keystore.
+ * 2. Field encryption cipher spec,
+ */
 @Serializable
 data class CustomData(
+    /**
+     * Defines the algorithm and settings use to encrypt and decrypt fields.
+     */
     @SerialName("field_encryption_cipher_spec")
-    val fieldEncryptionCipherSpec: CipherSpec?,
+    val fieldEncryptionCipherSpec: SerializableCipherSpec?,
+
+    /**
+     * Password protected keystore, it contains the field encryption key.
+     */
     @SerialName("key_store")
     val keyStore: UserKeyStore
 )

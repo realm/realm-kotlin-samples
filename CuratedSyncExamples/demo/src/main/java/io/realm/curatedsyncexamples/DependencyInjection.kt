@@ -24,7 +24,7 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 /**
- * Enum with all the required App Services App.
+ * Enum that lists all the available demos.
  */
 enum class Demos(
     val title: String,
@@ -67,7 +67,10 @@ enum class Demos(
 
 typealias DemoWithApp = Pair<Demos, App>
 
-val appsModule = module {
+/**
+ * Koin module for the main entry point.
+ */
+val mainModule = module {
     // Create singletons for each app.
     for (app in Demos.values()) {
         single(app.qualifier) { App.create(app.appId) }
