@@ -1,4 +1,3 @@
-// This function would replace the users keystore contents.
 exports = async function (arg) {
     const customUserDataCollection = context.services
         .get("mongodb-atlas")
@@ -6,14 +5,13 @@ exports = async function (arg) {
         .collection("custom_data");
 
     try {
-        console.log(context.user.id)
         await customUserDataCollection.updateOne(
             {
-                // Save the user's account ID to your configured user_id_field
+                // Update the users custom data
                 owner_id: context.user.id
             },
             {
-                $set: {key_store: arg}
+                $set: { key_store: arg }
             }
         );
         return true;

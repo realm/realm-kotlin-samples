@@ -22,6 +22,7 @@ import androidx.lifecycle.viewModelScope
 import io.realm.curatedsyncexamples.DemoWithApp
 import io.realm.curatedsyncexamples.Demos
 import io.realm.kotlin.mongodb.App
+import io.realm.kotlin.mongodb.AuthenticationProvider
 import io.realm.kotlin.mongodb.Credentials
 import io.realm.kotlin.mongodb.exceptions.ServiceException
 import kotlinx.coroutines.Dispatchers
@@ -41,7 +42,8 @@ class ExamplesScreenViewModel(private val apps: List<DemoWithApp>) : ViewModel()
 
     private suspend fun App.isAvailable() =
         try {
-            login(Credentials.anonymous())
+            // Try to login an anonymous user to see if the app is active.
+            login(Credentials.anonymous(reuseExisting = false)).logOut()
             true
         } catch (e: ServiceException) {
             e.message?.startsWith("[Service][Unknown(4351)]") != true

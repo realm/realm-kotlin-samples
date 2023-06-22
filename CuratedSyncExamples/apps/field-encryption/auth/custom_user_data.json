@@ -4,5 +4,5 @@
     "database_name": "field_encryption",
     "collection_name": "custom_data",
     "user_id_field": "owner_id",
-    "on_user_creation_function_name": "initializeEncryptionKey"
+    "on_user_creation_function_name": "initializeCustomData"
 }

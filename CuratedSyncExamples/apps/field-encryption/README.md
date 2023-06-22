@@ -4,14 +4,14 @@ This demo showcases a method to enhance the security of users sensitive data. Ou
 
 ## Considerations
 
-The purpose of this demo is to show how can we leverage the MongoDB and  resources to provide end-to-end field level encryption to users with multi-device access. 
+The purpose of this demo is to show how can we leverage the MongoDB and resources to provide end-to-end field level encryption to users with multi-device access. The example depicts the use of Atlas as a keystore but the user keystore could reside in a separate third-party key store server.
 
 ## Overview
+Field level encryption requires of two
 
-The encryption would be done using the Android keystore system. It offers enhanced security in key handling, any cryptographic key stored in this container is protected from unathorized use. Once a key is in the Android Keystore it can be used for different cryptographic operations, but it is not exportable.
+The encryption would be done using the [Android keystore system](https://developer.android.com/training/articles/keystore). It offers enhanced security in key handling, any cryptographic key stored in this container is protected from unathorized use. Once a key is in the Android Keystore it can be used for different cryptographic operations, but it would not be exportable.
 
 If we only relied on the Android KeyStore to handle the encryption keys, the user would only had access to the data from a single device, keys won't be exportable into other devices. To overcome this issue we have introduced a user bound keystore in Atlas, it stores the user's keys, and it allows to import them into any new device.
-
 
 ## User keystore
 

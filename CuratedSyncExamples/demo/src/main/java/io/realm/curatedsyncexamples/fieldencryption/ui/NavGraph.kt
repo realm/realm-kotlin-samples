@@ -16,24 +16,23 @@
  */
 package io.realm.curatedsyncexamples.fieldencryption.ui
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import io.realm.curatedsyncexamples.fieldencryption.models.SystemKeyStore
 import io.realm.curatedsyncexamples.fieldencryption.ui.keystore.UnlockUserKeyStoreScreen
 import io.realm.curatedsyncexamples.fieldencryption.ui.login.LoginScreen
 import io.realm.curatedsyncexamples.fieldencryption.ui.records.SecretRecordScreen
 import io.realm.kotlin.mongodb.App
+import io.realm.kotlin.mongodb.Credentials
 import org.koin.compose.koinInject
+import java.security.KeyStore
 
 object Screens {
     const val LOGIN_SCREEN = "LOGIN_SCREEN"
@@ -43,11 +42,12 @@ object Screens {
 
 class NavGraphViewModel(
     private val app: App,
-    private val keyAlias: String
+    private val keyAlias: String,
+    private val localKeyStore: KeyStore
 ) : ViewModel() {
     fun isUserLoggedIn(): Boolean = app.currentUser != null
 
-    fun isFieldEncryptionKeyAvailable(): Boolean = SystemKeyStore.containsKey(keyAlias)
+    fun isFieldEncryptionKeyAvailable(): Boolean = localKeyStore.isKeyEntry(keyAlias)
 }
 
 @Composable

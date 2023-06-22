@@ -1,6 +1,6 @@
 [
     {
-        "name": "initializeEncryptionKey",
+        "name": "initializeCustomData",
         "private": false
     },
     {

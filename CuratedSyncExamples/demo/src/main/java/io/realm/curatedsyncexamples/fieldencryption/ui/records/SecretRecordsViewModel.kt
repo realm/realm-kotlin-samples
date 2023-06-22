@@ -21,13 +21,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.realm.curatedsyncexamples.fieldencryption.ext.fieldEncryptionCipherSpec
 import io.realm.curatedsyncexamples.fieldencryption.models.SecretRecord
-import io.realm.curatedsyncexamples.fieldencryption.models.SystemKeyStore
-import io.realm.curatedsyncexamples.fieldencryption.models.cipherSpec
-import io.realm.curatedsyncexamples.fieldencryption.models.getFieldLevelEncryptionKey
-import io.realm.curatedsyncexamples.fieldencryption.models.key
+import io.realm.curatedsyncexamples.fieldencryption.models.FLECipherSpec
+import io.realm.curatedsyncexamples.fieldencryption.models.FLEKey
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
-import io.realm.kotlin.internal.platform.runBlocking
 import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.mongodb.User
 import io.realm.kotlin.mongodb.sync.SyncConfiguration
@@ -39,6 +36,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.security.KeyStore
 
 data class SecretRecordsUiState(
     val loading: Boolean = true,
@@ -48,7 +46,8 @@ data class SecretRecordsUiState(
 
 class SecretRecordsViewModel(
     private val app: App,
-    private val keyAlias: String
+    private val keyAlias: String,
+    private val localKeyStore: KeyStore,
 ) : ViewModel() {
     private lateinit var realm: Realm
     private lateinit var user: User
@@ -58,39 +57,41 @@ class SecretRecordsViewModel(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            user = app.currentUser!!
-            cipherSpec = user.fieldEncryptionCipherSpec()
-            runBlocking {
-                key = getFieldLevelEncryptionKey(keyAlias, user, "password")
-            }
+            app.currentUser?.let { user ->
+                this@SecretRecordsViewModel.user = user
 
-            val syncConfig = SyncConfiguration
-                .Builder(app.currentUser!!, setOf(SecretRecord::class))
-                .initialSubscriptions {
-                    // Subscribe to all secret records
-                    add(it.query<SecretRecord>())
-                }
-                .waitForInitialRemoteData()
-                .build()
+                // Import key and cipher spec required to access the secret contents
+                FLECipherSpec = user.fieldEncryptionCipherSpec()
+                FLEKey = localKeyStore.getKey(keyAlias, null)
 
-            realm = Realm.open(syncConfig)
-
-            val job = async {
-                realm.query<SecretRecord>()
-                    .sort("_id", Sort.DESCENDING)
-                    .asFlow()
-                    .collect {
-                        records.postValue(it.list)
+                val syncConfig = SyncConfiguration
+                    .Builder(app.currentUser!!, setOf(SecretRecord::class))
+                    .initialSubscriptions {
+                        // Subscribe to all secret records
+                        add(it.query<SecretRecord>())
                     }
-            }
+                    .waitForInitialRemoteData()
+                    .build()
 
-            addCloseable {
-                job.cancel()
-                realm.close()
-            }
+                realm = Realm.open(syncConfig)
 
-            _uiState.update {
-                it.copy(loading = false)
+                val job = async {
+                    realm.query<SecretRecord>()
+                        .sort("_id", Sort.DESCENDING)
+                        .asFlow()
+                        .collect {
+                            records.postValue(it.list)
+                        }
+                }
+
+                addCloseable {
+                    job.cancel()
+                    realm.close()
+                }
+
+                _uiState.update {
+                    it.copy(loading = false)
+                }
             }
         }
     }
@@ -104,8 +105,9 @@ class SecretRecordsViewModel(
             it.copy(loggingOut = true)
         }
         viewModelScope.launch(Dispatchers.IO) {
-            user.logOut()
-            SystemKeyStore.removeKey(keyAlias)
+            app.currentUser?.logOut()
+
+            localKeyStore.deleteEntry(keyAlias)
 
             _uiState.update {
                 it.copy(loggedOut = true)

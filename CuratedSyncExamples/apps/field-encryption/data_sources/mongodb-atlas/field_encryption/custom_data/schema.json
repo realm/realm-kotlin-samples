@@ -1,10 +1,15 @@
 {
+    "title": "custom_data",
+    "type": "object",
+    "required": [],
     "properties": {
         "_id": {
             "bsonType": "objectId"
         },
-        "field_encryption_cipher_spec": {
-            "bsonType": "object",
+        "fle_cipher_spec": {
+            "title": "custom_data_fle_cipher_spec",
+            "type": "object",
+            "required": [],
             "properties": {
                 "algorithm": {
                     "bsonType": "string"
@@ -21,62 +26,10 @@
             }
         },
         "key_store": {
-            "bsonType": "object",
-            "properties": {
-                "cipher_spec": {
-                    "bsonType": "object",
-                    "properties": {
-                        "algorithm": {
-                            "bsonType": "string"
-                        },
-                        "block": {
-                            "bsonType": "string"
-                        },
-                        "key_length": {
-                            "bsonType": "int"
-                        },
-                        "padding": {
-                            "bsonType": "string"
-                        }
-                    }
-                },
-                "encryption_key_spec": {
-                    "bsonType": "object",
-                    "properties": {
-                        "algorithm": {
-                            "bsonType": "string"
-                        },
-                        "iterations_count": {
-                            "bsonType": "int"
-                        },
-                        "key_length": {
-                            "bsonType": "int"
-                        },
-                        "salt": {
-                            "bsonType": "array",
-                            "items": {
-                                "bsonType": "int"
-                            }
-                        }
-                    }
-                },
-                "key_hash": {
-                    "bsonType": "array",
-                    "items": {
-                        "bsonType": "int"
-                    }
-                },
-                "secure_contents": {
-                    "bsonType": "array",
-                    "items": {
-                        "bsonType": "int"
-                    }
-                }
-            }
+            "bsonType": "binData"
         },
         "owner_id": {
             "bsonType": "string"
         }
-    },
-    "title": "custom_datum"
+    }
 }

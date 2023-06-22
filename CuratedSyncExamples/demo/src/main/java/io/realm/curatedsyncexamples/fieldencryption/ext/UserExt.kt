@@ -18,25 +18,39 @@ package io.realm.curatedsyncexamples.fieldencryption.ext
 
 import io.realm.curatedsyncexamples.fieldencryption.models.SerializableCipherSpec
 import io.realm.curatedsyncexamples.fieldencryption.models.CustomData
-import io.realm.curatedsyncexamples.fieldencryption.models.UserKeyStore
 import io.realm.kotlin.annotations.ExperimentalRealmSerializerApi
 import io.realm.kotlin.mongodb.User
 import io.realm.kotlin.mongodb.ext.call
 import io.realm.kotlin.mongodb.ext.customData
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.security.KeyStore
 
 @OptIn(ExperimentalRealmSerializerApi::class)
-fun User.keyStore(): UserKeyStore {
-    return customData<CustomData>()?.keyStore!!
-}
+fun User.hasKeyStore() = customData<CustomData>()?.keyStore != null
 
 @OptIn(ExperimentalRealmSerializerApi::class)
-suspend fun User.updateKeyStore(keyStore: UserKeyStore) {
+fun User.getRemoteKeyStore(password: String): KeyStore =
+    KeyStore.getInstance("BKS").apply {
+        // Load any user keystore if available
+        customData<CustomData>()?.keyStore?.let { keyStoreBlob ->
+            ByteArrayInputStream(keyStoreBlob).use { keyStoreStream ->
+                load(keyStoreStream, password.toCharArray())
+            }
+        } ?: load(null)
+    }
+
+@OptIn(ExperimentalRealmSerializerApi::class)
+suspend fun User.updateRemoteKeyStore(keyStore: KeyStore, password: String) {
     functions.call<Boolean>("updateKeyStore") {
-        add(keyStore)
+        ByteArrayOutputStream().use { outputStream ->
+            keyStore.store(outputStream, password.toCharArray())
+            add(outputStream.toByteArray())
+        }
     }
 }
 
 @OptIn(ExperimentalRealmSerializerApi::class)
 fun User.fieldEncryptionCipherSpec(): SerializableCipherSpec {
-    return customData<CustomData>()?.fieldEncryptionCipherSpec!!
+    return customData<CustomData>()?.FLECipherSpec!!
 }

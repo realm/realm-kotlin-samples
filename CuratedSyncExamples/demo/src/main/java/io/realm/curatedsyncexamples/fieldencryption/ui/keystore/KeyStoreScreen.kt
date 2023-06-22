@@ -41,7 +41,6 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusOrder
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.key.onKeyEvent
@@ -78,7 +77,7 @@ fun UnlockUserKeyStoreScreen(
                 state = uiState,
                 modifier = Modifier.padding(48.dp)
             ) { password ->
-                viewModel.unlock(password)
+                viewModel.importRemoteKey(password)
             }
         }
         LaunchedEffect(uiState.isUnlocked) {
@@ -144,8 +143,9 @@ fun UserKeyUnlocker(
                     if (it.nativeKeyEvent.keyCode == KeyEvent.KEYCODE_ENTER) {
                         localFocusManager.moveFocus(FocusDirection.Next)
                         true
+                    } else {
+                        false
                     }
-                    false
                 },
             enabled = !state.isUnlocking,
             isError = state.errorMessage != null,

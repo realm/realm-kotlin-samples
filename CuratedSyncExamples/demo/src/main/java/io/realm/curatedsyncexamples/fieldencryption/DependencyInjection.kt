@@ -23,13 +23,36 @@ import io.realm.curatedsyncexamples.fieldencryption.ui.login.LoginViewModel
 import io.realm.curatedsyncexamples.fieldencryption.ui.records.SecretRecordsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
+import java.security.KeyStore
 
 
 val fieldEncryptionModule = module {
     val keyAlias = "fieldLevelEncryptionKey"
 
-    viewModel { KeyStoreViewModel(get(qualifier = Demos.FIELD_ENCRYPTION.qualifier), keyAlias = keyAlias) }
+    val androidKeyStore = KeyStore.getInstance("AndroidKeyStore").apply {
+        load(null)
+    }
+
+    viewModel {
+        KeyStoreViewModel(
+            app = get(qualifier = Demos.FIELD_ENCRYPTION.qualifier),
+            keyAlias = keyAlias,
+            localKeyStore = androidKeyStore
+        )
+    }
     viewModel { LoginViewModel(get(qualifier = Demos.FIELD_ENCRYPTION.qualifier)) }
-    viewModel { SecretRecordsViewModel(get(qualifier = Demos.FIELD_ENCRYPTION.qualifier), keyAlias) }
-    viewModel { NavGraphViewModel(get(qualifier = Demos.FIELD_ENCRYPTION.qualifier), keyAlias) }
+    viewModel {
+        SecretRecordsViewModel(
+            app = get(qualifier = Demos.FIELD_ENCRYPTION.qualifier),
+            keyAlias = keyAlias,
+            localKeyStore = androidKeyStore
+        )
+    }
+    viewModel {
+        NavGraphViewModel(
+            app = get(qualifier = Demos.FIELD_ENCRYPTION.qualifier),
+            localKeyStore = androidKeyStore,
+            keyAlias = keyAlias,
+        )
+    }
 }

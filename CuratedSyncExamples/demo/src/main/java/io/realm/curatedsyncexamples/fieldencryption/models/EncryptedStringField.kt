@@ -16,38 +16,36 @@
  */
 package io.realm.curatedsyncexamples.fieldencryption.models
 
-import io.realm.kotlin.types.EmbeddedRealmObject
-import io.realm.kotlin.types.annotations.Ignore
 import java.security.Key
 import kotlin.reflect.KMutableProperty0
 import kotlin.reflect.KProperty
 
 /**
- * Cipher spec that will be used to encrypt/decrypt fields.
+ * Field level encryption cypher spec.
  *
  * It is a global variable because we cannot reference the user out from a RealmObject yet.
  */
-lateinit var cipherSpec: SerializableCipherSpec
+lateinit var FLECipherSpec: SerializableCipherSpec
 
 /**
- * Key that will be used to encrypt/decrypt fields.
+ * Field level encryption key.
  *
  * It is a global variable because we cannot reference the user out from a RealmObject yet.
  */
-lateinit var key: Key
+lateinit var FLEKey: Key
 
 
 /**
  * Delegates that encapsulates the logic to encrypt/decrypt a String.
  *
- * It uses the global variables [cipherSpec] and [key] to encrypt/decrypt the
+ * It uses the global variables [FLECipherSpec] and [FLEKey] to encrypt/decrypt the
  * contents from [backingProperty].
  */
 class SecureStringDelegate(private val backingProperty: KMutableProperty0<ByteArray>) {
     operator fun getValue(
         thisRef: Any,
         property: KProperty<*>
-    ): String = String(bytes = cipherSpec.decrypt(backingProperty.get(), key))
+    ): String = String(bytes = FLECipherSpec.decrypt(backingProperty.get(), FLEKey))
 
     operator fun setValue(
         thisRef: Any,
@@ -55,9 +53,9 @@ class SecureStringDelegate(private val backingProperty: KMutableProperty0<ByteAr
         value: String
     ) {
         backingProperty.set(
-            cipherSpec.encrypt(
+            FLECipherSpec.encrypt(
                 input = value.toByteArray(),
-                key = key
+                key = FLEKey
             )
         )
     }

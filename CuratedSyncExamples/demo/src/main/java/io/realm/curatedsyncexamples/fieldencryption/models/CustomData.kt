@@ -25,16 +25,16 @@ import kotlinx.serialization.Serializable
  * 2. Field encryption cipher spec,
  */
 @Serializable
-data class CustomData(
+class CustomData(
     /**
-     * Defines the algorithm and settings use to encrypt and decrypt fields.
+     * Defines the algorithm for field level encryption.
      */
-    @SerialName("field_encryption_cipher_spec")
-    val fieldEncryptionCipherSpec: SerializableCipherSpec?,
+    @SerialName("fle_cipher_spec")
+    val FLECipherSpec: SerializableCipherSpec?,
 
     /**
-     * Password protected keystore, it contains the field encryption key.
+     * BKS keystore.
      */
     @SerialName("key_store")
-    val keyStore: UserKeyStore
+    val keyStore: ByteArray?
 )
