@@ -16,14 +16,14 @@
  */
 package io.realm.curatedsyncexamples.fieldencryption.ui.keystore
 
+import android.view.KeyEvent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -37,7 +37,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusOrder
+import androidx.compose.ui.focus.focusProperties
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
@@ -79,13 +89,16 @@ fun UnlockUserKeyStoreScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun UserKeyUnlocker(
     state: KeyStoreUiState,
     modifier: Modifier = Modifier,
     onUnlock: (String) -> Unit = {}
 ) {
+    val (passwordRef, buttonRef) = remember { FocusRequester.createRefs() }
+    val localFocusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
     var password: String by remember { mutableStateOf("") }
 
     Column(
@@ -123,16 +136,38 @@ fun UserKeyUnlocker(
             value = password,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp),
+                .padding(top = 16.dp)
+                .focusProperties {
+                    next = buttonRef
+                }
+                .onKeyEvent {
+                    if (it.nativeKeyEvent.keyCode == KeyEvent.KEYCODE_ENTER) {
+                        localFocusManager.moveFocus(FocusDirection.Next)
+                        true
+                    }
+                    false
+                },
             enabled = !state.isUnlocking,
             isError = state.errorMessage != null,
-            onValueChange = { password = it },
+            onValueChange = { password = it.trim() /* Do not support whitespace in password */ },
             label = { Text("Password") },
+            singleLine = true,
             visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    keyboardController?.hide()
+                    localFocusManager.clearFocus()
+                }
+            ),
         )
         ElevatedButton(
-            modifier = Modifier.padding(top = 4.dp),
+            modifier = Modifier
+                .padding(top = 4.dp)
+                .focusRequester(buttonRef),
             enabled = !state.isUnlocking,
             onClick = { onUnlock(password) }) {
             Text(text = "Continue")
