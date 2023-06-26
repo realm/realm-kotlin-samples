@@ -59,14 +59,10 @@ data class SerializableCipherSpec(
                 /* key = */ key,
                 /* params = */ IvParameterSpec(encryptedData, 0, IV_SIZE)
             )
-            try {
-                doFinal(
-                    /* input = */ encryptedData,
-                    /* inputOffset = */ IV_SIZE,
-                    /* inputLen = */ encryptedData.size - IV_SIZE
-                )
-            } catch (e: Exception) {
-                byteArrayOf()
-            }
+            doFinal(
+                /* input = */ encryptedData,
+                /* inputOffset = */ IV_SIZE,
+                /* inputLen = */ encryptedData.size - IV_SIZE
+            )
         }
 }

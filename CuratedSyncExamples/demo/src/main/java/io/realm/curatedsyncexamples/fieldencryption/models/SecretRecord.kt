@@ -23,7 +23,7 @@ import io.realm.kotlin.types.annotations.PrimaryKey
 import org.mongodb.kbson.BsonObjectId
 
 /**
- * Object that contains an encrypted field.
+ * Object with an encrypted field.
  */
 @PersistedName("secret_record")
 class SecretRecord : RealmObject {
@@ -32,7 +32,14 @@ class SecretRecord : RealmObject {
     @PrimaryKey
     var _id: BsonObjectId = BsonObjectId()
 
+    /**
+     * Contains encrypted data.
+     */
     var securedContent: ByteArray = byteArrayOf()
+
+    /**
+     * Helper that automatically encrypts/decrypts data.
+     */
     @Ignore
     var content: String by SecureStringDelegate(::securedContent)
 }

@@ -20,20 +20,20 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
- * App services user custom data. It contains the resources required to achieve field level encryption:
+ * App services user custom data. It contains the resources required for FLE:
  * 1. Encryption key, it is stored in a password protected keystore.
  * 2. Field encryption cipher spec,
  */
 @Serializable
 class CustomData(
     /**
-     * Defines the algorithm for field level encryption.
+     * Defines the FLE algorithm.
      */
     @SerialName("fle_cipher_spec")
     val FLECipherSpec: SerializableCipherSpec?,
 
     /**
-     * BKS keystore.
+     * BKS keystore containing the key.
      */
     @SerialName("key_store")
     val keyStore: ByteArray?

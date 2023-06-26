@@ -16,6 +16,7 @@
  */
 package io.realm.curatedsyncexamples.fieldencryption.models
 
+import java.lang.Exception
 import java.security.Key
 import kotlin.reflect.KMutableProperty0
 import kotlin.reflect.KProperty
@@ -44,13 +45,18 @@ lateinit var FLEKey: Key
 class SecureStringDelegate(private val backingProperty: KMutableProperty0<ByteArray>) {
     operator fun getValue(
         thisRef: Any,
-        property: KProperty<*>
-    ): String = String(bytes = FLECipherSpec.decrypt(backingProperty.get(), FLEKey))
+        property: KProperty<*>,
+    ): String =
+        try {
+            String(bytes = FLECipherSpec.decrypt(backingProperty.get(), FLEKey))
+        } catch (e: Exception) {
+            "Data could not be decrypted"
+        }
 
     operator fun setValue(
         thisRef: Any,
         property: KProperty<*>,
-        value: String
+        value: String,
     ) {
         backingProperty.set(
             FLECipherSpec.encrypt(
