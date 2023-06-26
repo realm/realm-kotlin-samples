@@ -14,12 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.realm.curatedsyncexamples
+package io.realm.curatedsyncexamples.presence
 
-const val FIELD_ENCRYPTION_APP_ID = "field-encryption-fjrvt"
+import io.realm.curatedsyncexamples.Demos
+import io.realm.curatedsyncexamples.presence.ui.UserStatusListViewModel
+import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.dsl.module
 
-const val USER_PRESENCE_APP_ID = "presence-detection-bcsii"
-const val OFFLINE_LOGIN_APP_ID = "<insert-app-id>"
-const val ERROR_HANDLING_APP_ID = "<insert-app-id>"
-const val BUSINESS_LOGIC_APP_ID = "<insert-app-id>"
-const val PURCHASE_VERIFICATION_APP_ID = "<insert-app-id>"
+val presenceDetectionModule = module {
+    viewModel {
+        UserStatusListViewModel(
+            app = get(qualifier = Demos.USER_PRESENCE.qualifier),
+        )
+    }
+}

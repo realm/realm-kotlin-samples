@@ -1,0 +1,17 @@
+{
+    "name": "presenceDetector",
+    "log_types": [
+        "sync"
+    ],
+    "log_statuses": [
+        "success"
+    ],
+    "policy": {
+        "type": "batch"
+    },
+    "action": {
+        "type": "function",
+        "name": "logPresenceDetector"
+    },
+    "disabled": false
+}

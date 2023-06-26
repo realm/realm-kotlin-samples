@@ -17,6 +17,7 @@
 package io.realm.curatedsyncexamples
 
 import io.realm.curatedsyncexamples.fieldencryption.FieldEncryptionActivity
+import io.realm.curatedsyncexamples.presence.PresenceDetectionActivity
 import io.realm.curatedsyncexamples.ui.ExamplesScreenViewModel
 import io.realm.kotlin.mongodb.App
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -38,7 +39,7 @@ enum class Demos(
     ),
     USER_PRESENCE(
         "User presence",
-        DemoSelectorActivity::class.java,
+        PresenceDetectionActivity::class.java,
         USER_PRESENCE_APP_ID,
     ),
     OFFLINE_LOGIN(

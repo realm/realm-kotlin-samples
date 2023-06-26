@@ -18,11 +18,12 @@ package io.realm.curatedsyncexamples
 
 import android.app.Application
 import io.realm.curatedsyncexamples.fieldencryption.fieldEncryptionModule
+import io.realm.curatedsyncexamples.presence.presenceDetectionModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.GlobalContext.startKoin
 
-class CuratedSyncExamplesApp: Application() {
+class CuratedSyncExamplesApp : Application() {
     override fun onCreate() {
         super.onCreate()
 
@@ -32,7 +33,11 @@ class CuratedSyncExamplesApp: Application() {
             // Reference Android context
             androidContext(this@CuratedSyncExamplesApp)
             // Load modules
-            modules(mainModule, fieldEncryptionModule)
+            modules(
+                mainModule,
+                fieldEncryptionModule,
+                presenceDetectionModule,
+            )
         }
     }
 }

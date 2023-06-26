@@ -42,11 +42,11 @@ class ExamplesScreenViewModel(private val apps: List<DemoWithApp>) : ViewModel()
 
     private suspend fun App.isAvailable() =
         try {
-            // Try to login an anonymous user to see if the app is active.
-            login(Credentials.anonymous(reuseExisting = false)).logOut()
+            // Try to perform some action to validate that the app exists
+            emailPasswordAuth.resendConfirmationEmail("realm")
             true
         } catch (e: ServiceException) {
-            e.message?.startsWith("[Service][Unknown(4351)]") != true
+            e.message?.startsWith("[Service][Unknown(4351)] cannot find app") != true
         }
 
     private suspend fun getDemoEntriesWithStatus() =

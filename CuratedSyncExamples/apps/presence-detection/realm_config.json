@@ -1,7 +1,7 @@
 {
-    "app_id": "field-encryption",
+    "app_id": "presence-detection",
     "config_version": 20210101,
-    "name": "field-encryption",
+    "name": "presence-detection",
     "location": "IE",
     "provider_region": "aws-eu-west-1",
     "deployment_model": "LOCAL"
