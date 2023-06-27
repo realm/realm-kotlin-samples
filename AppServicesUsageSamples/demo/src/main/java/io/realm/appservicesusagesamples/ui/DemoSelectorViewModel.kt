@@ -20,6 +20,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.realm.kotlin.mongodb.App
+import io.realm.kotlin.mongodb.exceptions.ConnectionException
 import io.realm.kotlin.mongodb.exceptions.ServiceException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,7 +34,8 @@ typealias DemoWithStatus = Pair<io.realm.appservicesusagesamples.Demos, Boolean>
 /**
  * View model for the sample selector screen.
  */
-class SampleSelectorScreenViewModel(private val apps: List<io.realm.appservicesusagesamples.DemoWithApp>) : ViewModel() {
+class SampleSelectorScreenViewModel(private val apps: List<io.realm.appservicesusagesamples.DemoWithApp>) :
+    ViewModel() {
     private val loading = MutableStateFlow(true)
     val loadingState: StateFlow<Boolean> = loading.asStateFlow()
 
@@ -44,6 +46,8 @@ class SampleSelectorScreenViewModel(private val apps: List<io.realm.appservicesu
             // Try to perform some action to validate that the app exists
             emailPasswordAuth.resendConfirmationEmail("realm")
             true
+        } catch (e: ConnectionException) {
+            false
         } catch (e: ServiceException) {
             e.message?.startsWith("[Service][Unknown(4351)] cannot find app") != true
         }
