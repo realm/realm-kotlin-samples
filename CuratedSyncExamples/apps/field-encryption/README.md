@@ -36,13 +36,13 @@ After the user logs in on a new device, we need to import any required keys from
 
 This process would ensure that the data is accessible anytime anywhere, even offline as the keys would be stored in the user's devices. While password protected in the server, the keys stored in the device keystore would be hardware protected.
 
-The process of importing the keys can be found here [link to the code].
+The process of importing the keys can be found [here](demo/src/main/java/io/realm/curatedsyncexamples/fieldencryption/ui/keystore/KeyStoreViewModel.kt#L86).
 
 ## Encrypting data
 As we mentioned before, to be able to encrypt data we need an algorithm along with the key to encrypt and decrypt. In the `CustomData` we have included a property that contains the specification for the algorithm that would be used for FLE.
 
 AES cipher specification is defined in the users custom data.
-```kotlin
+```json
 {
   fle_cipher_spec: {
     algorithm: "AES",
@@ -63,12 +63,12 @@ class Person: RealmObject {
 }
 ```
 
-These operations can be encapsulated into a helper delegate, for example [insert link] to seamlessly provide access to the data.
+These operations can be encapsulated into a helper delegate, for example [SecureStringDelegate](demo/src/main/java/io/realm/curatedsyncexamples/fieldencryption/models/SecureStringDelegate.kt#45) to seamlessly provide access to the data.
 
 ```kotlin
 class Person: RealmObject {
     var securedContent: ByteArray? = null
-    var content String by SecureStringDelegate(::securedSSN)
+    var content String by SecureStringDelegate(::securedContent)
 }
 ```
 
