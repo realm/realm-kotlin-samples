@@ -76,10 +76,8 @@ Currently, there are some limitations on how we can associate a key to an object
 
 ![alt text](diagram3.svg "Flow")
 
-## Attack vectors
+## Vectors attacks
 Nothing is 100% secure, there is always a tradeoffs associated with security. The implementation outlined here also suffers from the vulnerabilities. Please evaluate them against your security needs before using the approach outlined:
 
 The remote keystore stored on the server is only password protected and thus prone to brute-force attacks if anyone gets access to it. Choosing a secure password is very important.
 During the import phase, the keys reside in unprotected user memory. Android apps are operating in secure sandboxes, but if a device is rooted this guarantee might be broken and memory will be susceptible to be read by malicious programs.
-
-
