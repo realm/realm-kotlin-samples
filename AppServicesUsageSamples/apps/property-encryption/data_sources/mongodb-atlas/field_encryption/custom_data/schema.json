@@ -1,0 +1,35 @@
+{
+    "title": "custom_data",
+    "type": "object",
+    "required": [],
+    "properties": {
+        "_id": {
+            "bsonType": "objectId"
+        },
+        "ple_cipher_spec": {
+            "title": "custom_data_ple_cipher_spec",
+            "type": "object",
+            "required": [],
+            "properties": {
+                "algorithm": {
+                    "bsonType": "string"
+                },
+                "block": {
+                    "bsonType": "string"
+                },
+                "key_length": {
+                    "bsonType": "long"
+                },
+                "padding": {
+                    "bsonType": "string"
+                }
+            }
+        },
+        "key_store": {
+            "bsonType": "binData"
+        },
+        "owner_id": {
+            "bsonType": "string"
+        }
+    }
+}

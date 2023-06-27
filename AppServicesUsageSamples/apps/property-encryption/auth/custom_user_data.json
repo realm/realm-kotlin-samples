@@ -1,0 +1,8 @@
+{
+    "enabled": true,
+    "mongo_service_name": "mongodb-atlas",
+    "database_name": "property_encryption",
+    "collection_name": "custom_data",
+    "user_id_field": "owner_id",
+    "on_user_creation_function_name": "initializeCustomData"
+}

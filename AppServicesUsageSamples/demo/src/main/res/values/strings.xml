@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">App Services Usage Samples</string>
+    <string name="title_activity_example_selector">DemoSelectorActivity</string>
+</resources>

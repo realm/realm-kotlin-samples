@@ -1,8 +1,0 @@
-{
-    "app_id": "field-encryption",
-    "config_version": 20210101,
-    "name": "field-encryption",
-    "location": "IE",
-    "provider_region": "aws-eu-west-1",
-    "deployment_model": "LOCAL"
-}
