@@ -17,7 +17,6 @@
 package io.realm.curatedsyncexamples
 
 const val FIELD_ENCRYPTION_APP_ID = "field-encryption-fjrvt"
-
 const val USER_PRESENCE_APP_ID = "<insert-app-id>"
 const val OFFLINE_LOGIN_APP_ID = "<insert-app-id>"
 const val ERROR_HANDLING_APP_ID = "<insert-app-id>"
