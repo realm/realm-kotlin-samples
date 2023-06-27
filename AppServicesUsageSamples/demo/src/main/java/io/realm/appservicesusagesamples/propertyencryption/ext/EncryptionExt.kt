@@ -14,11 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.realm.appservicesusagesamples
+package io.realm.appservicesusagesamples.propertyencryption.ext
 
-const val PROPERTY_ENCRYPTION_APP_ID = "property-encryption-fjrvt"
-const val USER_PRESENCE_APP_ID = "<insert-app-id>"
-const val OFFLINE_LOGIN_APP_ID = "<insert-app-id>"
-const val ERROR_HANDLING_APP_ID = "<insert-app-id>"
-const val BUSINESS_LOGIC_APP_ID = "<insert-app-id>"
-const val PURCHASE_VERIFICATION_APP_ID = "<insert-app-id>"
+import io.realm.appservicesusagesamples.propertyencryption.models.SerializableCipherSpec
+import javax.crypto.KeyGenerator
+import javax.crypto.SecretKey
+
+fun SerializableCipherSpec.generateAndStoreKey(): SecretKey =
+    KeyGenerator
+        .getInstance(
+            /* algorithm = */ algorithm
+        ).apply {
+            init(keyLength)
+        }
+        .generateKey()

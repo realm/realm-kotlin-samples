@@ -16,7 +16,7 @@
  */
 package io.realm.appservicesusagesamples
 
-import io.realm.appservicesusagesamples.fieldencryption.FieldEncryptionActivity
+import io.realm.appservicesusagesamples.propertyencryption.PropertyEncryptionActivity
 import io.realm.appservicesusagesamples.ui.ExamplesScreenViewModel
 import io.realm.kotlin.mongodb.App
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -31,56 +31,56 @@ enum class Demos(
     val activity: Class<*>,
     val appId: String,
 ) {
-    FIELD_ENCRYPTION(
-        "Field level encryption",
-        FieldEncryptionActivity::class.java,
-        io.realm.appservicesusagesamples.FIELD_ENCRYPTION_APP_ID
+    PROPERTY_ENCRYPTION(
+        "Property level encryption",
+        PropertyEncryptionActivity::class.java,
+        PROPERTY_ENCRYPTION_APP_ID
     ),
     USER_PRESENCE(
         "User presence",
-        io.realm.appservicesusagesamples.DemoSelectorActivity::class.java,
-        io.realm.appservicesusagesamples.USER_PRESENCE_APP_ID,
+        DemoSelectorActivity::class.java,
+        USER_PRESENCE_APP_ID,
     ),
     OFFLINE_LOGIN(
         "Offline login",
-        io.realm.appservicesusagesamples.DemoSelectorActivity::class.java,
-        io.realm.appservicesusagesamples.OFFLINE_LOGIN_APP_ID,
+        DemoSelectorActivity::class.java,
+        OFFLINE_LOGIN_APP_ID,
     ),
     ERROR_HANDLING(
         "Error handling",
-        io.realm.appservicesusagesamples.DemoSelectorActivity::class.java,
-        io.realm.appservicesusagesamples.ERROR_HANDLING_APP_ID,
+        DemoSelectorActivity::class.java,
+        ERROR_HANDLING_APP_ID,
     ),
     BUSINESS_LOGIC(
         "Business logic",
-        io.realm.appservicesusagesamples.DemoSelectorActivity::class.java,
-        io.realm.appservicesusagesamples.BUSINESS_LOGIC_APP_ID,
+        DemoSelectorActivity::class.java,
+        BUSINESS_LOGIC_APP_ID,
     ),
     PURCHASE_VERIFICATION(
         "Purchase verification",
-        io.realm.appservicesusagesamples.DemoSelectorActivity::class.java,
-        io.realm.appservicesusagesamples.PURCHASE_VERIFICATION_APP_ID,
+        DemoSelectorActivity::class.java,
+        PURCHASE_VERIFICATION_APP_ID,
     );
 
     val qualifier = named(appId)
 }
 
-typealias DemoWithApp = Pair<io.realm.appservicesusagesamples.Demos, App>
+typealias DemoWithApp = Pair<Demos, App>
 
 /**
  * Koin module for the main entry point.
  */
 val mainModule = module {
     // Create singletons for each app.
-    for (app in io.realm.appservicesusagesamples.Demos.values()) {
+    for (app in Demos.values()) {
         single(app.qualifier) { App.create(app.appId) }
     }
 
     viewModel {
         ExamplesScreenViewModel(
-            apps = io.realm.appservicesusagesamples.Demos.values()
+            apps = Demos.values()
                 .map { demo ->
-                    io.realm.appservicesusagesamples.DemoWithApp(
+                    DemoWithApp(
                         first = demo,
                         second = get(demo.qualifier)
                     )

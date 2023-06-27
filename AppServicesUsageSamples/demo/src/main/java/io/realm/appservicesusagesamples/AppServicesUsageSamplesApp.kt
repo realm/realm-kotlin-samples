@@ -17,7 +17,7 @@
 package io.realm.appservicesusagesamples
 
 import android.app.Application
-import io.realm.appservicesusagesamples.fieldencryption.fieldEncryptionModule
+import io.realm.appservicesusagesamples.propertyencryption.propertyEncryptionModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.GlobalContext.startKoin
@@ -32,7 +32,7 @@ class AppServicesUsageSamplesApp: Application() {
             // Reference Android context
             androidContext(this@AppServicesUsageSamplesApp)
             // Load modules
-            modules(mainModule, fieldEncryptionModule)
+            modules(mainModule, propertyEncryptionModule)
         }
     }
 }

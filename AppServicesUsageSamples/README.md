@@ -4,7 +4,7 @@ Reference app that show cases different design patterns and examples of using th
 
 ## Samples
 
-### [Field level encryption](apps/field-encryption/README.md)
+### [Property level encryption](apps/property-encryption/README.md)
 
 This demo shows the process of protecting users' sensitive data by employing end-to-end encryption techniques while guaranteeing access from any user's device.
 

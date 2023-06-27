@@ -19,14 +19,13 @@ package io.realm.appservicesusagesamples
 import android.security.keystore.KeyProperties
 import android.security.keystore.KeyProtection
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import io.realm.appservicesusagesamples.fieldencryption.ext.generateAndStoreKey
-import io.realm.appservicesusagesamples.fieldencryption.models.SerializableCipherSpec
+import io.realm.appservicesusagesamples.propertyencryption.ext.generateAndStoreKey
+import io.realm.appservicesusagesamples.propertyencryption.models.SerializableCipherSpec
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.security.KeyStore
 import java.security.KeyStore.SecretKeyEntry
-import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import kotlin.test.BeforeTest
 
