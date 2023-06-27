@@ -1,42 +1,85 @@
-# Field level encryption
+# Property level encryption
+The goal of property-level encryption is to ensure that only the users themselves can access their data and prevent any unauthorized access by other parties, including MongoDB. 
 
-This demo showcases a method to enhance the security of users sensitive data. Our goal is to ensure that only the users themselves can access their data and prevent any unauthorized access by other parties. Additionally, we enable users to access their data simultaneously from multiple devices. All of this is achieved by leveraging the powerful capabilities of MongoDB services.
+Realm does not have built-in property-level encryption support. However, with this sample we will demonstrate how to add this feature with the Realm Sync and Android Keystore APIs. Furthermore, this solution would enable users to access their data simultaneously from multiple devices. All of this is achieved by leveraging the powerful capabilities of MongoDB services.
+
+## Introduction
+Property-level encryption restricts access to sensitive data by applying a ciphering algorithm with a unique key that will encrypt the data on the device. The encrypted data will be synced to Atlas, thus only allowing people with the proper key to be able to read it again. This also includes MonogDB itself.
+
+It is crucial to ensure that only the rightful users have access to the keys.
 
 ## Considerations
+The purpose of this demo is to show how can we leverage MongoDB and other tools to provide end-to-end property-level encryption to users with multi-device access.
 
-The purpose of this demo is to show how can we leverage the MongoDB and resources to provide end-to-end field level encryption to users with multi-device access. The example depicts the use of Atlas as a keystore but the user keystore could reside in a separate third-party key store server.
+There are different algorithms available to achieve encryption, the ones selected in this sample are for demonstrative purposes. Any production development must select them based on their security requirements. 
 
-## Overview
-Field level encryption requires of two
+## Key handling
+Keys are stored in a key store on the device, a secure repository that safe-keeps the keys and guarantees that only the rightful users have access to them. It normally has some hardware-enhanced security features.
 
-The encryption would be done using the [Android keystore system](https://developer.android.com/training/articles/keystore). It offers enhanced security in key handling, any cryptographic key stored in this container is protected from unathorized use. Once a key is in the Android Keystore it can be used for different cryptographic operations, but it would not be exportable.
+For this demo, we will use the Android Keystore available from SDK version > 18. It offers hardware-enhanced security like biometric authentication and guarantees that the cryptographic material stored in it is not exportable.
 
-If we only relied on the Android KeyStore to handle the encryption keys, the user would only had access to the data from a single device, keys won't be exportable into other devices. To overcome this issue we have introduced a user bound keystore in Atlas, it stores the user's keys, and it allows to import them into any new device.
+We will use the symmetric encryption algorithm AES, as it provides great performance when encrypting files and data.
 
-## User keystore
+## Multi-device support
+As we mentioned, the local device keystore does not support exporting keys, this means that a user would not be able to access their data from a new device as the encryption keys would only be available from the original one. To overcome this we need a shared keystore that would allow accessing these keys from any device. 
 
-This keystore is stored in atlas and it is accessible to the user via `CustomData`. Although the custom data is only accessible to the user, any admin with db access would be able to access to the user keys and thus to the encrypted fields. We need to also encrypt the keystore contents.
+![alt text](diagram1.svg "Deployment")
 
-To facilitate device roaming the keystore encryption key is password generated. This way a user would be able to generate the key on any new device if they facilitate the right passphrase.
+For this sample, we store the user keys in a password-protected Keystore in the user's `CustomData`. This allows you to control access to these (encrypted) keys based on the permission system in App Services.
 
-## Importing and creating keys
+We have chosen `BKS` as the remote keystore format as it supports storing symmetric keys. It is also supported by the Android SDK and allows us to show the interaction between the remote and local keystores in the sample code.
 
-The user keystore is not intended to serve as the primary keystore since the Android key store provides a higher level of security.
+## Key import
+After the user logs in on a new device, we need to import any required keys from the remote keystore into the local. If no key were available in the remote keystore, we would generate a new one that will be stored both remotely and locally.
 
-The system keystore serves as a repository for importing keys, which are then utilized for cryptographic operations. If a user needs to generate a new key, it will be stored not only in the system keystore but also in the user's personal keystore. This ensures that the key is accessible across different devices later on.
+![alt text](diagram2.svg "Key import")
 
-## Accessing data
+This process would ensure that the data is accessible anytime anywhere, even offline as the keys would be stored in the user's devices. While password protected in the server, the keys stored in the device keystore would be hardware protected.
 
-Once the keys are present in the system and combined with the encryption algorithm specification defined in the user's custom data, we can secure the user's data.
+The process of importing the keys can be found here [link to the code].
 
-In this sample we have created the `SecureStringDelegate` a helper that provides seamless access to the secured data, as if it was a regular property. 
+## Encrypting data
+As we mentioned before, to be able to encrypt data we need an algorithm along with the key to encrypt and decrypt. In the `CustomData` we have included a property that contains the specification for the algorithm that would be used for FLE.
 
-There are some known issues around data modelling right now. First it would convenient if we were able to access the user custom data from an object, that would facilitate accessing the cipher algorithm and key. Second, when we add support for custom type adapters we would be able to collapse the secured and accessor in a single property.
+AES cipher specification is defined in the users custom data.
+```kotlin
+{
+  fle_cipher_spec: {
+    algorithm: "AES",
+    block: "CBC",
+    padding: "PKCS7Padding",
+    key_length: 128
+  }
+}
+```
 
-## Vector attacks
+Java Crypto APIs work with binary data, before encrypting we would have to convert the value into a byte array, and then after decrypting we would convert the byte array into the actual type. 
 
-The algorithm used to secure the user keystore in Atlas is prone to brute force attacks, anybody with with access could attempt an attack. 
+Realm has support for ByteArrays so we would be able to store any encrypted data in a RealmObject. 
 
-Another weak point is that during the import phase the keys are available unencrypted in users unsecured memory region.
+```kotlin
+class Person: RealmObject {
+    var securedContent: ByteArray? = null
+}
+```
 
-There are other alternatives to using a password based key, for example, the keys could be provided by an external repository or we could even implement a decentralized process where devices could exchange keystores securely using asymetric keys. This process would be a more complex, and would require at least one device online to grant access to the data.
+These operations can be encapsulated into a helper delegate, for example [insert link] to seamlessly provide access to the data.
+
+```kotlin
+class Person: RealmObject {
+    var securedContent: ByteArray? = null
+    var content String by SecureStringDelegate(::securedSSN)
+}
+```
+
+Currently, there are some limitations on how we can associate a key to an object or property because RealmObjects don't provide any information about its source realm or user yet. In this demo we have opted for storing such data in global variables.
+
+![alt text](diagram3.svg "Flow")
+
+## Attack vectors
+Nothing is 100% secure, there is always a tradeoffs associated with security. The implementation outlined here also suffers from the vulnerabilities. Please evaluate them against your security needs before using the approach outlined:
+
+The remote keystore stored on the server is only password protected and thus prone to brute-force attacks if anyone gets access to it. Choosing a secure password is very important.
+During the import phase, the keys reside in unprotected user memory. Android apps are operating in secure sandboxes, but if a device is rooted this guarantee might be broken and memory will be susceptible to be read by malicious programs.
+
+
