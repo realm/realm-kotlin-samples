@@ -6,7 +6,7 @@ Reference app that show cases different design patterns and examples of using th
 
 ### [Field level encryption](apps/field-encryption/README.md)
 
-This demo shows the process of protecting users sensitive data by employing encryption techniques while guaranteeing the access from any users device.
+This demo shows the process of protecting users' sensitive data by employing end-to-end encryption techniques while guaranteeing access from any user's device.
 
 ## Demo app structure
 
