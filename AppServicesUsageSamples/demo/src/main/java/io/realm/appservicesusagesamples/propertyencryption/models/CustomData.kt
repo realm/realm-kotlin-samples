@@ -22,8 +22,8 @@ import kotlinx.serialization.Serializable
 /**
  * App services user custom data. It contains the resources required to achieve property level
  * encryption:
- * 1. Encryption key, it is stored in a password protected keystore.
- * 2. Field encryption cipher spec,
+ * 1. Encryption key, stored and password-protected in [keyStore].
+ * 2. Field encryption cipher spec, defined in [PLECipherSpec],
  */
 @Serializable
 class CustomData(

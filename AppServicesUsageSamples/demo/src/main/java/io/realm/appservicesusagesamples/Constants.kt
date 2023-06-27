@@ -16,7 +16,7 @@
  */
 package io.realm.appservicesusagesamples
 
-const val PROPERTY_ENCRYPTION_APP_ID = "property-encryption-fjrvt"
+const val PROPERTY_ENCRYPTION_APP_ID = "<insert-app-id>"
 const val USER_PRESENCE_APP_ID = "<insert-app-id>"
 const val OFFLINE_LOGIN_APP_ID = "<insert-app-id>"
 const val ERROR_HANDLING_APP_ID = "<insert-app-id>"

@@ -51,7 +51,7 @@ data class KeyStoreUiState(
 /**
  * View model for the [UnlockRemoteKeyStoreScreen].
  */
-class KeyStoreViewModel(
+class UnlockRemoteKeyStoreScreenViewModel(
     val app: App,
     private val keyAlias: String,
     private val localKeyStore: KeyStore,

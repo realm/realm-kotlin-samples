@@ -62,7 +62,7 @@ import org.koin.compose.koinInject
  */
 @Composable
 fun UnlockRemoteKeyStoreScreen(
-    viewModel: KeyStoreViewModel = koinInject(),
+    viewModel: UnlockRemoteKeyStoreScreenViewModel = koinInject(),
     modifier: Modifier = Modifier,
     onUnlocked: () -> Unit
 ) {

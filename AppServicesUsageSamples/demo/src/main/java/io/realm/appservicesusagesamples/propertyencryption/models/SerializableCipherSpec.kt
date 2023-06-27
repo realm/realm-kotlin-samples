@@ -27,7 +27,7 @@ private const val IV_SIZE: Int = 16  // should be ok for most of the cases
 
 /**
  * Class that contains all the information required to instantiate a [Cipher], it also provides
- * with methods to encrypt/decrypt data.
+ * methods to encrypt/decrypt data.
  */
 @Serializable
 data class SerializableCipherSpec(

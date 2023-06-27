@@ -20,7 +20,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.realm.kotlin.mongodb.App
-import io.realm.kotlin.mongodb.Credentials
 import io.realm.kotlin.mongodb.exceptions.ServiceException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,11 +41,11 @@ class SampleSelectorScreenViewModel(private val apps: List<io.realm.appservicesu
 
     private suspend fun App.isAvailable() =
         try {
-            // Try to login an anonymous user to see if the app is active.
-            login(Credentials.anonymous(reuseExisting = false)).logOut()
+            // Try to perform some action to validate that the app exists
+            emailPasswordAuth.resendConfirmationEmail("realm")
             true
         } catch (e: ServiceException) {
-            e.message?.startsWith("[Service][Unknown(4351)]") != true
+            e.message?.startsWith("[Service][Unknown(4351)] cannot find app") != true
         }
 
     private suspend fun getDemoEntriesWithStatus() =

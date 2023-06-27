@@ -17,7 +17,7 @@
 package io.realm.appservicesusagesamples.propertyencryption
 
 import io.realm.appservicesusagesamples.propertyencryption.ui.NavGraphViewModel
-import io.realm.appservicesusagesamples.propertyencryption.ui.keystore.KeyStoreViewModel
+import io.realm.appservicesusagesamples.propertyencryption.ui.keystore.UnlockRemoteKeyStoreScreenViewModel
 import io.realm.appservicesusagesamples.propertyencryption.ui.login.LoginViewModel
 import io.realm.appservicesusagesamples.propertyencryption.ui.records.SecretRecordsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -33,7 +33,7 @@ val propertyEncryptionModule = module {
     }
 
     viewModel {
-        KeyStoreViewModel(
+        UnlockRemoteKeyStoreScreenViewModel(
             app = get(qualifier = io.realm.appservicesusagesamples.Demos.PROPERTY_ENCRYPTION.qualifier),
             keyAlias = keyAlias,
             localKeyStore = androidKeyStore
