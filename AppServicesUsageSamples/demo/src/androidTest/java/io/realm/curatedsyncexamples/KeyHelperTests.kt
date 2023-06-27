@@ -19,7 +19,7 @@ package io.realm.appservicesusagesamples
 import android.security.keystore.KeyProperties
 import android.security.keystore.KeyProtection
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import io.realm.appservicesusagesamples.propertyencryption.ext.generateAndStoreKey
+import io.realm.appservicesusagesamples.propertyencryption.ext.generateKey
 import io.realm.appservicesusagesamples.propertyencryption.models.SerializableCipherSpec
 import org.junit.Assert.*
 import org.junit.Test
@@ -61,7 +61,7 @@ class KeyHelperTests {
     @Test
     fun importKeyToAndroidKeyStore() {
         val keyAlias = "alias"
-        val secretKey = cipherSpec.generateAndStoreKey()
+        val secretKey = cipherSpec.generateKey()
 
         val inMemoryKeyStore = KeyStore.getInstance("BKS")
             .apply {

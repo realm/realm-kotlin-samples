@@ -18,14 +18,12 @@ package io.realm.appservicesusagesamples.ui
 
 import android.content.Intent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -43,11 +41,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.realm.appservicesusagesamples.R
 import org.koin.compose.koinInject
 
+/**
+ * View that displays the available and unavailable samples.
+ */
 @Composable
-fun ExamplesScreen(
-    viewModel: ExamplesScreenViewModel = koinInject()
+fun SampleSelectorScreen(
+    viewModel: SampleSelectorScreenViewModel = koinInject()
 ) {
-    val demoEntriesWithStatus by viewModel.demoEntriesWithStatus.observeAsState(emptyList())
+    val sampleEntriesWithStatus by viewModel.sampleEntriesWithStatus.observeAsState(emptyList())
     val loading by viewModel.loadingState.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
@@ -69,25 +70,25 @@ fun ExamplesScreen(
                             contentDescription = "Realm logo",
                         )
                         Text(
-                            text = "Reference app that showcases different design patterns and examples of Realm Kotlin SDK with Atlas.",
+                            text = "Reference app that showcases different design patterns and samples of Realm Kotlin SDK with Atlas.",
                             modifier = Modifier.padding(top = 48.dp),
                             textAlign = TextAlign.Justify
                         )
                     }
                 }
                 items(
-                    items = demoEntriesWithStatus.filter { it.second }.map { it.first }
-                ) { demo ->
-                    DemoEntry(
-                        title = demo.title,
+                    items = sampleEntriesWithStatus.filter { it.second }.map { it.first }
+                ) { sample ->
+                    SampleEntry(
+                        title = sample.title,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(bottom = 8.dp),
                     ) {
-                        context.startActivity(Intent(context, demo.activity))
+                        context.startActivity(Intent(context, sample.activity))
                     }
                 }
-                if (demoEntriesWithStatus.any { !it.second }) {
+                if (sampleEntriesWithStatus.any { !it.second }) {
                     item {
                         Row(
                             modifier = Modifier
@@ -95,22 +96,22 @@ fun ExamplesScreen(
                                 .padding(top = 24.dp, bottom = 24.dp)
                         ) {
                             Text(
-                                text = "⚠️ The following demos are not available. Please follow the Readme instructions to set them up.",
+                                text = "⚠️ The following samples are not available. Please follow the Readme instructions to set them up.",
                                 textAlign = TextAlign.Justify
                             )
                         }
                     }
                     items(
-                        items = demoEntriesWithStatus.filter { !it.second }.map { it.first }
-                    ) { demo ->
-                        DemoEntry(
-                            title = demo.title,
+                        items = sampleEntriesWithStatus.filter { !it.second }.map { it.first }
+                    ) { sample ->
+                        SampleEntry(
+                            title = sample.title,
                             enabled = false,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(bottom = 8.dp),
                         ) {
-                            context.startActivity(Intent(context, demo.activity))
+                            context.startActivity(Intent(context, sample.activity))
                         }
                     }
                 }
@@ -119,8 +120,11 @@ fun ExamplesScreen(
     }
 }
 
+/**
+ * View that shows the details of a specific sample.
+ */
 @Composable
-fun DemoEntry(
+fun SampleEntry(
     title: String,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,

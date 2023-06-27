@@ -20,7 +20,10 @@ import io.realm.appservicesusagesamples.propertyencryption.models.SerializableCi
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 
-fun SerializableCipherSpec.generateAndStoreKey(): SecretKey =
+/**
+ * Generates a new key for the given cipher specification.
+ */
+fun SerializableCipherSpec.generateKey(): SecretKey =
     KeyGenerator
         .getInstance(
             /* algorithm = */ algorithm

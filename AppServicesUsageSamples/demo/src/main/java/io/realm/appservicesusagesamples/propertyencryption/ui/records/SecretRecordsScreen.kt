@@ -51,10 +51,79 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import io.realm.appservicesusagesamples.propertyencryption.models.SecretRecord
 import org.koin.compose.koinInject
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
+/**
+ * This screen would display a list of [SecretRecord] and a control view to add new entries. For each
+ * entry it would show its encrypted content in hexadecimal and the uncrypted value.
+ */
+@OptIn(ExperimentalEncodingApi::class)
+@Composable
+fun SecretRecordScreen(
+    viewModel: SecretRecordsViewModel = koinInject(),
+    modifier: Modifier = Modifier,
+    onLogout: () -> Unit
+) {
+    val records by viewModel.records.observeAsState(emptyList())
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val listState = rememberLazyListState()
+
+    LaunchedEffect(uiState.loggedOut) {
+        if (uiState.loggedOut) {
+            onLogout()
+        }
+    }
+    LaunchedEffect(key1 = records) {
+        listState.scrollToItem(0)
+    }
+    LazyColumn(
+        state = listState
+    ) {
+        items(
+            records,
+            key = {
+                it._id.toHexString()
+            }
+        ) { record ->
+            SecretRecordCard(
+                content = record.content,
+                encryptedContent = Base64.encode(record.securedContent),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp, horizontal = 16.dp),
+            )
+
+        }
+        item {
+            Box(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .height(144.dp)
+            )
+        }
+    }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        AddSecretRecordCard(
+            uiState,
+            onLogout = { viewModel.logout() }
+        ) {
+            viewModel.addRecord(it)
+        }
+    }
+}
+
+
+/**
+ * View with controls to add new entries or logout.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddSecretRecordCard(
@@ -127,66 +196,6 @@ fun SecretRecordCard(
                 softWrap = false,
                 overflow = TextOverflow.Ellipsis
             )
-        }
-    }
-}
-
-@OptIn(ExperimentalEncodingApi::class)
-@Composable
-fun SecretRecordScreen(
-    viewModel: SecretRecordsViewModel = koinInject(),
-    modifier: Modifier = Modifier,
-    onLogout: () -> Unit
-) {
-    val records by viewModel.records.observeAsState(emptyList())
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val listState = rememberLazyListState()
-
-    LaunchedEffect(uiState.loggedOut) {
-        if (uiState.loggedOut) {
-            onLogout()
-        }
-    }
-    LaunchedEffect(key1 = records) {
-        listState.scrollToItem(0)
-    }
-    LazyColumn(
-        state = listState
-    ) {
-        items(
-            records,
-            key = {
-                it._id.toHexString()
-            }
-        ) { record ->
-            SecretRecordCard(
-                content = record.content,
-                encryptedContent = Base64.encode(record.securedContent),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp, horizontal = 16.dp),
-            )
-
-        }
-        item {
-            Box(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .height(144.dp)
-            )
-        }
-    }
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        contentAlignment = Alignment.BottomCenter
-    ) {
-        AddSecretRecordCard(
-            uiState,
-            onLogout = { viewModel.logout() }
-        ) {
-            viewModel.addRecord(it)
         }
     }
 }

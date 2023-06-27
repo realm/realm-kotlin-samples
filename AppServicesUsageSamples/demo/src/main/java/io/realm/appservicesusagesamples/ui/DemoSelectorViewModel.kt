@@ -19,10 +19,7 @@ package io.realm.appservicesusagesamples.ui
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.realm.appservicesusagesamples.DemoWithApp
-import io.realm.appservicesusagesamples.Demos
 import io.realm.kotlin.mongodb.App
-import io.realm.kotlin.mongodb.AuthenticationProvider
 import io.realm.kotlin.mongodb.Credentials
 import io.realm.kotlin.mongodb.exceptions.ServiceException
 import kotlinx.coroutines.Dispatchers
@@ -34,11 +31,14 @@ import kotlinx.coroutines.launch
 
 typealias DemoWithStatus = Pair<io.realm.appservicesusagesamples.Demos, Boolean>
 
-class ExamplesScreenViewModel(private val apps: List<io.realm.appservicesusagesamples.DemoWithApp>) : ViewModel() {
+/**
+ * View model for the sample selector screen.
+ */
+class SampleSelectorScreenViewModel(private val apps: List<io.realm.appservicesusagesamples.DemoWithApp>) : ViewModel() {
     private val loading = MutableStateFlow(true)
     val loadingState: StateFlow<Boolean> = loading.asStateFlow()
 
-    val demoEntriesWithStatus: MutableLiveData<List<DemoWithStatus>> by lazy { MutableLiveData<List<DemoWithStatus>>() }
+    val sampleEntriesWithStatus: MutableLiveData<List<DemoWithStatus>> by lazy { MutableLiveData<List<DemoWithStatus>>() }
 
     private suspend fun App.isAvailable() =
         try {
@@ -56,13 +56,8 @@ class ExamplesScreenViewModel(private val apps: List<io.realm.appservicesusagesa
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            demoEntriesWithStatus.postValue(getDemoEntriesWithStatus())
+            sampleEntriesWithStatus.postValue(getDemoEntriesWithStatus())
             loading.update { false }
         }
     }
 }
-
-data class ExampleEntry(
-    val name: String,
-    val activity: Class<*>
-)

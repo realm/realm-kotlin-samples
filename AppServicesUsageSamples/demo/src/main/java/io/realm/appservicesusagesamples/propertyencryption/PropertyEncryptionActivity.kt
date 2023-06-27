@@ -24,6 +24,9 @@ import androidx.compose.ui.Modifier
 import io.realm.appservicesusagesamples.propertyencryption.ui.NavGraph
 import io.realm.appservicesusagesamples.ui.theme.AppServicesUsageSamplesTheme
 
+/**
+ * Activity that hosts the views that would demo property level encryption.
+ */
 class PropertyEncryptionActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

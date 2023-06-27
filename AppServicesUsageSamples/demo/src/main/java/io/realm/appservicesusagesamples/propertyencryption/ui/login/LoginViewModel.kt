@@ -26,14 +26,19 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.lang.Exception
 
+/**
+ * Holds the UI state for the login screen.
+ */
 data class LoginUiState(
     val loggingIn: Boolean = false,
     val loggedIn: Boolean = false,
     val errorMessage: String? = null,
 )
 
+/**
+ * View model for the login screen.
+ */
 class LoginViewModel(
     private val app: App
 ) : ViewModel() {

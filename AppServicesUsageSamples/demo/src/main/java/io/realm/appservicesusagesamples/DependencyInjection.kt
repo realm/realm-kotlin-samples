@@ -17,7 +17,7 @@
 package io.realm.appservicesusagesamples
 
 import io.realm.appservicesusagesamples.propertyencryption.PropertyEncryptionActivity
-import io.realm.appservicesusagesamples.ui.ExamplesScreenViewModel
+import io.realm.appservicesusagesamples.ui.SampleSelectorScreenViewModel
 import io.realm.kotlin.mongodb.App
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
@@ -38,27 +38,27 @@ enum class Demos(
     ),
     USER_PRESENCE(
         "User presence",
-        DemoSelectorActivity::class.java,
+        SampleSelectorActivity::class.java,
         USER_PRESENCE_APP_ID,
     ),
     OFFLINE_LOGIN(
         "Offline login",
-        DemoSelectorActivity::class.java,
+        SampleSelectorActivity::class.java,
         OFFLINE_LOGIN_APP_ID,
     ),
     ERROR_HANDLING(
         "Error handling",
-        DemoSelectorActivity::class.java,
+        SampleSelectorActivity::class.java,
         ERROR_HANDLING_APP_ID,
     ),
     BUSINESS_LOGIC(
         "Business logic",
-        DemoSelectorActivity::class.java,
+        SampleSelectorActivity::class.java,
         BUSINESS_LOGIC_APP_ID,
     ),
     PURCHASE_VERIFICATION(
         "Purchase verification",
-        DemoSelectorActivity::class.java,
+        SampleSelectorActivity::class.java,
         PURCHASE_VERIFICATION_APP_ID,
     );
 
@@ -77,7 +77,7 @@ val mainModule = module {
     }
 
     viewModel {
-        ExamplesScreenViewModel(
+        SampleSelectorScreenViewModel(
             apps = Demos.values()
                 .map { demo ->
                     DemoWithApp(

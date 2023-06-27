@@ -19,16 +19,19 @@ package io.realm.appservicesusagesamples
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import io.realm.appservicesusagesamples.ui.ExamplesScreen
+import io.realm.appservicesusagesamples.ui.SampleSelectorScreen
 import io.realm.appservicesusagesamples.ui.theme.AppServicesUsageSamplesTheme
 
-class DemoSelectorActivity : ComponentActivity() {
+/**
+ * Activity that display a list with the available samples.
+ */
+class SampleSelectorActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
             AppServicesUsageSamplesTheme {
-                ExamplesScreen()
+                SampleSelectorScreen()
             }
         }
     }

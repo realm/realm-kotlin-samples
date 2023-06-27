@@ -26,7 +26,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import io.realm.appservicesusagesamples.propertyencryption.ui.keystore.UnlockUserKeyStoreScreen
+import io.realm.appservicesusagesamples.propertyencryption.ui.keystore.UnlockRemoteKeyStoreScreen
 import io.realm.appservicesusagesamples.propertyencryption.ui.login.LoginScreen
 import io.realm.appservicesusagesamples.propertyencryption.ui.records.SecretRecordScreen
 import io.realm.kotlin.mongodb.App
@@ -81,7 +81,7 @@ fun NavGraph(
         composable(
             Screens.KEYSTORE_PASSWORD_SCREEN,
         ) {
-            UnlockUserKeyStoreScreen(
+            UnlockRemoteKeyStoreScreen(
                 modifier = modifier.verticalScroll(rememberScrollState())
             ) {
                 navActions.navigateToSecretRecordsScreen()

@@ -56,8 +56,12 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.compose.koinInject
 
+/**
+ * In this screen we prompt the user to introduce a password whether initialize the remote keystore
+ * or, if initialized, to load its contents.
+ */
 @Composable
-fun UnlockUserKeyStoreScreen(
+fun UnlockRemoteKeyStoreScreen(
     viewModel: KeyStoreViewModel = koinInject(),
     modifier: Modifier = Modifier,
     onUnlocked: () -> Unit

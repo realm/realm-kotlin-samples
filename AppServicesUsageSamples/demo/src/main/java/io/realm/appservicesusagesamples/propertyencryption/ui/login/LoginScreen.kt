@@ -57,6 +57,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.compose.koinInject
 
+/**
+ * This screens prompts the user to wheter register or authenticate via email-password.
+ */
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel = koinInject(),
@@ -89,6 +92,9 @@ fun LoginScreen(
     }
 }
 
+/**
+ * View with the inputs and controls to perform the authentication.
+ */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun LoginBox(

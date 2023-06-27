@@ -20,7 +20,8 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
- * App services user custom data. It contains the resources required for PLE:
+ * App services user custom data. It contains the resources required to achieve property level
+ * encryption:
  * 1. Encryption key, it is stored in a password protected keystore.
  * 2. Field encryption cipher spec,
  */

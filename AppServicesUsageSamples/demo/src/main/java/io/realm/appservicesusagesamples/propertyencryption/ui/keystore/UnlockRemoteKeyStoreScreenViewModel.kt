@@ -20,8 +20,8 @@ import android.security.keystore.KeyProperties
 import android.security.keystore.KeyProtection
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.realm.appservicesusagesamples.propertyencryption.ext.propertyEncryptionCipherSpec
-import io.realm.appservicesusagesamples.propertyencryption.ext.generateAndStoreKey
+import io.realm.appservicesusagesamples.propertyencryption.ext.getPropertyEncryptionCipherSpec
+import io.realm.appservicesusagesamples.propertyencryption.ext.generateKey
 import io.realm.appservicesusagesamples.propertyencryption.ext.getRemoteKeyStore
 import io.realm.appservicesusagesamples.propertyencryption.ext.hasKeyStore
 import io.realm.appservicesusagesamples.propertyencryption.ext.updateRemoteKeyStore
@@ -38,6 +38,9 @@ import java.security.KeyStore
 import java.security.KeyStore.SecretKeyEntry
 import javax.crypto.SecretKey
 
+/**
+ * UI state of the KeyStore screen.
+ */
 data class KeyStoreUiState(
     val isInitialized: Boolean = false,
     val isUnlocking: Boolean = false,
@@ -45,6 +48,9 @@ data class KeyStoreUiState(
     val errorMessage: String? = null,
 )
 
+/**
+ * View model for the [UnlockRemoteKeyStoreScreen].
+ */
 class KeyStoreViewModel(
     val app: App,
     private val keyAlias: String,
@@ -95,7 +101,7 @@ class KeyStoreViewModel(
             }
             // Now we can safely retrieve the key from the remote keystore
             val remoteKey = remoteKeyStore.getKey(keyAlias, null) as SecretKey
-            val cipherSpec = user.propertyEncryptionCipherSpec()
+            val cipherSpec = user.getPropertyEncryptionCipherSpec()
 
             // now we can add it in the secure local keystore
             localKeyStore.setEntry(
@@ -117,8 +123,8 @@ class KeyStoreViewModel(
     }
 
     private suspend fun generateAndStoreKey(user: User, keyStore: KeyStore, password: String) {
-        val cipherSpec = user.propertyEncryptionCipherSpec()
-        val key = cipherSpec.generateAndStoreKey()
+        val cipherSpec = user.getPropertyEncryptionCipherSpec()
+        val key = cipherSpec.generateKey()
 
         keyStore.setEntry(
             keyAlias,

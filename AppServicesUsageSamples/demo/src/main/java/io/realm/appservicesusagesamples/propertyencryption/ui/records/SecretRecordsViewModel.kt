@@ -19,7 +19,7 @@ package io.realm.appservicesusagesamples.propertyencryption.ui.records
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.realm.appservicesusagesamples.propertyencryption.ext.propertyEncryptionCipherSpec
+import io.realm.appservicesusagesamples.propertyencryption.ext.getPropertyEncryptionCipherSpec
 import io.realm.appservicesusagesamples.propertyencryption.models.SecretRecord
 import io.realm.appservicesusagesamples.propertyencryption.models.PLECipherSpec
 import io.realm.appservicesusagesamples.propertyencryption.models.PLEKey
@@ -38,12 +38,18 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.security.KeyStore
 
+/**
+ * Holds the UI state for the secret records screen.
+ */
 data class SecretRecordsUiState(
     val loading: Boolean = true,
     val loggingOut: Boolean = false,
     val loggedOut: Boolean = false
 )
 
+/**
+ * View model for the secret records screen.
+ */
 class SecretRecordsViewModel(
     private val app: App,
     private val keyAlias: String,
@@ -61,7 +67,7 @@ class SecretRecordsViewModel(
                 this@SecretRecordsViewModel.user = user
 
                 // Import key and cipher spec required to access the secret contents
-                PLECipherSpec = user.propertyEncryptionCipherSpec()
+                PLECipherSpec = user.getPropertyEncryptionCipherSpec()
                 PLEKey = localKeyStore.getKey(keyAlias, null)
 
                 val syncConfig = SyncConfiguration

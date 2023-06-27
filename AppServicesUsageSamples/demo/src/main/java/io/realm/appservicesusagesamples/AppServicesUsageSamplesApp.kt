@@ -22,6 +22,9 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.GlobalContext.startKoin
 
+/**
+ * Samples application. It contains the DI module initialization.
+ */
 class AppServicesUsageSamplesApp: Application() {
     override fun onCreate() {
         super.onCreate()

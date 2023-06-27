@@ -26,9 +26,15 @@ import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.security.KeyStore
 
+/**
+ * Checks if a user has an initialized keystore.
+ */
 @OptIn(ExperimentalRealmSerializerApi::class)
 fun User.hasKeyStore() = customData<CustomData>()?.keyStore != null
 
+/**
+ * Loads the remote [KeyStore].
+ */
 @OptIn(ExperimentalRealmSerializerApi::class)
 fun User.getRemoteKeyStore(password: String): KeyStore =
     KeyStore.getInstance("BKS").apply {
@@ -40,6 +46,9 @@ fun User.getRemoteKeyStore(password: String): KeyStore =
         } ?: load(null)
     }
 
+/**
+ * Pushes any changes to the remote [KeyStore].
+ */
 @OptIn(ExperimentalRealmSerializerApi::class)
 suspend fun User.updateRemoteKeyStore(keyStore: KeyStore, password: String) {
     functions.call<Boolean>("updateKeyStore") {
@@ -50,7 +59,10 @@ suspend fun User.updateRemoteKeyStore(keyStore: KeyStore, password: String) {
     }
 }
 
+/**
+ * Retrieves the user's property level encryption algorithm specification.
+ */
 @OptIn(ExperimentalRealmSerializerApi::class)
-fun User.propertyEncryptionCipherSpec(): SerializableCipherSpec {
+fun User.getPropertyEncryptionCipherSpec(): SerializableCipherSpec {
     return customData<CustomData>()?.PLECipherSpec!!
 }
