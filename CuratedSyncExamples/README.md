@@ -1,6 +1,6 @@
 # Kotlin SDK Curated samples
 
-Reference app that show cases different design patterns and examples of Realm Kotlin SDK with Atlas.
+Reference app that show cases different design patterns and examples of using the Realm Kotlin SDK with Atlas App Services.
 
 ## Samples
 
