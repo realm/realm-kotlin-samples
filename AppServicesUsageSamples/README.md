@@ -5,6 +5,7 @@ Reference app that show cases different design patterns and examples of using th
 ## Samples
 
 ### [Property level encryption](apps/property-encryption/README.md)
+### [Presence detection](apps/presence-detection/README.md)
 
 This demo shows the process of protecting users' sensitive data by employing end-to-end encryption techniques while guaranteeing access from any user's device.
 
@@ -17,7 +18,7 @@ The project has been structured in two main folders:
 
 ## Getting started
 
-The demos are indendepent of each other, this means that it is not required to install all the app services app samples to test an individual sample.
+The demos are independent of each other, this means that it is not required to install all the app services app samples to test an individual sample.
 
 To begin, locate the App services app sources that you wish to install. We have conveniently linked them in the Samples list of this document.
 

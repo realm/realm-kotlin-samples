@@ -72,7 +72,7 @@ class UserStatusListViewModel(
                     realm = Realm.open(syncConfig)
 
                     val job = async {
-                        realm.query<UserStatus>()
+                        realm.query<UserStatus>("owner_id != $0", user.id)
                             .sort("present", Sort.DESCENDING)
                             .asFlow()
                             .collect {
