@@ -56,7 +56,6 @@ fun ControlsCard(
     onConnect: () -> Unit,
     onDisconnect: () -> Unit,
 ) {
-
     ElevatedCard(
         modifier = modifier.fillMaxWidth()
     ) {
@@ -153,50 +152,55 @@ fun UserStatusListScreen(
     LaunchedEffect(key1 = users) {
         listState.scrollToItem(0)
     }
-    LazyColumn(
-        state = listState
+    Surface(
+        color = MaterialTheme.colorScheme.background,
+        modifier = modifier,
     ) {
-        if (uiState.connectionState == ConnectionState.CONNECTED) {
-            items(
-                users,
-                key = {
-                    it.id.toHexString()
-                }
-            ) { userStatus ->
-                StatusCard(
-                    connected = userStatus.present,
-                    message = if (uiState.userId == userStatus.ownerId) {
-                        "You"
-                    } else {
-                        "User id: ${userStatus.ownerId}"
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp, horizontal = 16.dp),
-                )
+        LazyColumn(
+            state = listState
+        ) {
+            if (uiState.connectionState == ConnectionState.CONNECTED) {
+                items(
+                    users,
+                    key = {
+                        it.id.toHexString()
+                    }
+                ) { userStatus ->
+                    StatusCard(
+                        connected = userStatus.present,
+                        message = if (uiState.userId == userStatus.ownerId) {
+                            "You"
+                        } else {
+                            "User id: ${userStatus.ownerId}"
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp, horizontal = 16.dp),
+                    )
 
+                }
+            }
+            item {
+                Box(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .height(72.dp)
+                )
             }
         }
-        item {
-            Box(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .height(72.dp)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            ControlsCard(
+                uiState,
+                onLogout = { viewModel.logout() },
+                onConnect = { viewModel.connect() },
+                onDisconnect = { viewModel.disconnect() },
             )
         }
-    }
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        contentAlignment = Alignment.BottomCenter
-    ) {
-        ControlsCard(
-            uiState,
-            onLogout = { viewModel.logout() },
-            onConnect = { viewModel.connect() },
-            onDisconnect = { viewModel.disconnect() },
-        )
     }
 }
 
