@@ -16,6 +16,7 @@
  */
 package io.realm.appservicesusagesamples
 
+import io.realm.appservicesusagesamples.errorhandling.ErrorHandlingActivity
 import io.realm.appservicesusagesamples.propertyencryption.PropertyEncryptionActivity
 import io.realm.appservicesusagesamples.ui.SampleSelectorScreenViewModel
 import io.realm.appservicesusagesamples.presence.PresenceDetectionActivity
@@ -49,7 +50,7 @@ enum class Demos(
     ),
     ERROR_HANDLING(
         "Error handling",
-        SampleSelectorActivity::class.java,
+        ErrorHandlingActivity::class.java,
         ERROR_HANDLING_APP_ID,
     ),
     BUSINESS_LOGIC(

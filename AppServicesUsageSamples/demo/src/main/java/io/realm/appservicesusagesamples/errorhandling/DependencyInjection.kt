@@ -14,11 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.realm.appservicesusagesamples
+package io.realm.appservicesusagesamples.errorhandling
 
-const val PROPERTY_ENCRYPTION_APP_ID = "<insert-app-id>"
-const val USER_PRESENCE_APP_ID = "presence-detection-bcsii"
-const val OFFLINE_LOGIN_APP_ID = "<insert-app-id>"
-const val ERROR_HANDLING_APP_ID = "error-handling-jltyk"
-const val BUSINESS_LOGIC_APP_ID = "<insert-app-id>"
-const val PURCHASE_VERIFICATION_APP_ID = "<insert-app-id>"
+import io.realm.appservicesusagesamples.Demos
+import io.realm.appservicesusagesamples.errorhandling.ui.ErrorHandlingViewModel
+import io.realm.appservicesusagesamples.presence.ui.UserStatusListViewModel
+import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.dsl.module
+
+val errorHandlingModule = module {
+    viewModel {
+        ErrorHandlingViewModel(
+            app = get(qualifier = Demos.ERROR_HANDLING.qualifier),
+        )
+    }
+}
