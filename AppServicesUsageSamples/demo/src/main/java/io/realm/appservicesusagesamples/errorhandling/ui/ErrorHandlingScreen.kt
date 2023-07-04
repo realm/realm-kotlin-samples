@@ -44,7 +44,6 @@ import org.koin.compose.koinInject
 @Composable
 fun ErrorHandlingScreen(
     viewModel: ErrorHandlingViewModel = koinInject(),
-    modifier: Modifier = Modifier,
     onLogout: () -> Unit,
 ) {
     val entries by viewModel.entries.observeAsState(emptyList())

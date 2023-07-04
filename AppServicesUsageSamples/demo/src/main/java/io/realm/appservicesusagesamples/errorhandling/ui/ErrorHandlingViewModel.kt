@@ -4,14 +4,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.realm.appservicesusagesamples.errorhandling.models.Entry
-import io.realm.appservicesusagesamples.presence.models.UserStatus
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.mongodb.Credentials
 import io.realm.kotlin.mongodb.User
+import io.realm.kotlin.mongodb.exceptions.SyncException
 import io.realm.kotlin.mongodb.sync.ConnectionState
 import io.realm.kotlin.mongodb.sync.SyncConfiguration
+import io.realm.kotlin.mongodb.sync.SyncSession
 import io.realm.kotlin.mongodb.syncSession
 import io.realm.kotlin.query.Sort
 import kotlinx.coroutines.Dispatchers
@@ -53,6 +54,13 @@ class ErrorHandlingViewModel(
                         .initialSubscriptions {
                             // Subscribe to all user statuses
                             add(it.query<Entry>())
+                        }
+                        .errorHandler{ session: SyncSession, exception: SyncException ->
+                            _uiState.update {
+                                it.copy(
+                                    errorMessage = exception.message
+                                )
+                            }
                         }
                         .waitForInitialRemoteData()
                         .build()
