@@ -19,20 +19,38 @@ package io.realm.appservicesusagesamples.errorhandling
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.ui.Modifier
+import io.realm.appservicesusagesamples.errorhandling.ui.ClientResetAction
 import io.realm.appservicesusagesamples.errorhandling.ui.ErrorHandlingScreen
-import io.realm.appservicesusagesamples.presence.ui.UserStatusListScreen
+import io.realm.appservicesusagesamples.errorhandling.ui.ErrorHandlingViewModel
 import io.realm.appservicesusagesamples.ui.theme.AppServicesUsageSamplesTheme
+import org.koin.android.scope.AndroidScopeComponent
+import org.koin.androidx.scope.activityRetainedScope
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
+import org.koin.core.scope.Scope
 
-class ErrorHandlingActivity : ComponentActivity() {
+const val CLIENT_RESET_STRATEGY = "client_reset_strategy"
+
+class ErrorHandlingActivity : ComponentActivity(), AndroidScopeComponent {
+    override val scope: Scope by activityRetainedScope()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val clientResetMode = intent
+            ?.getStringExtra(CLIENT_RESET_STRATEGY)
+            ?.let {
+                ClientResetAction.valueOf(it)
+            }
+            ?: ClientResetAction.RECOVER
+
+        val errorViewModel: ErrorHandlingViewModel by viewModel { parametersOf(clientResetMode) }
+
         setContent {
             AppServicesUsageSamplesTheme {
-                ErrorHandlingScreen {
+                ErrorHandlingScreen(errorViewModel) { restart ->
+                    // Restart the activity if required
+                    if(restart) startActivity(intent)
                     finish()
                 }
             }

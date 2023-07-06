@@ -24,6 +24,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -38,7 +40,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import io.realm.appservicesusagesamples.Demos
 import io.realm.appservicesusagesamples.R
+import io.realm.appservicesusagesamples.errorhandling.ui.ClientResetAction
 import org.koin.compose.koinInject
 
 /**
@@ -46,7 +50,7 @@ import org.koin.compose.koinInject
  */
 @Composable
 fun SampleSelectorScreen(
-    viewModel: SampleSelectorScreenViewModel = koinInject()
+    viewModel: SampleSelectorScreenViewModel,
 ) {
     val sampleEntriesWithStatus by viewModel.sampleEntriesWithStatus.observeAsState(emptyList())
     val loading by viewModel.loadingState.collectAsStateWithLifecycle()
@@ -78,14 +82,9 @@ fun SampleSelectorScreen(
                 }
                 items(
                     items = sampleEntriesWithStatus.filter { it.second }.map { it.first }
-                ) { sample ->
-                    SampleEntry(
-                        title = sample.title,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 8.dp),
-                    ) {
-                        context.startActivity(Intent(context, sample.activity))
+                ) { sample: Demos ->
+                    with(sample) {
+                        addView(true)
                     }
                 }
                 if (sampleEntriesWithStatus.any { !it.second }) {
@@ -104,14 +103,8 @@ fun SampleSelectorScreen(
                     items(
                         items = sampleEntriesWithStatus.filter { !it.second }.map { it.first }
                     ) { sample ->
-                        SampleEntry(
-                            title = sample.title,
-                            enabled = false,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 8.dp),
-                        ) {
-                            context.startActivity(Intent(context, sample.activity))
+                        with(sample){
+                            addView(false)
                         }
                     }
                 }
@@ -128,7 +121,7 @@ fun SampleEntry(
     title: String,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     ElevatedButton(
         onClick = onClick,

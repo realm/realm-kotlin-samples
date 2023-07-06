@@ -1,5 +1,6 @@
 package io.realm.appservicesusagesamples.errorhandling.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,8 +15,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,44 +25,44 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.realm.appservicesusagesamples.errorhandling.models.Entry
 import io.realm.kotlin.mongodb.sync.ConnectionState
-import org.koin.compose.koinInject
 
 
 @Composable
 fun ErrorHandlingScreen(
-    viewModel: ErrorHandlingViewModel = koinInject(),
-    onLogout: () -> Unit,
+    viewModel: ErrorHandlingViewModel,
+    onLogout: (Boolean) -> Unit,
 ) {
+    val context = LocalContext.current
     val entries by viewModel.entries.observeAsState(emptyList())
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val listState = rememberLazyListState()
-    LaunchedEffect(uiState.loggedOut) {
-        if (uiState.loggedOut) {
-            onLogout()
-        }
-    }
     LaunchedEffect(key1 = entries) {
         listState.scrollToItem(0)
+    }
+    LaunchedEffect(key1 = uiState) {
+        if (uiState.restart) {
+            Toast.makeText(context, uiState.errorMessage!!, Toast.LENGTH_LONG).show()
+            onLogout(true)
+        }
     }
     Surface(
         color = MaterialTheme.colorScheme.background,
     ) {
         EntryList(
-            listState = listState,
             list = entries,
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
+            listState = listState,
+            uiState = uiState,
         )
         Box(
             modifier = Modifier
@@ -73,10 +72,11 @@ fun ErrorHandlingScreen(
         ) {
             ControlsCard(
                 uiState,
-                onAddEntry = { viewModel.addEntry() },
-                onLogout = { viewModel.logout() },
-                onConnect = { viewModel.connect() },
-                onDisconnect = { viewModel.disconnect() },
+                onAddEntry = viewModel::addEntry,
+                onLogout = { onLogout(false) },
+                onConnect = viewModel::connect,
+                onClientReset = viewModel::triggerClientReset,
+                onDisconnect = viewModel::disconnect,
             )
         }
     }
@@ -87,6 +87,7 @@ fun EntryList(
     list: List<Entry>,
     modifier: Modifier,
     listState: LazyListState,
+    uiState: ErrorHandlingUIStatus,
 ) {
     Surface(
         color = MaterialTheme.colorScheme.background,
@@ -143,11 +144,10 @@ fun ControlsCard(
     modifier: Modifier = Modifier,
     onAddEntry: () -> Unit,
     onLogout: () -> Unit,
+    onClientReset: () -> Unit,
     onConnect: () -> Unit,
     onDisconnect: () -> Unit,
 ) {
-    var expanded by remember { mutableStateOf(false) }
-
     ElevatedCard(
         modifier = modifier.fillMaxWidth()
     ) {
@@ -158,6 +158,7 @@ fun ControlsCard(
                 ) {
                     ElevatedButton(
                         colors = ButtonDefaults.buttonColors(),
+                        enabled = !state.loading,
                         modifier = Modifier
                             .weight(1f)
                             .padding(end = 4.dp),
@@ -167,21 +168,14 @@ fun ControlsCard(
                     }
                     ElevatedButton(
                         colors = ButtonDefaults.buttonColors(),
-                        enabled = !state.loading && !state.loggingOut,
+                        enabled = !state.loading && state.connectionState == ConnectionState.DISCONNECTED,
                         modifier = Modifier
                             .weight(1f)
                             .padding(start = 4.dp),
-                        onClick = { expanded = true }
+                        onClick = onClientReset
                     ) {
                         Text(text = "Client reset")
                     }
-                    ClientResetMenu(
-                        expanded = expanded,
-                        onClientReset = { action ->
-
-                        },
-                        onDismiss = { expanded = false },
-                    )
                 }
                 Divider(Modifier.padding(vertical = 4.dp))
                 Row(
@@ -189,7 +183,7 @@ fun ControlsCard(
                 ) {
                     ElevatedButton(
                         colors = ButtonDefaults.buttonColors(),
-                        enabled = state.connectionState != ConnectionState.CONNECTING,
+                        enabled = !state.loading && state.connectionState != ConnectionState.CONNECTING,
                         modifier = Modifier
                             .weight(1f)
                             .padding(end = 4.dp),
@@ -208,7 +202,7 @@ fun ControlsCard(
                     }
                     ElevatedButton(
                         colors = ButtonDefaults.buttonColors(),
-                        enabled = !state.loading && !state.loggingOut,
+                        enabled = !state.loading,
                         modifier = Modifier
                             .weight(1f)
                             .padding(start = 4.dp),
@@ -237,56 +231,20 @@ fun ControlsCard(
     }
 }
 
-enum class ClientResetAction {
-    RECOVER, DISCARD, MANUAL, BACKUP
-}
-
-@Composable
-fun ClientResetMenu(
-    expanded: Boolean,
-    onClientReset: (ClientResetAction) -> Unit,
-    onDismiss: () -> Unit,
-) {
-    DropdownMenu(expanded = expanded, onDismissRequest = onDismiss) {
-        DropdownMenuItem(
-            text = { Text(text = "Recover unsynced changed") },
-            onClick = { onClientReset(ClientResetAction.RECOVER) }
-        )
-        DropdownMenuItem(
-            text = { Text(text = "Discard unsynced changes") },
-            onClick = { onClientReset(ClientResetAction.DISCARD) }
-        )
-        DropdownMenuItem(
-            text = { Text(text = "Manual recover unsynced changed") },
-            onClick = { onClientReset(ClientResetAction.MANUAL) }
-        )
-        DropdownMenuItem(text = { Text(text = "Backup realm") },
-            onClick = { onClientReset(ClientResetAction.BACKUP) }
-        )
-    }
-}
-
-@Preview
-@Composable
-fun ClientResetMenuPreview() {
-    Surface(
-        color = MaterialTheme.colorScheme.background
-    ) {
-        ClientResetMenu(
-            true,
-            onClientReset = {},
-            onDismiss = {}
-        )
-    }
-}
-
 @Preview
 @Composable
 fun EntryListPreview() {
     Surface(
         color = MaterialTheme.colorScheme.background
     ) {
-        EntryList(List(5) { Entry() }, Modifier, rememberLazyListState())
+        EntryList(
+            List(5) { Entry() },
+            Modifier,
+            rememberLazyListState(),
+            ErrorHandlingUIStatus(
+                connectionState = ConnectionState.CONNECTED,
+            )
+        )
     }
 }
 
@@ -314,6 +272,7 @@ fun ControlsCardPreview() {
             onLogout = {},
             onDisconnect = {},
             onConnect = {},
+            onClientReset = {},
         )
     }
 }
@@ -333,6 +292,7 @@ fun ControlsCardWithErrorPreview() {
             onLogout = {},
             onDisconnect = {},
             onConnect = {},
+            onClientReset = {},
         )
     }
 }

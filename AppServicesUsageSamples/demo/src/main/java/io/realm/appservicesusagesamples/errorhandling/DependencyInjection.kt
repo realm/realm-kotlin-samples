@@ -23,9 +23,12 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val errorHandlingModule = module {
-    viewModel {
-        ErrorHandlingViewModel(
-            app = get(qualifier = Demos.ERROR_HANDLING.qualifier),
-        )
+    scope<ErrorHandlingActivity> {
+        factory { params ->
+            ErrorHandlingViewModel(
+                app = get(qualifier = Demos.ERROR_HANDLING.qualifier),
+                clientResetAction = params.get(),
+            )
+        }
     }
 }
