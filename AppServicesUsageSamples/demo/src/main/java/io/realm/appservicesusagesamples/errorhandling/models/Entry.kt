@@ -9,4 +9,7 @@ class Entry: RealmObject {
     @PrimaryKey
     @PersistedName("_id")
     var id = BsonObjectId()
+
+    @PersistedName("owner_id")
+    var ownerId: String = ""
 }

@@ -50,6 +50,7 @@ class ErrorHandlingViewModel(
     private val app: App,
     private val clientResetAction: ClientResetAction,
 ) : ViewModel() {
+    private lateinit var user: User
     private lateinit var realm: Realm
 
     private val _uiState: UiStateFlow = MutableStateFlow(ErrorHandlingUIStatus())
@@ -67,7 +68,7 @@ class ErrorHandlingViewModel(
 
     private suspend fun openRealm() {
         coroutineScope {
-            val user = app.login(Credentials.anonymous(reuseExisting = false))
+            user = app.login(Credentials.anonymous(reuseExisting = false))
 
             val syncClientResetStrategy: SyncClientResetStrategy = when (clientResetAction) {
                 ClientResetAction.RECOVER -> automaticUnsyncedDataRecovery(_uiState)
@@ -156,7 +157,11 @@ class ErrorHandlingViewModel(
     fun addEntry() {
         viewModelScope.launch {
             realm.write {
-                copyToRealm(Entry())
+                copyToRealm(
+                    Entry().apply {
+                        ownerId = user.id
+                    }
+                )
             }
         }
     }

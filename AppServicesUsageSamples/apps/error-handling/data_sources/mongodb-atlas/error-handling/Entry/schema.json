@@ -1,0 +1,16 @@
+{
+    "properties": {
+        "_id": {
+            "bsonType": "objectId"
+        },
+        "owner_id": {
+            "bsonType": "string"
+        }
+    },
+    "required": [
+        "_id",
+        "owner_id"
+    ],
+    "title": "Entry",
+    "type": "object"
+}
