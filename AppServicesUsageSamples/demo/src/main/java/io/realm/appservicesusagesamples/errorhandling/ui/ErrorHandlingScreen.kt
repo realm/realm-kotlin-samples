@@ -2,6 +2,7 @@ package io.realm.appservicesusagesamples.errorhandling.ui
 
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,6 +26,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -73,7 +77,7 @@ fun ErrorHandlingScreen(
             ControlsCard(
                 uiState,
                 onAddEntry = viewModel::addEntry,
-                onLogout = { onLogout(false) },
+                onCompensatingWrite = viewModel::triggerCompensatingWriteError,
                 onConnect = viewModel::connect,
                 onClientReset = viewModel::triggerClientReset,
                 onDisconnect = viewModel::disconnect,
@@ -143,11 +147,14 @@ fun ControlsCard(
     state: ErrorHandlingUIStatus,
     modifier: Modifier = Modifier,
     onAddEntry: () -> Unit,
-    onLogout: () -> Unit,
+    onCompensatingWrite: () -> Unit,
     onClientReset: () -> Unit,
     onConnect: () -> Unit,
     onDisconnect: () -> Unit,
 ) {
+    var enabled by remember { mutableStateOf(false)}
+    enabled = state.errorMessage != null
+
     ElevatedCard(
         modifier = modifier.fillMaxWidth()
     ) {
@@ -206,12 +213,13 @@ fun ControlsCard(
                         modifier = Modifier
                             .weight(1f)
                             .padding(start = 4.dp),
-                        onClick = onLogout
+                        onClick = onCompensatingWrite
                     ) {
-                        Text(text = "Logout")
+                        Text(text = "Comp. write")
                     }
                 }
-                if (state.errorMessage != null) {
+
+                if (enabled) {
                     Box(
                         modifier = Modifier.padding(top = 8.dp)
                     ) {
@@ -222,6 +230,9 @@ fun ControlsCard(
                                 .fillMaxWidth()
                                 .background(Color.Red)
                                 .padding(8.dp)
+                                .clickable {
+                                    enabled = false
+                                },
                         )
                     }
                 }
@@ -269,7 +280,7 @@ fun ControlsCardPreview() {
                 loading = false
             ),
             onAddEntry = {},
-            onLogout = {},
+            onCompensatingWrite = {},
             onDisconnect = {},
             onConnect = {},
             onClientReset = {},
@@ -289,7 +300,7 @@ fun ControlsCardWithErrorPreview() {
                 errorMessage = "Need more ips"
             ),
             onAddEntry = {},
-            onLogout = {},
+            onCompensatingWrite = {},
             onDisconnect = {},
             onConnect = {},
             onClientReset = {},

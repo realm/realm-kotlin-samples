@@ -1,6 +1,7 @@
+/**
+ * WARNING: THIS FUNCTION EXISTS FOR DEMO PORPUSES AND SHOULD NOT BE USED IN PRODUCTION.
+ */
 exports = async function(arg){
-  console.log("trying "+ "__realm_sync_" + context.app.id);
-  console.log("user id "+ context.user.id)
     const clientFilesCollection = context.services
         .get("mongodb-atlas")
         .db("__realm_sync_" + context.app.id)
@@ -14,7 +15,7 @@ exports = async function(arg){
         );
         return result.deletedCount;
     } catch (e) {
-        console.error(`Failed to delete data for user: ${context.user.id}`);
+        console.error(`Failed to delete client file for user: ${context.user.id}`);
         throw e
     }
 };

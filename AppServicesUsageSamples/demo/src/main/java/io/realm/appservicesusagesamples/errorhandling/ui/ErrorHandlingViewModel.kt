@@ -15,6 +15,7 @@ import io.realm.kotlin.ext.query
 import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.mongodb.Credentials
 import io.realm.kotlin.mongodb.User
+import io.realm.kotlin.mongodb.exceptions.CompensatingWriteException
 import io.realm.kotlin.mongodb.exceptions.SyncException
 import io.realm.kotlin.mongodb.ext.call
 import io.realm.kotlin.mongodb.sync.ConnectionState
@@ -83,9 +84,14 @@ class ErrorHandlingViewModel(
                     add(it.query<Entry>())
                 }
                 .errorHandler { _: SyncSession, exception: SyncException ->
+                    val errorMessage = when (exception) {
+                        is CompensatingWriteException -> "The server undid ${exception.writes.count()} change"
+                        else -> exception.message
+                    }
+
                     _uiState.update {
                         it.copy(
-                            errorMessage = exception.message
+                            errorMessage = errorMessage
                         )
                     }
                 }
@@ -110,7 +116,8 @@ class ErrorHandlingViewModel(
                     .collect { connectionStateChange ->
                         _uiState.update {
                             it.copy(
-                                connectionState = connectionStateChange.newState
+                                connectionState = connectionStateChange.newState,
+                                errorMessage = null,
                             )
                         }
                     }
@@ -130,7 +137,8 @@ class ErrorHandlingViewModel(
             _uiState.update {
                 it.copy(
                     loading = false,
-                    connectionState = realm.syncSession.connectionState
+                    connectionState = realm.syncSession.connectionState,
+                    errorMessage = null,
                 )
             }
         }
@@ -138,7 +146,10 @@ class ErrorHandlingViewModel(
 
     fun triggerClientReset() {
         _uiState.update {
-            it.copy(loading = true, errorMessage = null)
+            it.copy(
+                loading = true,
+                errorMessage = null,
+            )
         }
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -155,6 +166,11 @@ class ErrorHandlingViewModel(
     }
 
     fun addEntry() {
+        _uiState.update {
+            it.copy(
+                errorMessage = null,
+            )
+        }
         viewModelScope.launch {
             realm.write {
                 copyToRealm(
@@ -166,13 +182,30 @@ class ErrorHandlingViewModel(
         }
     }
 
+    fun triggerCompensatingWriteError() {
+        viewModelScope.launch {
+            realm.write {
+                copyToRealm(
+                    Entry().apply {
+                        ownerId = "invalid user id"
+                    }
+                )
+            }
+        }
+    }
+
     fun connect() {
+        _uiState.update {
+            it.copy(
+                errorMessage = null,
+            )
+        }
         realm.syncSession.resume()
     }
 
     fun disconnect() {
         _uiState.update {
-            it.copy(connectionState = ConnectionState.DISCONNECTED)
+            it.copy(connectionState = ConnectionState.DISCONNECTED, errorMessage = null)
         }
 
         realm.syncSession.pause()
