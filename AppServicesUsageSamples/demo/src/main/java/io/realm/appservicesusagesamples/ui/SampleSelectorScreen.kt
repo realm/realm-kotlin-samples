@@ -39,14 +39,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.realm.appservicesusagesamples.R
-import org.koin.compose.koinInject
 
 /**
  * View that displays the available and unavailable samples.
  */
 @Composable
 fun SampleSelectorScreen(
-    viewModel: SampleSelectorScreenViewModel = koinInject()
+    viewModel: SampleSelectorScreenViewModel
 ) {
     val sampleEntriesWithStatus by viewModel.sampleEntriesWithStatus.observeAsState(emptyList())
     val loading by viewModel.loadingState.collectAsStateWithLifecycle()
