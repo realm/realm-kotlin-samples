@@ -136,7 +136,7 @@ fun StatusCard(
 
 @Composable
 fun UserStatusListScreen(
-    viewModel: UserStatusListViewModel = koinInject(),
+    viewModel: UserStatusListViewModel,
     modifier: Modifier = Modifier,
     onLogout: () -> Unit,
 ) {

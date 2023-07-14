@@ -1,3 +1,19 @@
+/*
+ * Copyright 2023 Realm Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.realm.appservicesusagesamples.errorhandling.ui
 
 import android.util.Log
@@ -54,7 +70,7 @@ class ErrorHandlingViewModel(
     private lateinit var user: User
     private lateinit var realm: Realm
 
-    private val _uiState: UiStateFlow = MutableStateFlow(ErrorHandlingUIStatus())
+    val _uiState: UiStateFlow = MutableStateFlow(ErrorHandlingUIStatus())
     val uiState: StateFlow<ErrorHandlingUIStatus> = _uiState.asStateFlow()
 
     val entries: MutableLiveData<List<Entry>> by lazy {
@@ -72,10 +88,10 @@ class ErrorHandlingViewModel(
             user = app.login(Credentials.anonymous(reuseExisting = false))
 
             val syncClientResetStrategy: SyncClientResetStrategy = when (clientResetAction) {
-                ClientResetAction.RECOVER -> automaticUnsyncedDataRecovery(_uiState)
-                ClientResetAction.DISCARD -> discardUnsyncedData(_uiState)
-                ClientResetAction.MANUAL -> manualUnsyncedDataRecovery(_uiState)
-                ClientResetAction.BACKUP -> backupRealm(_uiState)
+                ClientResetAction.RECOVER -> automaticUnsyncedDataRecovery
+                ClientResetAction.DISCARD -> discardUnsyncedData
+                ClientResetAction.MANUAL -> manualUnsyncedDataRecovery
+                ClientResetAction.BACKUP -> backupRealm
             }
 
             val syncConfig = SyncConfiguration
@@ -155,7 +171,9 @@ class ErrorHandlingViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             val user = app.currentUser!!
 
+            // Tell the server force a reset for this client
             doClientReset(user)
+            // Client reset would be triggered once connected
             connect()
         }
     }

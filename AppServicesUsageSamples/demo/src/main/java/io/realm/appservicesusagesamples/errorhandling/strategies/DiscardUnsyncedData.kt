@@ -16,6 +16,7 @@
  */
 package io.realm.appservicesusagesamples.errorhandling.strategies
 
+import io.realm.appservicesusagesamples.errorhandling.ui.ErrorHandlingViewModel
 import io.realm.appservicesusagesamples.errorhandling.ui.UiStateFlow
 import io.realm.kotlin.MutableRealm
 import io.realm.kotlin.TypedRealm
@@ -24,8 +25,11 @@ import io.realm.kotlin.mongodb.sync.DiscardUnsyncedChangesStrategy
 import io.realm.kotlin.mongodb.sync.SyncSession
 import kotlinx.coroutines.flow.update
 
-fun discardUnsyncedData(_uiState: UiStateFlow): DiscardUnsyncedChangesStrategy {
-    return object : DiscardUnsyncedChangesStrategy {
+/**
+ * Client reset strategy that would automatically discard any unsynced local changes.
+ */
+val ErrorHandlingViewModel.discardUnsyncedData
+    get() = object : DiscardUnsyncedChangesStrategy {
         override fun onAfterReset(before: TypedRealm, after: MutableRealm) {
             _uiState.update {
                 it.copy(loading = false, errorMessage = "Client reset: unsynced changes discarded.")
@@ -41,4 +45,3 @@ fun discardUnsyncedData(_uiState: UiStateFlow): DiscardUnsyncedChangesStrategy {
             exception: ClientResetRequiredException,
         ) = Unit
     }
-}

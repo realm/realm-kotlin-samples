@@ -22,16 +22,24 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import io.realm.appservicesusagesamples.presence.ui.UserStatusListScreen
+import io.realm.appservicesusagesamples.presence.ui.UserStatusListViewModel
 import io.realm.appservicesusagesamples.ui.theme.AppServicesUsageSamplesTheme
+import org.koin.android.scope.AndroidScopeComponent
+import org.koin.androidx.scope.activityRetainedScope
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.scope.Scope
 
-class PresenceDetectionActivity : ComponentActivity() {
+class PresenceDetectionActivity : ComponentActivity(), AndroidScopeComponent {
+    override val scope: Scope by activityRetainedScope()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val viewModel: UserStatusListViewModel by viewModel()
 
         setContent {
             AppServicesUsageSamplesTheme {
                 UserStatusListScreen(
+                    viewModel = viewModel,
                     modifier = Modifier
                         .fillMaxSize(),
                 ) {

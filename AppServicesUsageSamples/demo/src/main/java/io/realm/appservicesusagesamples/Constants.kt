@@ -17,8 +17,8 @@
 package io.realm.appservicesusagesamples
 
 const val PROPERTY_ENCRYPTION_APP_ID = "<insert-app-id>"
-const val USER_PRESENCE_APP_ID = "presence-detection-bcsii"
+const val USER_PRESENCE_APP_ID = "<insert-app-id>"
 const val OFFLINE_LOGIN_APP_ID = "<insert-app-id>"
-const val ERROR_HANDLING_APP_ID = "error-handling-jltyk"
+const val ERROR_HANDLING_APP_ID = "<insert-app-id>"
 const val BUSINESS_LOGIC_APP_ID = "<insert-app-id>"
 const val PURCHASE_VERIFICATION_APP_ID = "<insert-app-id>"

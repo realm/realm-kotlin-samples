@@ -17,6 +17,7 @@
 package io.realm.appservicesusagesamples.errorhandling.strategies
 
 import io.realm.appservicesusagesamples.errorhandling.models.Entry
+import io.realm.appservicesusagesamples.errorhandling.ui.ErrorHandlingViewModel
 import io.realm.appservicesusagesamples.errorhandling.ui.UiStateFlow
 import io.realm.kotlin.MutableRealm
 import io.realm.kotlin.TypedRealm
@@ -27,8 +28,17 @@ import io.realm.kotlin.mongodb.sync.SyncSession
 import io.realm.kotlin.query.find
 import kotlinx.coroutines.flow.update
 
-fun manualUnsyncedDataRecovery(_uiState: UiStateFlow): DiscardUnsyncedChangesStrategy {
-    return object : DiscardUnsyncedChangesStrategy {
+/**
+ * Client reset strategy that shows how to try to recover any changes manually. It is not advisable
+ * to try to perform any manual recovery, but if required the strategy should be based in
+ * [DiscardUnsyncedChangesStrategy].
+ *
+ * The [DiscardUnsyncedChangesStrategy.onAfterReset] provides two realm instances, before and after
+ * the reset, that can be used to recover any unsynced changes. After the reset all Realm instances
+ * and listeners would be automatically updated.
+ */
+val ErrorHandlingViewModel.manualUnsyncedDataRecovery
+    get() = object : DiscardUnsyncedChangesStrategy {
         override fun onAfterReset(before: TypedRealm, after: MutableRealm) {
             var recoveredCount = 0
 
@@ -60,4 +70,3 @@ fun manualUnsyncedDataRecovery(_uiState: UiStateFlow): DiscardUnsyncedChangesStr
             exception: ClientResetRequiredException,
         ) = Unit
     }
-}

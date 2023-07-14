@@ -16,7 +16,6 @@
  */
 package io.realm.appservicesusagesamples.ui
 
-import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,8 +23,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -42,8 +39,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.realm.appservicesusagesamples.Demos
 import io.realm.appservicesusagesamples.R
-import io.realm.appservicesusagesamples.errorhandling.ui.ClientResetAction
-import org.koin.compose.koinInject
 
 /**
  * View that displays the available and unavailable samples.

@@ -16,16 +16,20 @@
  */
 package io.realm.appservicesusagesamples.errorhandling.strategies
 
+import io.realm.appservicesusagesamples.errorhandling.ui.ErrorHandlingViewModel
 import io.realm.appservicesusagesamples.errorhandling.ui.UiStateFlow
 import io.realm.kotlin.mongodb.exceptions.ClientResetRequiredException
 import io.realm.kotlin.mongodb.sync.ManuallyRecoverUnsyncedChangesStrategy
 import io.realm.kotlin.mongodb.sync.SyncSession
 import kotlinx.coroutines.flow.update
 
-fun backupRealm(_uiState: UiStateFlow): ManuallyRecoverUnsyncedChangesStrategy {
-    return object : ManuallyRecoverUnsyncedChangesStrategy {
+/**
+ * Client reset strategy that allows to create a backup of the original realm file.
+ */
+val ErrorHandlingViewModel.backupRealm
+    get() = object : ManuallyRecoverUnsyncedChangesStrategy {
         override fun onClientReset(session: SyncSession, exception: ClientResetRequiredException) {
-            exception.executeClientReset()
+            exception.executeClientReset() // invokes the backup creation
             exception.recoveryFilePath // this file contains a backed up realm file.
 
             // After a manual client reset all Realm instances would be automatically closed. We then
@@ -39,4 +43,3 @@ fun backupRealm(_uiState: UiStateFlow): ManuallyRecoverUnsyncedChangesStrategy {
             }
         }
     }
-}

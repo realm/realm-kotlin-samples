@@ -33,9 +33,10 @@ import org.koin.core.scope.Scope
 class SampleSelectorActivity : ComponentActivity(), AndroidScopeComponent {
     override val scope: Scope by activityRetainedScope()
 
-    val viewModel: SampleSelectorScreenViewModel by viewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val viewModel: SampleSelectorScreenViewModel by viewModel()
 
         setContent {
             AppServicesUsageSamplesTheme {

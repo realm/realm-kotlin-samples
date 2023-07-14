@@ -16,7 +16,7 @@
  */
 package io.realm.appservicesusagesamples.errorhandling.strategies
 
-import io.realm.appservicesusagesamples.errorhandling.ui.UiStateFlow
+import io.realm.appservicesusagesamples.errorhandling.ui.ErrorHandlingViewModel
 import io.realm.kotlin.MutableRealm
 import io.realm.kotlin.TypedRealm
 import io.realm.kotlin.mongodb.exceptions.ClientResetRequiredException
@@ -24,8 +24,11 @@ import io.realm.kotlin.mongodb.sync.RecoverUnsyncedChangesStrategy
 import io.realm.kotlin.mongodb.sync.SyncSession
 import kotlinx.coroutines.flow.update
 
-fun automaticUnsyncedDataRecovery(_uiState: UiStateFlow): RecoverUnsyncedChangesStrategy {
-    return object : RecoverUnsyncedChangesStrategy {
+/**
+ * Client reset strategy that tries to automatically try to recover any unsynced changes.
+ */
+val ErrorHandlingViewModel.automaticUnsyncedDataRecovery
+    get() = object : RecoverUnsyncedChangesStrategy {
         override fun onAfterReset(before: TypedRealm, after: MutableRealm) {
             _uiState.update {
                 it.copy(
@@ -42,4 +45,3 @@ fun automaticUnsyncedDataRecovery(_uiState: UiStateFlow): RecoverUnsyncedChanges
             exception: ClientResetRequiredException,
         ) = Unit
     }
-}
