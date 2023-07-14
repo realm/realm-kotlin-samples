@@ -60,7 +60,7 @@ import io.realm.kotlin.mongodb.sync.ConnectionState
 @Composable
 fun ErrorHandlingScreen(
     viewModel: ErrorHandlingViewModel,
-    onLogout: (Boolean) -> Unit,
+    onRestart: () -> Unit,
 ) {
     val context = LocalContext.current
     val entries by viewModel.entries.observeAsState(emptyList())
@@ -72,7 +72,7 @@ fun ErrorHandlingScreen(
     LaunchedEffect(key1 = uiState) {
         if (uiState.restart) {
             Toast.makeText(context, uiState.errorMessage!!, Toast.LENGTH_LONG).show()
-            onLogout(true)
+            onRestart()
         }
     }
     Surface(

@@ -87,6 +87,8 @@ class ErrorHandlingViewModel(
         coroutineScope {
             user = app.login(Credentials.anonymous(reuseExisting = false))
 
+            // Loads the client reset strategy selected by the user in the demo
+            // selection screen
             val syncClientResetStrategy: SyncClientResetStrategy = when (clientResetAction) {
                 ClientResetAction.RECOVER -> automaticUnsyncedDataRecovery
                 ClientResetAction.DISCARD -> discardUnsyncedData
@@ -94,12 +96,10 @@ class ErrorHandlingViewModel(
                 ClientResetAction.BACKUP -> backupRealm
             }
 
-            val syncConfig = SyncConfiguration
-                .Builder(user, setOf(Entry::class))
-                .initialSubscriptions {
-                    add(it.query<Entry>())
-                }
-                .errorHandler { _: SyncSession, exception: SyncException ->
+            // This is the error handler that would be used by the sync session.
+            // It will filter and show any compensating write
+            val errorHandler =
+                SyncSession.ErrorHandler { _: SyncSession, exception: SyncException ->
                     val errorMessage = when (exception) {
                         is CompensatingWriteException -> "The server undid ${exception.writes.count()} change"
                         else -> exception.message
@@ -111,6 +111,13 @@ class ErrorHandlingViewModel(
                         )
                     }
                 }
+
+            val syncConfig = SyncConfiguration
+                .Builder(user, setOf(Entry::class))
+                .initialSubscriptions {
+                    add(it.query<Entry>())
+                }
+                .errorHandler(errorHandler)
                 .syncClientResetStrategy(syncClientResetStrategy)
                 .waitForInitialRemoteData()
                 .build()

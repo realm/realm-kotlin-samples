@@ -48,9 +48,8 @@ class ErrorHandlingActivity : ComponentActivity(), AndroidScopeComponent {
 
         setContent {
             AppServicesUsageSamplesTheme {
-                ErrorHandlingScreen(errorViewModel) { restart ->
-                    // Restart the activity if required
-                    if(restart) startActivity(intent)
+                ErrorHandlingScreen(errorViewModel) {
+                    startActivity(intent)
                     finish()
                 }
             }
