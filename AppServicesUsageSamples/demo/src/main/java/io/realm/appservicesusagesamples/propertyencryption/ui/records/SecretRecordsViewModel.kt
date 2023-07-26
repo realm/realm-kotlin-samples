@@ -20,9 +20,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.realm.appservicesusagesamples.propertyencryption.ext.getPropertyEncryptionCipherSpec
-import io.realm.appservicesusagesamples.propertyencryption.models.SecretRecord
 import io.realm.appservicesusagesamples.propertyencryption.models.PLECipherSpec
 import io.realm.appservicesusagesamples.propertyencryption.models.PLEKey
+import io.realm.appservicesusagesamples.propertyencryption.models.SecretRecord
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.mongodb.App
@@ -76,7 +76,6 @@ class SecretRecordsViewModel(
                         // Subscribe to all secret records
                         add(it.query<SecretRecord>())
                     }
-                    .waitForInitialRemoteData()
                     .build()
 
                 realm = Realm.open(syncConfig)
