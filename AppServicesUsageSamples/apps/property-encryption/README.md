@@ -25,14 +25,16 @@ As we mentioned, the local device keystore does not support exporting keys, this
 
 ![alt text](diagram1.svg "Deployment")
 
-For this sample, we store the user keys in a password-protected Keystore in the user's `CustomData`. This allows you to control access to these (encrypted) keys based on the permission system in App Services.
+For this sample, we store the user keys in a password-protected Keystore in the user's `PropertyEncryptionConfiguration`. This allows you to control access to these (encrypted) keys based on the permission system in App Services. On the first login the function [initializeCustomData.js](functions/initializeCustomData.js) would initialize the remote keystore and algorithm specifications that would be later used by the client.
 
 We have chosen `BKS` as the remote keystore format as it supports storing symmetric keys. It is also supported by the Android SDK and allows us to show the interaction between the remote and local keystores in the sample code.
 
 ## Key import
 After the user logs in on a new device, we need to import any required keys from the remote keystore into the local. If no key were available in the remote keystore, we would generate a new one that will be stored both remotely and locally.
 
-![alt text](diagram2.svg "Key import")
+![alt text](diagram3.svg "Key import")
+
+The client would update its remote key store via the function [updateKeyStore.js](functions/updateKeyStore.js)
 
 This process would ensure that the data is accessible anytime anywhere, even offline as the keys would be stored in the user's devices. While password protected in the server, the keys stored in the device keystore would be hardware protected.
 

@@ -26,7 +26,7 @@ import kotlinx.serialization.Serializable
  * 2. Field encryption cipher spec, defined in [PLECipherSpec],
  */
 @Serializable
-class CustomData(
+class PropertyEncryptionConfiguration(
     /**
      * Defines the PLE algorithm.
      */

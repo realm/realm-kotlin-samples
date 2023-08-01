@@ -21,7 +21,18 @@ The demos are indendepent of each other, which means that it is not required to 
 
 To get started, locate the App services app sources in `apps` that you wish to install. We have conveniently linked them in the Samples list of this document.
 
-Next, follow the steps outlined in the [Atlas documentation](https://www.mongodb.com/docs/atlas/app-services/apps/create/) to setup the apps. These docs will guide you through the process and help troubleshoot any issue you might encounter.
+Next, follow the steps outlined in the [Atlas documentation](https://www.mongodb.com/docs/atlas/app-services/apps/create/) to setup an Atlas account and `realm-cli`, skip the app creation steps, then create and import the app with the following commands:
+
+```bash
+# If not logged in, log in first
+realm-cli login --api-key <your new public key> --private-api-key <your new private key>
+
+# Move to the app directory
+cd app/[APP-NAME]
+
+# Import the current app directory, answer prompts to publish the app
+realm-cli import 
+```
 
 After deploying the Atlas apps, you will need to update [Constants.kt](demo/src/main/java/io/realm/appservicesusagesamples/Constants.kt) with the newly created app ids.
 

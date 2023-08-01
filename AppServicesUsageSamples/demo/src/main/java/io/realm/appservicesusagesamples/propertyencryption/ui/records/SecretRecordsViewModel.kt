@@ -110,6 +110,8 @@ class SecretRecordsViewModel(
             it.copy(loggingOut = true)
         }
         viewModelScope.launch(Dispatchers.IO) {
+            PLECipherSpec = null
+            PLEKey = null
             app.currentUser?.logOut()
 
             localKeyStore.deleteEntry(keyAlias)

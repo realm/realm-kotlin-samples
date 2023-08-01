@@ -17,6 +17,7 @@ Samples are based on Kotlin `1.8.20`.
 | [Bookshelf](./Bookshelf): <br> A more elaborate example using a shared business logic in Ktor, Kotlinx.Serialization and Realm, combined with a platform specific UI using Jetpack Compose and SwiftUI | <img src="./Bookshelf/Screenshots/Android/Results.png" width="400">  | <img src="./Bookshelf/Screenshots/iOS/Search.png" width="400">  |
 | [Kotlin Multiplatform Demo](./MultiplatformDemo): <br> Kotlin Multiplatform demo running on Android/iOS/macOS and JVM with Compose Desktop. | <img src="./MultiplatformDemo/Screenshots/Android.png" width="400">  <img src="./MultiplatformDemo/Screenshots/JVM.png" width="400">| <img src="./MultiplatformDemo/Screenshots/iOS.png" width="400"> <img src="./MultiplatformDemo/Screenshots/macOS.png" width="400"> |
 | [JVM Console Application](./JVMConsole): <br> Simple Java Console Application using Realm-Kotlin. | <img src="./JVMConsole/Screenshots/Console.png" width="600"> 
+| [App Services usage samples](./AppServicesUsageSamples): <br> Atlas App Services usage samples with Realm-Kotlin. | <img src="./AppServicesUsageSamples/Screenshots/screenshot-appservices.png" width="600"> 
 
 | External Project  |   |   |  |
 |---|---|---|---|
