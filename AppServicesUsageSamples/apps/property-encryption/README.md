@@ -74,7 +74,7 @@ class Person: RealmObject {
 
 Currently, there are some limitations on how we can associate a key to an object or property because RealmObjects don't provide any information about its source realm or user yet. In this demo we have opted for storing such data in global variables.
 
-![alt text](diagram3.svg "Flow")
+![alt text](diagram2.svg "Flow")
 
 ## Vectors attacks
 Nothing is 100% secure, there is always a tradeoffs associated with security. The implementation outlined here also suffers from the vulnerabilities. Please evaluate them against your security needs before using the approach outlined:

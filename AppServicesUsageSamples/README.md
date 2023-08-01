@@ -12,14 +12,14 @@ This demo shows the process of protecting users' sensitive data by employing end
 
 The project has been structured in two main folders:
 
-- Demo - Android app containing the different samples. Samples have been separated in different packages.
-- Apps - Atlas App services apps required by each sample.
+- `demo` - Android app containing the different samples. Samples have been separated in different packages.
+- `apps` - Atlas App services apps required by each sample.
 
 ## Getting started
 
-The demos are indendepent of each other, this means that it is not required to install all the app services app samples to test an individual sample.
+The demos are indendepent of each other, which means that it is not required to install all the app services app samples to test an individual sample.
 
-To begin, locate the App services app sources that you wish to install. We have conveniently linked them in the Samples list of this document.
+To get started, locate the App services app sources in `apps` that you wish to install. We have conveniently linked them in the Samples list of this document.
 
 Next, follow the steps outlined in the [Atlas documentation](https://www.mongodb.com/docs/atlas/app-services/apps/create/) to setup the apps. These docs will guide you through the process and help troubleshoot any issue you might encounter.
 
