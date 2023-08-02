@@ -21,10 +21,10 @@ The demos are indendepent of each other, which means that it is not required to 
 
 To get started, locate the App services app sources in `apps` that you wish to install. We have conveniently linked them in the Samples list of this document.
 
-Next, follow the "Before you begin" steps outlined in the [Atlas documentation](https://www.mongodb.com/docs/atlas/app-services/apps/create/) to setup an Atlas account and `realm-cli`. Skip the app creation steps, but create and import the app with the following commands:
+Next, follow the "Before you begin" steps outlined in the [Atlas documentation](https://www.mongodb.com/docs/atlas/app-services/apps/create/) to setup an Atlas account and `realm-cli` (See the "App Services CLI" tab). Skip the app creation steps, but create and import the app with the following commands:
 
 ```bash
-# If not created create a cluster in Atlas
+# If not created, create a cluster in Atlas. See https://www.mongodb.com/basics/clusters/mongodb-cluster-setup#creating-a-mongodb-cluster
 
 # If not logged in, log in first
 realm-cli login --api-key <your new public key> --private-api-key <your new private key>
