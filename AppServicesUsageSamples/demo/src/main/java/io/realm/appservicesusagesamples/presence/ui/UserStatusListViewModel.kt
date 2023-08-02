@@ -49,7 +49,7 @@ class UserStatusListViewModel(
     private val app: App,
 ) : ViewModel() {
     private lateinit var realm: Realm
-    private lateinit var user: User
+    lateinit var user: User
 
     private val _uiState = MutableStateFlow(UserListUiStatus())
     val uiState: StateFlow<UserListUiStatus> = _uiState.asStateFlow()
@@ -64,7 +64,7 @@ class UserStatusListViewModel(
                         .Builder(app.currentUser!!, setOf(UserStatus::class))
                         .initialSubscriptions {
                             // Subscribe to all user statuses
-                            add(it.query<UserStatus>())
+                            add(it.query<UserStatus>("owner_id != $0", user.id))
                         }
                         .waitForInitialRemoteData()
                         .build()
@@ -72,7 +72,7 @@ class UserStatusListViewModel(
                     realm = Realm.open(syncConfig)
 
                     val job = async {
-                        realm.query<UserStatus>("owner_id != $0", user.id)
+                        realm.query<UserStatus>()
                             .sort("present", Sort.DESCENDING)
                             .asFlow()
                             .collect {

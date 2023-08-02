@@ -11,7 +11,7 @@ This sample shows how to implement user presence detection effectively using Rea
 Clients could detect whether they are connected to Atlas or not via the `SyncSession.connectionState` 
 property. The values of the connection state are `DISCONNECTED`, `CONNECTING`, or `CONNECTED`.
 
-This property support flows via the function `connectionStateAsFlow`, if simplifies listening to 
+`SyncSession.connectionState` supports flows via the function `connectionStateAsFlow`, if simplifies listening to 
 connectivity changes:
 
 ```kotlin
@@ -22,8 +22,7 @@ realm.syncSession
     }
 ```
 
-In this sample we use local connectivity detection to change the behavior of the connectivity control
-button, it would disconnect or connect the session based on whether there is or not connectivity.
+The local connectivity detection is used in this sample to display whether the current user is connected or not.
 
 ## Listen for external connectivity
 
