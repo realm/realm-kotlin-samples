@@ -32,10 +32,14 @@ realm-cli login --api-key <your new public key> --private-api-key <your new priv
 # Move to the app directory
 cd app/[APP-NAME]
 
-# Import the current app directory, answer prompts to publish the app
+# Import the current app directory
 realm-cli import 
 ```
 
-After deploying the Atlas apps, you will need to update [Constants.kt](demo/src/main/java/io/realm/appservicesusagesamples/Constants.kt) with the newly created app ids.
+The `realm-cli import` command would prompt for the app configuration details, the default parameters should be right for most cases. Then the tool would publish the app and return the app-id for the newly creted app. Example:
+
+![alt text](Screenshots/import-app-console-example.png "Console output")
+
+After deploying the Atlas apps, you will need to update [Constants.kt](demo/src/main/java/io/realm/appservicesusagesamples/Constants.kt) with their app ids.
 
 Once you have completed these steps, you would be able to run the samples using the Kotlin demo app.
