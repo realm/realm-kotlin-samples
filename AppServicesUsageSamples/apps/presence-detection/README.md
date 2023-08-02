@@ -1,18 +1,17 @@
 # Presence detection
 
-User presence detection allows to check for connectivity or activity of user or device. It has many
-applications from showing what users are available in a chat application to identify what devices are 
-malfunctioning in an industrial process.
+User presence detection allows to check for connectivity or activity of users or devices. It has many
+applications from showing users' availability in a chat application to identify malfunctioning devices in an industrial process.
 
 This sample shows how to implement user presence detection effectively using Realm and Atlas resources.
 
-## Listening for local connectivity
+## Tracking local connectivity
 
-Clients could detect whether they are connected to Atlas or not via the `SyncSession.connectionState` 
+Clients could detect whether they are connected to Atlas via the `SyncSession.connectionState` 
 property. The values of the connection state are `DISCONNECTED`, `CONNECTING`, or `CONNECTED`.
 
-This property support flows via the function `connectionStateAsFlow`, if simplifies listening to 
-connectivity changes:
+Realm supports listening to updates to the connection state via the function `connectionStateAsFlow`, and simplifies listening to 
+connectivity changes to:
 
 ```kotlin
 realm.syncSession
@@ -25,14 +24,14 @@ realm.syncSession
 In this sample we use local connectivity detection to change the behavior of the connectivity control
 button, it would disconnect or connect the session based on whether there is or not connectivity.
 
-## Listen for external connectivity
+## Tracking connectivity of external devices
 
 There are different approaches on how we can propagate to other parties the connectivity status of a 
 client.
 
 ### Forwarding logs
 
-This approach exclusively use App services resources to perform the detection exclusively on the server premise.
+This approach exclusively use App services resources to perform the detection exclusively on the server.
 
 App services would log any user connectivity change in the logs as a `Sync` type event. App services support forwarding these logs to predefined functions.
 
@@ -52,4 +51,4 @@ Another solution that we have not covered in this sample is the clients actively
 
 The clients would send a heart beat to the server each X seconds, then the server could poll for the clients that have not send a beat in Y amount of time, deeming them as disconnected.
 
-While this approach would improve the response time, it would use more resources and would scalate worse.
+While this approach would improve the response time, it would use more resources and wouldn't scale as well.
