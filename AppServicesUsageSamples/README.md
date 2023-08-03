@@ -4,11 +4,19 @@ Reference app that show cases different design patterns and examples of using th
 
 ## Samples
 
-### [Property level encryption](apps/property-encryption/README.md)
-### [Presence detection](apps/presence-detection/README.md)
-### [Client reset and error handling](apps/error-handling/README.md)
+### [Property level encryption and offline mode](apps/property-encryption/README.md)
 
 This demo shows the process of protecting users' sensitive data by employing end-to-end encryption techniques while guaranteeing access from any user's device.
+
+Addiotionally this demo supports offline mode, data would be accessible once the user has been logged in.
+
+### [Presence detection](apps/presence-detection/README.md)
+
+This sample shows how user presence can be detected with App Services.
+
+### [Client reset and error handling](apps/error-handling/README.md)
+
+A showcase for the different client reset resolution strategies and an example of how to handle sync errors.
 
 ## Demo app structure
 
