@@ -1,0 +1,20 @@
+{
+    "properties": {
+        "_id": {
+            "bsonType": "objectId"
+        },
+        "owner_id": {
+            "bsonType": "string"
+        },
+        "securedContent": {
+          "bsonType": "binData"
+        }
+    },
+    "required": [
+        "_id",
+        "owner_id",
+        "securedContent"
+    ],
+    "title": "secret_record",
+    "type": "object"
+}
