@@ -26,14 +26,14 @@ import kotlin.reflect.KProperty
  *
  * It is a global variable because we cannot reference the user out from a RealmObject yet.
  */
-lateinit var PLECipherSpec: SerializableCipherSpec
+var PLECipherSpec: SerializableCipherSpec? = null
 
 /**
  * Property level encryption key.
  *
  * It is a global variable because we cannot reference the user out from a RealmObject yet.
  */
-lateinit var PLEKey: Key
+var PLEKey: Key? = null
 
 
 /**
@@ -48,7 +48,7 @@ class SecureStringDelegate(private val backingProperty: KMutableProperty0<ByteAr
         property: KProperty<*>,
     ): String =
         try {
-            String(bytes = PLECipherSpec.decrypt(backingProperty.get(), PLEKey))
+            String(bytes = PLECipherSpec!!.decrypt(backingProperty.get(), PLEKey!!))
         } catch (e: Exception) {
             "Data could not be decrypted"
         }
@@ -59,9 +59,9 @@ class SecureStringDelegate(private val backingProperty: KMutableProperty0<ByteAr
         value: String,
     ) {
         backingProperty.set(
-            PLECipherSpec.encrypt(
+            PLECipherSpec!!.encrypt(
                 input = value.toByteArray(),
-                key = PLEKey
+                key = PLEKey!!
             )
         )
     }

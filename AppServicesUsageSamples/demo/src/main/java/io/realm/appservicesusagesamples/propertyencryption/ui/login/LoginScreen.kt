@@ -58,7 +58,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.compose.koinInject
 
 /**
- * This screens prompts the user to wheter register or authenticate via email-password.
+ * This screens prompts the user to register or authenticate via email-password.
  */
 @Composable
 fun LoginScreen(
