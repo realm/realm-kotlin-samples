@@ -14,17 +14,34 @@ This demo shows the process of protecting users' sensitive data by employing end
 
 The project has been structured in two main folders:
 
-- Demo - Android app containing the different samples. Samples have been separated in different packages.
-- Apps - Atlas App services apps required by each sample.
+- `demo` - Android app containing the different samples. Samples have been separated in different packages.
+- `apps` - Atlas App services apps required by each sample.
 
 ## Getting started
 
-The demos are independent of each other, this means that it is not required to install all the app services app samples to test an individual sample.
+The demos are indendepent of each other, which means that it is not required to install all the app services app samples to test an individual sample.
 
-To begin, locate the App services app sources that you wish to install. We have conveniently linked them in the Samples list of this document.
+To get started, locate the App services app sources in `apps` that you wish to install. We have conveniently linked them in the Samples list of this document.
 
-Next, follow the steps outlined in the [Atlas documentation](https://www.mongodb.com/docs/atlas/app-services/apps/create/) to setup the apps. These docs will guide you through the process and help troubleshoot any issue you might encounter.
+Next, follow the "Before you begin" steps outlined in the [Atlas documentation](https://www.mongodb.com/docs/atlas/app-services/apps/create/) to setup an Atlas account and `realm-cli` (See the "App Services CLI" tab). Skip the app creation steps, but create and import the app with the following commands:
 
-After deploying the Atlas apps, you will need to update [Constants.kt](demo/src/main/java/io/realm/appservicesusagesamples/Constants.kt) with the newly created app ids.
+```bash
+# If not created, create a cluster in Atlas. See https://www.mongodb.com/basics/clusters/mongodb-cluster-setup#creating-a-mongodb-cluster
+
+# If not logged in, log in first
+realm-cli login --api-key <your new public key> --private-api-key <your new private key>
+
+# Move to the app directory
+cd app/[APP-NAME]
+
+# Import the current app directory
+realm-cli import 
+```
+
+The `realm-cli import` command will prompt for the app configuration details, the default parameters should be suitable for most cases. Then the tool will publish the app and return the app-id for the newly created app. Example:
+
+![alt text](Screenshots/import-app-console-example.png "Console output")
+
+After deploying the Atlas apps, you will need to update [Constants.kt](demo/src/main/java/io/realm/appservicesusagesamples/Constants.kt) with their app ids.
 
 Once you have completed these steps, you would be able to run the samples using the Kotlin demo app.

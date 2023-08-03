@@ -9,5 +9,8 @@
     "permissions": {
         "rules": {},
         "defaultRoles": []
-    }
+    },
+    "queryable_fields_names": [
+        "owner_id"
+    ]
 }

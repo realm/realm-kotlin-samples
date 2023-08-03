@@ -156,38 +156,47 @@ fun UserStatusListScreen(
         color = MaterialTheme.colorScheme.background,
         modifier = modifier,
     ) {
-        LazyColumn(
-            state = listState
-        ) {
-            if (uiState.connectionState == ConnectionState.CONNECTED) {
-                items(
-                    users,
-                    key = {
-                        it.id.toHexString()
-                    }
-                ) { userStatus ->
+        if(!uiState.loading) {
+            LazyColumn(
+                state = listState
+            ) {
+                val connected = uiState.connectionState == ConnectionState.CONNECTED
+                item {
                     StatusCard(
-                        connected = userStatus.present,
-                        message = if (uiState.userId == userStatus.ownerId) {
-                            "You"
-                        } else {
-                            "User id: ${userStatus.ownerId}"
-                        },
+                        connected = connected,
+                        message = "You id: ${viewModel.user.id}",
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp, horizontal = 16.dp),
                     )
+                }
 
+                if (connected) {
+                    items(
+                        users,
+                        key = {
+                            it.id.toHexString()
+                        }
+                    ) { userStatus ->
+                        StatusCard(
+                            connected = userStatus.present,
+                            message = "User id: ${userStatus.ownerId}",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp, horizontal = 16.dp),
+                        )
+                    }
+                }
+                item {
+                    Box(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .height(72.dp)
+                    )
                 }
             }
-            item {
-                Box(
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .height(72.dp)
-                )
-            }
         }
+
         Box(
             modifier = Modifier
                 .fillMaxSize()

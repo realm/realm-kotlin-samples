@@ -20,8 +20,6 @@ import android.app.Application
 import io.realm.appservicesusagesamples.errorhandling.errorHandlingModule
 import io.realm.appservicesusagesamples.propertyencryption.propertyEncryptionModule
 import io.realm.appservicesusagesamples.presence.presenceDetectionModule
-import io.realm.kotlin.log.LogLevel
-import io.realm.kotlin.log.RealmLog
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.GlobalContext.startKoin

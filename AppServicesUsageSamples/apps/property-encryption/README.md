@@ -25,14 +25,16 @@ As we mentioned, the local device keystore does not support exporting keys, this
 
 ![alt text](diagram1.svg "Deployment")
 
-For this sample, we store the user keys in a password-protected Keystore in the user's `CustomData`. This allows you to control access to these (encrypted) keys based on the permission system in App Services.
+For this sample, we store the user keys in a password-protected Keystore in the user's `PropertyEncryptionConfiguration`. This allows you to control access to these (encrypted) keys based on the permission system in App Services. On the first login the function [initializeCustomData.js](functions/initializeCustomData.js) would initialize the remote keystore and algorithm specifications that would be later used by the client.
 
 We have chosen `BKS` as the remote keystore format as it supports storing symmetric keys. It is also supported by the Android SDK and allows us to show the interaction between the remote and local keystores in the sample code.
 
 ## Key import
 After the user logs in on a new device, we need to import any required keys from the remote keystore into the local. If no key were available in the remote keystore, we would generate a new one that will be stored both remotely and locally.
 
-![alt text](diagram2.svg "Key import")
+![alt text](diagram3.svg "Key import")
+
+The client would update its remote key store via the function [updateKeyStore.js](functions/updateKeyStore.js)
 
 This process would ensure that the data is accessible anytime anywhere, even offline as the keys would be stored in the user's devices. While password protected in the server, the keys stored in the device keystore would be hardware protected.
 
@@ -74,10 +76,10 @@ class Person: RealmObject {
 
 Currently, there are some limitations on how we can associate a key to an object or property because RealmObjects don't provide any information about its source realm or user yet. In this demo we have opted for storing such data in global variables.
 
-![alt text](diagram3.svg "Flow")
+![alt text](diagram2.svg "Flow")
 
-## Vectors attacks
-Nothing is 100% secure, there is always a tradeoffs associated with security. The implementation outlined here also suffers from the vulnerabilities. Please evaluate them against your security needs before using the approach outlined:
+## Attack vectors
+Nothing is 100% secure, there is always a tradeoffs associated with security. The implementation outlined here also suffers from vulnerabilities. Please evaluate them against your security needs before using the approach outlined:
 
 The remote keystore stored on the server is only password protected and thus prone to brute-force attacks if anyone gets access to it. Choosing a secure password is very important.
 During the import phase, the keys reside in unprotected user memory. Android apps are operating in secure sandboxes, but if a device is rooted this guarantee might be broken and memory will be susceptible to be read by malicious programs.
