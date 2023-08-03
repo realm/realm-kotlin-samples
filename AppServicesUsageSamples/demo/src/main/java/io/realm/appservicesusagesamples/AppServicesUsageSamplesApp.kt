@@ -18,6 +18,7 @@ package io.realm.appservicesusagesamples
 
 import android.app.Application
 import io.realm.appservicesusagesamples.propertyencryption.propertyEncryptionModule
+import io.realm.appservicesusagesamples.presence.presenceDetectionModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.GlobalContext.startKoin
@@ -35,7 +36,11 @@ class AppServicesUsageSamplesApp: Application() {
             // Reference Android context
             androidContext(this@AppServicesUsageSamplesApp)
             // Load modules
-            modules(mainModule, propertyEncryptionModule)
+            modules(
+                mainModule,
+                propertyEncryptionModule,
+                presenceDetectionModule,
+            )
         }
     }
 }

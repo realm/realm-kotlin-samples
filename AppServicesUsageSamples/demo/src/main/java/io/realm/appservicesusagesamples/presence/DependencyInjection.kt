@@ -14,13 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.realm.appservicesusagesamples
+package io.realm.appservicesusagesamples.presence
 
-// Replace any <insert-app-id> with the App Services app id sample.
-// It is not mandatory to have them all replaced, only the samples to evaluate.
-const val PROPERTY_ENCRYPTION_APP_ID = "<insert-app-id>"
-const val USER_PRESENCE_APP_ID = "<insert-app-id>"
-const val OFFLINE_LOGIN_APP_ID = "<insert-app-id>"
-const val ERROR_HANDLING_APP_ID = "<insert-app-id>"
-const val BUSINESS_LOGIC_APP_ID = "<insert-app-id>"
-const val PURCHASE_VERIFICATION_APP_ID = "<insert-app-id>"
+import io.realm.appservicesusagesamples.Demos
+import io.realm.appservicesusagesamples.presence.ui.UserStatusListViewModel
+import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.dsl.module
+
+val presenceDetectionModule = module {
+    viewModel {
+        UserStatusListViewModel(
+            app = get(qualifier = Demos.USER_PRESENCE.qualifier),
+        )
+    }
+}

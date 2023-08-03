@@ -25,6 +25,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".propertyencryption.PropertyEncryptionActivity"/>
+        <activity android:name=".presence.PresenceDetectionActivity"/>
     </application>
 
 </manifest>

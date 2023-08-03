@@ -18,6 +18,7 @@ package io.realm.appservicesusagesamples
 
 import io.realm.appservicesusagesamples.propertyencryption.PropertyEncryptionActivity
 import io.realm.appservicesusagesamples.ui.SampleSelectorScreenViewModel
+import io.realm.appservicesusagesamples.presence.PresenceDetectionActivity
 import io.realm.kotlin.mongodb.App
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
@@ -38,7 +39,7 @@ enum class Demos(
     ),
     USER_PRESENCE(
         "User presence",
-        SampleSelectorActivity::class.java,
+        PresenceDetectionActivity::class.java,
         USER_PRESENCE_APP_ID,
     ),
     OFFLINE_LOGIN(
