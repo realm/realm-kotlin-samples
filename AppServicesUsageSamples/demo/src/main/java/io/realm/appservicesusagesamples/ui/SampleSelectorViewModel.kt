@@ -19,6 +19,7 @@ package io.realm.appservicesusagesamples.ui
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import io.realm.appservicesusagesamples.Demos
 import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.mongodb.exceptions.ConnectionException
 import io.realm.kotlin.mongodb.exceptions.ServiceException
@@ -53,8 +54,15 @@ class SampleSelectorScreenViewModel(private val apps: List<io.realm.appservicesu
         }
 
     private suspend fun getDemoEntriesWithStatus() =
-        apps.map { demoWithApp ->
-            DemoWithStatus(demoWithApp.first, demoWithApp.second.isAvailable())
+        apps.map { demoWithApp: Pair<Demos, App> ->
+            when (demoWithApp.first) {
+                Demos.PROPERTY_ENCRYPTION -> {
+                    val isAvailable = demoWithApp.second.isAvailable()
+                    val isLoggedIn = demoWithApp.second.currentUser != null
+                    DemoWithStatus(demoWithApp.first, isAvailable || isLoggedIn)
+                }
+                else -> DemoWithStatus(demoWithApp.first, demoWithApp.second.isAvailable())
+            }
         }
 
     init {
