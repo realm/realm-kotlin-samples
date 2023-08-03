@@ -36,7 +36,7 @@ cd app/[APP-NAME]
 realm-cli import 
 ```
 
-The `realm-cli import` command would prompt for the app configuration details, the default parameters should be right for most cases. Then the tool would publish the app and return the app-id for the newly creted app. Example:
+The `realm-cli import` command will prompt for the app configuration details, the default parameters should be suitable for most cases. Then the tool will publish the app and return the app-id for the newly created app. Example:
 
 ![alt text](Screenshots/import-app-console-example.png "Console output")
 
