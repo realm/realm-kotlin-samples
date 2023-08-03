@@ -17,7 +17,7 @@
 package io.realm.appservicesusagesamples.propertyencryption.ext
 
 import io.realm.appservicesusagesamples.propertyencryption.models.SerializableCipherSpec
-import io.realm.appservicesusagesamples.propertyencryption.models.CustomData
+import io.realm.appservicesusagesamples.propertyencryption.models.PropertyEncryptionConfiguration
 import io.realm.kotlin.annotations.ExperimentalRealmSerializerApi
 import io.realm.kotlin.mongodb.User
 import io.realm.kotlin.mongodb.ext.call
@@ -30,7 +30,7 @@ import java.security.KeyStore
  * Checks if a user has an initialized keystore.
  */
 @OptIn(ExperimentalRealmSerializerApi::class)
-fun User.hasKeyStore() = customData<CustomData>()?.keyStore != null
+fun User.hasKeyStore() = customData<PropertyEncryptionConfiguration>()?.keyStore != null
 
 /**
  * Loads the remote [KeyStore].
@@ -39,7 +39,7 @@ fun User.hasKeyStore() = customData<CustomData>()?.keyStore != null
 fun User.getRemoteKeyStore(password: String): KeyStore =
     KeyStore.getInstance("BKS").apply {
         // Load any user keystore if available
-        customData<CustomData>()?.keyStore?.let { keyStoreBlob ->
+        customData<PropertyEncryptionConfiguration>()?.keyStore?.let { keyStoreBlob ->
             ByteArrayInputStream(keyStoreBlob).use { keyStoreStream ->
                 load(keyStoreStream, password.toCharArray())
             }
@@ -64,5 +64,5 @@ suspend fun User.updateRemoteKeyStore(keyStore: KeyStore, password: String) {
  */
 @OptIn(ExperimentalRealmSerializerApi::class)
 fun User.getPropertyEncryptionCipherSpec(): SerializableCipherSpec {
-    return customData<CustomData>()?.PLECipherSpec!!
+    return customData<PropertyEncryptionConfiguration>()?.PLECipherSpec!!
 }

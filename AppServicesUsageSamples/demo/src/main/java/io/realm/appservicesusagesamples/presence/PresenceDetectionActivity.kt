@@ -42,10 +42,11 @@ class PresenceDetectionActivity : ComponentActivity(), AndroidScopeComponent {
                     viewModel = viewModel,
                     modifier = Modifier
                         .fillMaxSize(),
-                ) {
-                    // close the app
-                    finish()
-                }
+                    onLogout = {
+                        // close the app
+                        finish()
+                    }
+                )
             }
         }
     }

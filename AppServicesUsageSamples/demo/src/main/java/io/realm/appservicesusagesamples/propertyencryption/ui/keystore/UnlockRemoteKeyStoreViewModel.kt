@@ -20,8 +20,8 @@ import android.security.keystore.KeyProperties
 import android.security.keystore.KeyProtection
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.realm.appservicesusagesamples.propertyencryption.ext.getPropertyEncryptionCipherSpec
 import io.realm.appservicesusagesamples.propertyencryption.ext.generateKey
+import io.realm.appservicesusagesamples.propertyencryption.ext.getPropertyEncryptionCipherSpec
 import io.realm.appservicesusagesamples.propertyencryption.ext.getRemoteKeyStore
 import io.realm.appservicesusagesamples.propertyencryption.ext.hasKeyStore
 import io.realm.appservicesusagesamples.propertyencryption.ext.updateRemoteKeyStore
@@ -96,8 +96,14 @@ class UnlockRemoteKeyStoreScreenViewModel(
             val remoteKeyStore = user.getRemoteKeyStore(password)
 
             if (!remoteKeyStore.isKeyEntry(keyAlias)) {
-                // key is missing, generate and store a new key
-                generateAndStoreKey(user, remoteKeyStore, password)
+                try {
+                    // key is missing, generate and store a new key
+                    generateAndStoreKey(user, remoteKeyStore, password)
+                } catch (e: Exception) {
+                    // Network request might fail
+                    e.message?.let { notifyError(it) }
+                    return
+                }
             }
             // Now we can safely retrieve the key from the remote keystore
             val remoteKey = remoteKeyStore.getKey(keyAlias, null) as SecretKey

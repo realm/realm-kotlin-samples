@@ -16,6 +16,8 @@
  */
 package io.realm.appservicesusagesamples
 
+// Replace any <insert-app-id> with the App Services app id sample.
+// It is not mandatory to have them all replaced, only the samples to evaluate.
 const val PROPERTY_ENCRYPTION_APP_ID = "<insert-app-id>"
 const val USER_PRESENCE_APP_ID = "<insert-app-id>"
 const val OFFLINE_LOGIN_APP_ID = "<insert-app-id>"

@@ -34,6 +34,8 @@ class SecretRecord : RealmObject {
 
     /**
      * Contains encrypted data.
+     *
+     * Public to allow access from [SecureStringDelegate].
      */
     var securedContent: ByteArray = byteArrayOf()
 
