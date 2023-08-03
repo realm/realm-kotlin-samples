@@ -78,17 +78,26 @@ fun ErrorHandlingScreen(
     Surface(
         color = MaterialTheme.colorScheme.background,
     ) {
-        EntryList(
-            list = entries,
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
-            listState = listState,
-            uiState = uiState,
-        )
+        if (uiState.loading) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                Text(
+                    text = "Loading...",
+                    modifier = Modifier.align(Alignment.Center),
+                )
+            }
+        } else {
+            EntryList(
+                list = entries,
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
+                listState = listState,
+                uiState = uiState,
+            )
+        }
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp),
-            contentAlignment = Alignment.BottomCenter
+            contentAlignment = Alignment.BottomCenter,
         ) {
             ControlsCard(
                 uiState,
@@ -168,7 +177,7 @@ fun ControlsCard(
     onConnect: () -> Unit,
     onDisconnect: () -> Unit,
 ) {
-    var enabled by remember { mutableStateOf(false)}
+    var enabled by remember { mutableStateOf(false) }
     enabled = state.errorMessage != null
 
     ElevatedCard(
