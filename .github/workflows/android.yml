@@ -48,3 +48,9 @@ jobs:
       run: |
         chmod +x gradlew
         ./gradlew jar        
+
+    - name: Building App Services Usage Samples
+      working-directory: ./AppServicesUsageSamples
+      run: |
+        chmod +x gradlew
+        ./gradlew assemble  
