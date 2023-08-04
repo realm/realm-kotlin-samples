@@ -49,30 +49,9 @@ enum class Demos(
             PresenceDetectionActivity::class.java,
         )
     ),
-    OFFLINE_LOGIN(
-        appId = OFFLINE_LOGIN_APP_ID,
-        addView = buttonSelector(
-            "Offline login",
-            SampleSelectorActivity::class.java,
-        )
-    ),
     ERROR_HANDLING(
         appId = ERROR_HANDLING_APP_ID,
         addView = errorHandlingSelector,
-    ),
-    BUSINESS_LOGIC(
-        appId = BUSINESS_LOGIC_APP_ID,
-        addView = buttonSelector(
-            "Business logic",
-            SampleSelectorActivity::class.java,
-        )
-    ),
-    PURCHASE_VERIFICATION(
-        appId = PURCHASE_VERIFICATION_APP_ID,
-        addView = buttonSelector(
-            "Purchase verification",
-            SampleSelectorActivity::class.java,
-        )
     );
 
     val qualifier = named(appId)
