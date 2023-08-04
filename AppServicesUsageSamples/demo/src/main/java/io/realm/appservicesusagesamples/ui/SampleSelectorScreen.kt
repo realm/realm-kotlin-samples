@@ -16,7 +16,6 @@
  */
 package io.realm.appservicesusagesamples.ui
 
-import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -38,6 +37,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import io.realm.appservicesusagesamples.Demos
 import io.realm.appservicesusagesamples.R
 
 /**
@@ -45,7 +45,7 @@ import io.realm.appservicesusagesamples.R
  */
 @Composable
 fun SampleSelectorScreen(
-    viewModel: SampleSelectorScreenViewModel
+    viewModel: SampleSelectorScreenViewModel,
 ) {
     val sampleEntriesWithStatus by viewModel.sampleEntriesWithStatus.observeAsState(emptyList())
     val loading by viewModel.loadingState.collectAsStateWithLifecycle()
@@ -77,14 +77,9 @@ fun SampleSelectorScreen(
                 }
                 items(
                     items = sampleEntriesWithStatus.filter { it.second }.map { it.first }
-                ) { sample ->
-                    SampleEntry(
-                        title = sample.title,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 8.dp),
-                    ) {
-                        context.startActivity(Intent(context, sample.activity))
+                ) { sample: Demos ->
+                    with(sample) {
+                        addView(true)
                     }
                 }
                 if (sampleEntriesWithStatus.any { !it.second }) {
@@ -103,14 +98,8 @@ fun SampleSelectorScreen(
                     items(
                         items = sampleEntriesWithStatus.filter { !it.second }.map { it.first }
                     ) { sample ->
-                        SampleEntry(
-                            title = sample.title,
-                            enabled = false,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 8.dp),
-                        ) {
-                            context.startActivity(Intent(context, sample.activity))
+                        with(sample){
+                            addView(false)
                         }
                     }
                 }
@@ -127,7 +116,7 @@ fun SampleEntry(
     title: String,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     ElevatedButton(
         onClick = onClick,

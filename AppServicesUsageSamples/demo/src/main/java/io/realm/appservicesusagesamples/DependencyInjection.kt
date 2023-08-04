@@ -19,48 +19,60 @@ package io.realm.appservicesusagesamples
 import io.realm.appservicesusagesamples.propertyencryption.PropertyEncryptionActivity
 import io.realm.appservicesusagesamples.ui.SampleSelectorScreenViewModel
 import io.realm.appservicesusagesamples.presence.PresenceDetectionActivity
+import io.realm.appservicesusagesamples.ui.EntryView
+import io.realm.appservicesusagesamples.ui.buttonSelector
+import io.realm.appservicesusagesamples.ui.errorHandlingSelector
 import io.realm.kotlin.mongodb.App
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
+
 /**
  * Enum that lists all the available demos.
  */
 enum class Demos(
-    val title: String,
-    val activity: Class<*>,
     val appId: String,
+    val addView: EntryView,
 ) {
     PROPERTY_ENCRYPTION(
-        "Property level encryption",
-        PropertyEncryptionActivity::class.java,
-        PROPERTY_ENCRYPTION_APP_ID
+        appId = PROPERTY_ENCRYPTION_APP_ID,
+        addView = buttonSelector(
+            "Property level encryption",
+            PropertyEncryptionActivity::class.java,
+        )
     ),
     USER_PRESENCE(
-        "User presence",
-        PresenceDetectionActivity::class.java,
-        USER_PRESENCE_APP_ID,
+        appId = USER_PRESENCE_APP_ID,
+        addView = buttonSelector(
+            "User presence",
+            PresenceDetectionActivity::class.java,
+        )
     ),
     OFFLINE_LOGIN(
-        "Offline login",
-        SampleSelectorActivity::class.java,
-        OFFLINE_LOGIN_APP_ID,
+        appId = OFFLINE_LOGIN_APP_ID,
+        addView = buttonSelector(
+            "Offline login",
+            SampleSelectorActivity::class.java,
+        )
     ),
     ERROR_HANDLING(
-        "Error handling",
-        SampleSelectorActivity::class.java,
-        ERROR_HANDLING_APP_ID,
+        appId = ERROR_HANDLING_APP_ID,
+        addView = errorHandlingSelector,
     ),
     BUSINESS_LOGIC(
-        "Business logic",
-        SampleSelectorActivity::class.java,
-        BUSINESS_LOGIC_APP_ID,
+        appId = BUSINESS_LOGIC_APP_ID,
+        addView = buttonSelector(
+            "Business logic",
+            SampleSelectorActivity::class.java,
+        )
     ),
     PURCHASE_VERIFICATION(
-        "Purchase verification",
-        SampleSelectorActivity::class.java,
-        PURCHASE_VERIFICATION_APP_ID,
+        appId = PURCHASE_VERIFICATION_APP_ID,
+        addView = buttonSelector(
+            "Purchase verification",
+            SampleSelectorActivity::class.java,
+        )
     );
 
     val qualifier = named(appId)
@@ -77,15 +89,17 @@ val mainModule = module {
         single(app.qualifier) { App.create(app.appId) }
     }
 
-    viewModel {
-        SampleSelectorScreenViewModel(
-            apps = Demos.values()
-                .map { demo ->
-                    DemoWithApp(
-                        first = demo,
-                        second = get(demo.qualifier)
-                    )
-                }
-        )
+    scope<SampleSelectorActivity> {
+        viewModel {
+            SampleSelectorScreenViewModel(
+                apps = Demos.values()
+                    .map { demo ->
+                        DemoWithApp(
+                            first = demo,
+                            second = get(demo.qualifier)
+                        )
+                    }
+            )
+        }
     }
 }

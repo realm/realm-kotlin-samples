@@ -6,6 +6,7 @@ Reference app that show cases different design patterns and examples of using th
 
 ### [Property level encryption](apps/property-encryption/README.md)
 ### [Presence detection](apps/presence-detection/README.md)
+### [Client reset and error handling](apps/error-handling/README.md)
 
 This demo shows the process of protecting users' sensitive data by employing end-to-end encryption techniques while guaranteeing access from any user's device.
 

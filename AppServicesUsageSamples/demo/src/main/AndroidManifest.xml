@@ -24,8 +24,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".propertyencryption.PropertyEncryptionActivity"/>
+        <activity android:name=".propertyencryption.PropertyEncryptionActivity" android:launchMode="singleTop"/>
         <activity android:name=".presence.PresenceDetectionActivity"/>
+        <activity android:name=".errorhandling.ErrorHandlingActivity"/>
     </application>
 
 </manifest>
