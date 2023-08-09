@@ -1,0 +1,4 @@
+rootProject.name = 'JavaInterop'
+include 'java-lib'
+include 'kotlin-lib'
+
