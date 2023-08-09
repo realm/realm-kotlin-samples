@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.example</groupId>
+    <artifactId>java-maven-lib</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <!--
+        Consume the Gradle kotlin library through a normal maven repository.
+        In this case MavenLocal. Publish it by calling `./gradlew :kotlin-lib:publishToMavenLocal
+        from the root folder.
+
+        This workflow keeps the POM file simple and the workflow is easy to understand. The downside
+        is that changes in the kotlin-lib is not propagated immediately and you will need to jump
+        between the two projects.
+
+        Another alternative could be to hook the Gradle project into the Maven project, but after
+        experimenting it doesn't seem immediately possible.
+
+        It is possible to trigger gradle builds from Maven using something like:
+
+       <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>3.1.0</version>
+            <executions>
+                <execution>
+                    <id>exec-gradle-build</id>
+                    <phase>generate-sources</phase>
+                    <goals>
+                        <goal>exec</goal>
+                    </goals>
+                    <configuration>
+                        <executable>../gradlew</executable>
+                        <arguments>
+                            <argument>-p=..</argument>
+                            <argument>:kotlin-lib:publishToMavenLocal</argument>
+                        </arguments>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+
+        But it does suffer from a bootstrap problem in the sense that Maven will resolve dependencies
+        before running plugins, so first time you will still be forced to manually run the gradle
+        build.
+
+        Maybe there is also a way to trigger the Kotlin build and add the class files located in
+        ../kotlin-lib/build/classes/kotlin/main to the classpath, but I do not know enough about
+        Maven to have explored this path fully.
+    -->
+    <dependencies>
+        <dependency>
+            <groupId>com.mongodb</groupId>
+            <artifactId>kotlin-lib</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+</project>

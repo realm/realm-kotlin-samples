@@ -3,13 +3,35 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm") version "1.9.0"
     id("io.realm.kotlin") version "1.10.2"
+    `maven-publish`
 }
 
-group = "org.example"
+group = "com.mongodb"
 version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("RealmKotlinInterface") {
+            from(components["kotlin"])
+            groupId = project.group as String
+            artifactId = "kotlin-lib"
+            version = project.version as String
+            artifact(tasks["javadocJar"])
+            artifact(tasks["sourcesJar"])
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
 }
 
 dependencies {
