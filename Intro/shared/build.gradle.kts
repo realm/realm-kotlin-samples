@@ -52,12 +52,18 @@ kotlin {
                 implementation("com.google.android.material:material:1.6.1")
             }
         }
-        val androidTest by getting {
+        val androidInstrumentedTest by getting {
             dependencies {
                 implementation(kotlin("test-junit"))
                 implementation("junit:junit:4.13.2")
                 implementation("androidx.test:runner:1.4.0")
                 implementation("androidx.test.ext:junit-ktx:1.1.3")
+            }
+        }
+        val androidUnitTest by getting {
+            dependencies {
+                implementation(kotlin("test-junit"))
+                implementation("junit:junit:4.13.2")
             }
         }
         val iosX64Main by getting
@@ -81,6 +87,7 @@ kotlin {
     }
 }
 android {
+    namespace = "io.realm.example.kmmsample.androidLib"
     compileSdk = 33
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
@@ -88,8 +95,4 @@ android {
         targetSdk = 33
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-    // FIXME connectedAndroidTest does not trigger any test.
-    // https://youtrack.jetbrains.com/issue/KT-35016
-    // https://github.com/realm/realm-kotlin/issues/73
-    sourceSets.getByName("androidTest").java.srcDir(file("src/androidTest/kotlin"))
 }
