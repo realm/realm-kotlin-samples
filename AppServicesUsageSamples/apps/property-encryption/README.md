@@ -1,7 +1,9 @@
-# Property level encryption
+# Property level encryption and offline mode
 The goal of property-level encryption is to ensure that only the users themselves can access their data and prevent any unauthorized access by other parties, including MongoDB. 
 
 Realm does not have built-in property-level encryption support. However, with this sample we will demonstrate how to add this feature with the Realm Sync and Android Keystore APIs. Furthermore, this solution would enable users to access their data simultaneously from multiple devices. All of this is achieved by leveraging the powerful capabilities of MongoDB services.
+
+Additionally, this demo shows offline mode: once logged in, the user will have access to the device data even if there is no connectivity. Even offline, the user would be able to modify the local data. Such changes would automatically be synced when the device regains connectivity.
 
 ## Introduction
 Property-level encryption restricts access to sensitive data by applying a ciphering algorithm with a unique key that will encrypt the data on the device. The encrypted data will be synced to Atlas, thus only allowing people with the proper key to be able to read it again. This also includes MonogDB itself.
