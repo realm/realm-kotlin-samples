@@ -21,53 +21,45 @@ jobs:
 
     - name: Building Java-Kotlin-Maven Interop Sample
       working-directory: ./JavaKotlinMavenInterop
-      run: chmod +x gradlew
+      run: |
+        chmod +x gradlew
+        ./gradlew :kotlin-lib:publishToMavenLocal
+        ./gradlew :java-app-gradle:run
+        mvn compile exec:java
 
-    - name: Publish Kotlin lib
-      working-directory: ./JavaKotlinMavenInterop
-      run: gradlew :kotlin-lib:publishToMavenLocal
+    - name: JVM Console
+      working-directory: ./JVMConsole
+      run: |
+        chmod +x gradlew
+        ./gradlew jar        
 
-    - name: Run Gradle app
-      working-directory: ./JavaKotlinMavenInterop
-      run: gradlew :java-app-gradle:run
+    - name: Building App Services Usage Samples
+      working-directory: ./AppServicesUsageSamples
+      run: |
+        chmod +x gradlew
+        ./gradlew assemble  
+
+    - name: Building Intro [Debug]
+      working-directory: ./Intro
+      run: |
+        chmod +x gradlew
+        ./gradlew buildDebug
+
+    - name: Building Bookshelf [Debug]
+      working-directory: ./Bookshelf
+      run: |
+        chmod +x gradlew
+        ./gradlew buildDebug
         
-    - name: Run Maven app
-      working-directory: ./JavaKotlinMavenInterop/java-app-maven
-      run: mvn compile exec:java
+    - name: Building KMP Demo
+      working-directory: ./MultiplatformDemo
+      run: |
+        chmod +x gradlew
+        ./gradlew assemble  
 
-    # - name: JVM Console
-    #   working-directory: ./JVMConsole
-    #   run: |
-    #     chmod +x gradlew
-    #     ./gradlew jar        
-
-    # - name: Building App Services Usage Samples
-    #   working-directory: ./AppServicesUsageSamples
-    #   run: |
-    #     chmod +x gradlew
-    #     ./gradlew assemble  
-
-    # - name: Building Intro [Debug]
-    #   working-directory: ./Intro
-    #   run: |
-    #     chmod +x gradlew
-    #     ./gradlew buildDebug
-
-    # - name: Building Bookshelf [Debug]
-    #   working-directory: ./Bookshelf
-    #   run: |
-    #     chmod +x gradlew
-    #     ./gradlew buildDebug
-        
-    # - name: Building KMP Demo
-    #   working-directory: ./MultiplatformDemo
-    #   run: |
-    #     chmod +x gradlew
-    #     ./gradlew assemble  
-
-    # - name: Building KMP Sync Demo
-    #   working-directory: ./MultiplatformDemoWithSync
-    #   run: |
-    #     chmod +x gradlew
-    #     ./gradlew assemble  
+    - name: Building KMP Sync Demo
+      working-directory: ./MultiplatformDemoWithSync
+      run: |
+        chmod +x gradlew
+        ./gradlew assemble  
 
