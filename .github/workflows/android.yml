@@ -54,3 +54,12 @@ jobs:
       run: |
         chmod +x gradlew
         ./gradlew assemble  
+
+    - name: Building Java-Kotlin-Maven Interop Sample
+      working-directory: ./JavaKotlinMavenInterop
+      run: |
+        chmod +x gradlew
+        ./gradlew :kotlin-lib:publishToMavenLocal
+        ./gradlew :java-app-gradle:run
+        cd java-app-maven
+        mvn compile exec:java  
