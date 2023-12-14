@@ -25,11 +25,11 @@ jobs:
 
     - name: Publish Kotlin lib
       working-directory: ./JavaKotlinMavenInterop
-      run: ./gradlew :kotlin-lib:publishToMavenLocal
+      run: gradlew :kotlin-lib:publishToMavenLocal
 
     - name: Run Gradle app
       working-directory: ./JavaKotlinMavenInterop
-      run: ./gradlew :java-app-gradle:run
+      run: gradlew :java-app-gradle:run
         
     - name: Run Maven app
       working-directory: ./JavaKotlinMavenInterop/java-app-maven
