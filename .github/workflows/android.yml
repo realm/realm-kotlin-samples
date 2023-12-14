@@ -25,6 +25,7 @@ jobs:
         chmod +x gradlew
         ./gradlew :kotlin-lib:publishToMavenLocal
         ./gradlew :java-app-gradle:run
+        cd java-app-maven
         mvn compile exec:java
 
     - name: JVM Console
