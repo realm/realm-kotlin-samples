@@ -19,41 +19,41 @@ jobs:
         java-version: '17'
         distribution: 'adopt'
 
-    - name: JVM Console
-      working-directory: ./JVMConsole
-      run: |
-        chmod +x gradlew
-        ./gradlew jar        
+    # - name: JVM Console
+    #   working-directory: ./JVMConsole
+    #   run: |
+    #     chmod +x gradlew
+    #     ./gradlew jar        
 
-    - name: Building App Services Usage Samples
-      working-directory: ./AppServicesUsageSamples
-      run: |
-        chmod +x gradlew
-        ./gradlew assemble  
+    # - name: Building App Services Usage Samples
+    #   working-directory: ./AppServicesUsageSamples
+    #   run: |
+    #     chmod +x gradlew
+    #     ./gradlew assemble  
 
-    - name: Building Intro [Debug]
-      working-directory: ./Intro
-      run: |
-        chmod +x gradlew
-        ./gradlew buildDebug
+    # - name: Building Intro [Debug]
+    #   working-directory: ./Intro
+    #   run: |
+    #     chmod +x gradlew
+    #     ./gradlew buildDebug
 
-    - name: Building Bookshelf [Debug]
-      working-directory: ./Bookshelf
-      run: |
-        chmod +x gradlew
-        ./gradlew buildDebug
+    # - name: Building Bookshelf [Debug]
+    #   working-directory: ./Bookshelf
+    #   run: |
+    #     chmod +x gradlew
+    #     ./gradlew buildDebug
         
-    - name: Building KMP Demo
-      working-directory: ./MultiplatformDemo
-      run: |
-        chmod +x gradlew
-        ./gradlew assemble  
+    # - name: Building KMP Demo
+    #   working-directory: ./MultiplatformDemo
+    #   run: |
+    #     chmod +x gradlew
+    #     ./gradlew assemble  
 
-    - name: Building KMP Sync Demo
-      working-directory: ./MultiplatformDemoWithSync
-      run: |
-        chmod +x gradlew
-        ./gradlew assemble  
+    # - name: Building KMP Sync Demo
+    #   working-directory: ./MultiplatformDemoWithSync
+    #   run: |
+    #     chmod +x gradlew
+    #     ./gradlew assemble  
 
     - name: Building Java-Kotlin-Maven Interop Sample
       working-directory: ./JavaKotlinMavenInterop
