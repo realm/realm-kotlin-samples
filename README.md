@@ -18,6 +18,8 @@ Samples are based on Kotlin `1.8.20`.
 | [Kotlin Multiplatform Demo](./MultiplatformDemo): <br> Kotlin Multiplatform demo running on Android/iOS/macOS and JVM with Compose Desktop. | <img src="./MultiplatformDemo/Screenshots/Android.png" width="400">  <img src="./MultiplatformDemo/Screenshots/JVM.png" width="400">| <img src="./MultiplatformDemo/Screenshots/iOS.png" width="400"> <img src="./MultiplatformDemo/Screenshots/macOS.png" width="400"> |
 | [JVM Console Application](./JVMConsole): <br> Simple Java Console Application using Realm-Kotlin. | <img src="./JVMConsole/Screenshots/Console.png" width="600"> 
 | [App Services usage samples](./AppServicesUsageSamples): <br> Atlas App Services usage samples with Realm-Kotlin. | <img src="./AppServicesUsageSamples/Screenshots/screenshot-appservices.png" width="600"> 
+| [Java-Kotlin-Maven Interop Demo](./JavaKotlinMavenInterop): <br> Sample project showing how Realm Kotlin can be consumed by a Java project using Maven. | <img src="./JavaKotlinMavenInterop/Screenshots/realm-kotlin-maven.png" width="600"> 
+
 
 | External Project  |   |   |  |
 |---|---|---|---|
