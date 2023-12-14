@@ -21,14 +21,19 @@ jobs:
 
     - name: Building Java-Kotlin-Maven Interop Sample
       working-directory: ./JavaKotlinMavenInterop
-      run: |
-        chmod +x gradlew
-        ./gradlew :kotlin-lib:publishToMavenLocal
+      run: chmod +x gradlew
 
+    - name: Publish Kotlin lib
+      working-directory: ./JavaKotlinMavenInterop
+      run: ./gradlew :kotlin-lib:publishToMavenLocal
 
-    # ./gradlew :java-app-gradle:run
-    # cd java-app-maven
-    # mvn compile exec:java  
+    - name: Run Gradle app
+      working-directory: ./JavaKotlinMavenInterop
+      run: ./gradlew :java-app-gradle:run
+        
+    - name: Run Maven app
+      working-directory: ./JavaKotlinMavenInterop/java-app-maven
+      run: mvn compile exec:java
 
     # - name: JVM Console
     #   working-directory: ./JVMConsole
