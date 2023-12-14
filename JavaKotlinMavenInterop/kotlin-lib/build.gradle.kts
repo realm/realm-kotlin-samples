@@ -1,8 +1,8 @@
 import java.net.URI
 
 plugins {
-    kotlin("jvm") version "1.9.21"
-    id("io.realm.kotlin") version "1.13.0"
+    kotlin("jvm")
+    id("io.realm.kotlin")
     `maven-publish`
     signing
 }
