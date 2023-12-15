@@ -1,20 +1,24 @@
 package com.mongodb.devicesync.javainterop.gradle;
 
+import com.mongodb.devicesync.kotlin.CancellationToken;
+import com.mongodb.devicesync.kotlin.Person;
+import com.mongodb.devicesync.kotlin.RealmRepository;
 import io.realm.kotlin.MutableRealm;
 import io.realm.kotlin.notifications.InitialResults;
 import io.realm.kotlin.notifications.ResultsChange;
 import io.realm.kotlin.notifications.UpdatedResults;
-import com.mongodb.devicesync.kotlin.CancellationToken;
-import com.mongodb.devicesync.kotlin.Person;
-import com.mongodb.devicesync.kotlin.RealmRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 /**
- * Java app, demonstrating how you can create an interop between a separate module containing
- * Realm Kotlin.
+ * Java app demonstrating how you can work with Realm Kotlin.
+ *
+ * Since Realm Kotlin is required to be written in Kotlin and use
+ * Kotlin specific features like coroutines, we have hidden the
+ * implementation behind a Java friendly interface, which the
+ * Java app can then interact with.
  */
 public class JavaGradleApp {
     public static void main(String[] args) throws InterruptedException {

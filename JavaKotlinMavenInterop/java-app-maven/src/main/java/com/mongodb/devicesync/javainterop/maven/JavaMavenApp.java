@@ -13,8 +13,12 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 /**
- * Java app, demonstrating how you can create an interop between a separate module containing
- * Realm Kotlin.
+ * Java app demonstrating how you can work with Realm Kotlin.
+ *
+ * Since Realm Kotlin is required to be written in Kotlin and use
+ * Kotlin specific features like coroutines, we have hidden the
+ * implementation behind a Java friendly interface, which the
+ * Java app can then interact with.
  */
 public class JavaMavenApp {
     public static void main(String[] args) throws InterruptedException {
@@ -22,29 +26,6 @@ public class JavaMavenApp {
 
         println("Opening Realm");
         repository.openRealm();
-
-        // It looks like there might be a problem with writeBlocking and Flows.
-        // See https://github.com/realm/realm-kotlin/issues/1606
-        println("Listen to data changes");
-        CountDownLatch waitForUpdateLatch = new CountDownLatch(2);
-        CancellationToken listenerToken = repository.updatesAsCallbacks((ResultsChange<Person> change) -> {
-            // Updates will happen on the thread determined by dispatcher running
-            // the flow on the Kotlin side. In this case Dispatchers.Default, which
-            // is a worker thread
-            if (change instanceof InitialResults) {
-                println("Initial event: (size=" + change.getList().size() + ")");
-            } else if (change instanceof UpdatedResults) {
-                UpdatedResults<Person> c = (UpdatedResults) change;
-                println("Update event: (" +
-                        "insertions=" + c.getInsertions().length +
-                        ", deletions=" + c.getDeletions().length +
-                        ", changes=" + c.getChanges().length +
-                        ")");
-                waitForUpdateLatch.countDown();
-            } else {
-                throw new IllegalStateException();
-            }
-        });
 
         println("Write data");
         List<Person> persons = new ArrayList<>();
@@ -62,13 +43,38 @@ public class JavaMavenApp {
             println(person.toString());
         }
 
+        println("Listen to data changes");
+        // Use latches to control the timing for the purpose of this app.
+        CountDownLatch initialUpdateLatch = new CountDownLatch(1);
+        CountDownLatch waitForUpdateLatch = new CountDownLatch(1);
+        CancellationToken listenerToken = repository.updatesAsCallbacks((ResultsChange<Person> change) -> {
+            // Updates will happen on the thread determined by dispatcher running
+            // the flow on the Kotlin side. In this case a custom worker thread.
+            if (change instanceof InitialResults) {
+                println("Initial event: (size=" + change.getList().size() + ")");
+                initialUpdateLatch.countDown();
+            } else if (change instanceof UpdatedResults) {
+                UpdatedResults<Person> c = (UpdatedResults) change;
+                println("Update event: (" +
+                        "insertions=" + c.getInsertions().length +
+                        ", deletions=" + c.getDeletions().length +
+                        ", changes=" + c.getChanges().length +
+                        ")");
+                waitForUpdateLatch.countDown();
+            } else {
+                throw new IllegalStateException();
+            }
+        });
+        initialUpdateLatch.await();
+
         println("Update data");
         repository.updateData((MutableRealm realm) -> {
             realm.findLatest(result.get(0)).setName("UpdatedName");
         });
         waitForUpdateLatch.await();
-        listenerToken.cancel();
+
         println("Close Realm");
+        listenerToken.cancel();
         repository.closeRealm();
     }
 
