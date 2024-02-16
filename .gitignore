@@ -1,4 +1,3 @@
-
 # Created by https://www.gitignore.io/api/c,git,c++,java,cmake,xcode,kotlin,android,intellij,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=c,git,c++,java,cmake,xcode,kotlin,android,intellij,visualstudiocode
 
@@ -257,7 +256,6 @@ fabric.properties
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.nar
 *.ear
@@ -327,3 +325,6 @@ DerivedData/
 **/xcshareddata/WorkspaceSettings.xcsettings
 
 # End of https://www.gitignore.io/api/c,git,c++,java,cmake,xcode,kotlin,android,intellij,visualstudiocode
+
+# Custom 
+JavaKotlinMavenInterop/java-app-maven/target
