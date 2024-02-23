@@ -15,11 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.realm.example.kmmsample
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import org.junit.Assert
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -28,6 +27,6 @@ class GreetingTestAndroid {
 
     @Test
     fun testExample() {
-        Assert.assertTrue("Check Android is mentioned", Greeting().greeting().contains("Android"))
+        assertTrue("Check Android is mentioned", Greeting().greeting().contains("Android"))
     }
 }
