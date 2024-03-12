@@ -5,6 +5,10 @@ import io.realm.kotlin.MutableRealm
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import io.realm.kotlin.ext.query
+import io.realm.kotlin.mongodb.App
+import io.realm.kotlin.mongodb.Credentials
+import io.realm.kotlin.mongodb.User
+import io.realm.kotlin.mongodb.sync.SyncConfiguration
 import io.realm.kotlin.notifications.ResultsChange
 import io.realm.kotlin.types.BaseRealmObject
 import kotlinx.coroutines.CoroutineName
@@ -16,6 +20,7 @@ import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.rx3.asObservable
 import java.util.concurrent.Executors
 
@@ -26,6 +31,12 @@ class CancellationToken(val job: Job) {
 }
 
 class RealmRepository {
+    init {
+        val app = App.create("APP-ID")
+        runBlocking {
+            user = app.currentUser ?: app.login(Credentials.emailPassword("hello@world.com", "123456"))
+        }
+    }
 
     interface UpdateCallback {
         fun update(realm: MutableRealm)
@@ -35,13 +46,18 @@ class RealmRepository {
         fun update(item: ResultsChange<E>)
     }
 
+    private lateinit var user: User
     lateinit var realm: Realm
     val realmDispatchers = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() - 1).asCoroutineDispatcher()
     val realmScope: CoroutineScope = CoroutineScope(CoroutineName("RealmScope") + realmDispatchers)
 
     fun openRealm() {
-        val config = RealmConfiguration.Builder(schema = setOf(Person::class, Child::class))
-            .name("javainterop-example.realm")
+        val config = SyncConfiguration.Builder(user, schema = setOf(Person::class, Child::class))
+            .initialSubscriptions { realm ->
+                add(
+                    realm.query<Person>()
+                )
+            }
             .build()
         Realm.deleteRealm(config) // Cleanup any old test data
         realm = Realm.open(config)
