@@ -48,7 +48,7 @@ kotlin {
             }
         }
         val androidMain by getting
-        val androidTest by getting {
+        val androidInstrumentedTest by getting {
             dependencies {
                 implementation(kotlin("test-junit"))
                 implementation("junit:junit:4.13.2")
@@ -69,5 +69,9 @@ android {
     defaultConfig {
         minSdk = 21
         targetSdk = 33
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 }

@@ -1,16 +1,16 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.7.20"
+    kotlin("jvm") version "1.9.0"
     application
 }
 
 buildscript {
     dependencies {
-        classpath("io.realm.kotlin:gradle-plugin:1.9.0")
+        classpath("io.realm.kotlin:gradle-plugin:1.15.0")
     }
 }
-rootProject.extra["realmVersion"] = "1.9.0"
+rootProject.extra["realmVersion"] = "1.15.0"
 
 apply(plugin = "io.realm.kotlin")
 

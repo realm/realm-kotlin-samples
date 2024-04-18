@@ -49,7 +49,7 @@ kotlin {
             }
         }
         val androidMain by getting
-        val androidTest by getting {
+        val androidInstrumentedTest by getting {
             dependencies {
                 implementation(kotlin("test-junit"))
                 implementation("junit:junit:4.13.2")
@@ -65,7 +65,7 @@ kotlin {
 }
 
 android {
-    compileSdk= 33
+    compileSdk= 34
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
         minSdk = 21
