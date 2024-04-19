@@ -4,9 +4,9 @@ plugins {
 }
 
 // https://maven.google.com/web/index.html?q=compiler#androidx.compose.compiler:compiler
-val compose_compiler_version = "1.4.6"
+val compose_compiler_version = "1.5.3" // Kotlin 1.9.10
 // https://maven.google.com/web/index.html?q=ui#androidx.compose.ui:ui
-val compose_ui_version = "1.4.3"
+val compose_ui_version = "1.6.5"
 
 dependencies {
     implementation(project(":shared"))
@@ -15,11 +15,11 @@ dependencies {
     implementation("androidx.compose.material:material:$compose_ui_version")
     implementation("androidx.compose.ui:ui:$compose_ui_version")
     implementation("androidx.compose.ui:ui-tooling:$compose_ui_version")
-    implementation("androidx.activity:activity-compose:1.4.0-beta01")
+    implementation("androidx.activity:activity-compose:1.8.2")
 }
 
 android {
-    compileSdk = 33
+    compileSdk = 34
     defaultConfig {
         applicationId = "io.realm.kotlin.demo"
         minSdk = 21
@@ -29,7 +29,7 @@ android {
     }
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
         }
     }
 
@@ -44,5 +44,9 @@ android {
 
     composeOptions {
         kotlinCompilerExtensionVersion = compose_compiler_version
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 }
