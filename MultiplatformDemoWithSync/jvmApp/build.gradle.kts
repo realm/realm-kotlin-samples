@@ -16,7 +16,6 @@ repositories {
 dependencies {
     implementation(compose.desktop.currentOs)
     implementation(project(":shared"))
-//    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.2")
 }
 
 tasks.withType<KotlinCompile> {
