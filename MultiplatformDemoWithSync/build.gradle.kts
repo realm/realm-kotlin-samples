@@ -1,9 +1,11 @@
 plugins {
-    kotlin("multiplatform") version "2.0.0" apply false
-    id("com.android.application") version "8.2.0" apply false
-    id("com.android.library") version "8.2.0" apply false
-    id("org.jetbrains.compose") version "1.6.10" apply false
-    id("org.jetbrains.kotlin.plugin.compose") version "2.0.0" apply false
+    alias(libsx.plugins.kotlinMultiplatform) apply false
+    alias(libsx.plugins.kotlinAndroid) apply false
+    alias(libsx.plugins.kotlinJvm) apply false
+    alias(libsx.plugins.androidApplication) apply false
+    alias(libsx.plugins.androidLibrary) apply false
+    alias(libsx.plugins.jetbrainsCompose) apply false
+    alias(libsx.plugins.compose.compiler) apply false
 }
 
 // Explicitly adding the plugin to the classpath as it makes it easier to control the version
@@ -11,10 +13,9 @@ plugins {
 // marker interface so would need to be added to the classpath manually anyway.
 buildscript {
     dependencies {
-        classpath("io.realm.kotlin:gradle-plugin:2.0.0-SNAPSHOT")
+        classpath(libsx.realm.plugin)
     }
 }
-rootProject.extra["realmVersion"] = "2.0.0-SNAPSHOT"
 
 allprojects {
     group = "io.realm.sample"

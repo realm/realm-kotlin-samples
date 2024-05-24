@@ -10,6 +10,11 @@ pluginManagement {
 }
 
 dependencyResolutionManagement {
+    versionCatalogs {
+        create("libsx") {
+            from(files("../versions/current.toml"))
+        }
+    }
     repositories {
         google()
         mavenCentral()
@@ -17,7 +22,7 @@ dependencyResolutionManagement {
         maven("https://oss.sonatype.org/content/repositories/snapshots")
     }
 }
-rootProject.name = "Realm Kotlin Multiplatform Sync Demo"
+rootProject.name = "realm-kotlin-multiplatform-sync-demo"
 include(":androidApp")
 include(":jvmApp")
 include(":shared")

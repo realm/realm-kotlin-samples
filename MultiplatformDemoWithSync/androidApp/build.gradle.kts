@@ -1,20 +1,14 @@
 plugins {
-    id("com.android.application")
-    kotlin("android")
-    id ("org.jetbrains.kotlin.plugin.compose")
+    alias(libsx.plugins.androidApplication)
+    alias(libsx.plugins.kotlinAndroid)
+    alias(libsx.plugins.compose.compiler)
 }
-
-// https://maven.google.com/web/index.html?q=ui#androidx.compose.ui:ui
-val compose_ui_version = "1.6.7"
 
 dependencies {
     implementation(project(":shared"))
-
-    implementation("androidx.compose.material:material:$compose_ui_version")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
-    implementation("androidx.compose.ui:ui:$compose_ui_version")
-    implementation("androidx.compose.ui:ui-tooling:$compose_ui_version")
-    implementation("androidx.activity:activity-compose:1.9.0")
+    implementation(libsx.androidx.compose)
+    implementation(libsx.androidx.compose.ui)
+    implementation(libsx.androidx.compose.material)
 }
 
 android {
@@ -34,5 +28,5 @@ android {
     }
 }
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()
+    kotlinOptions.jvmTarget = libsx.versions.jvmTarget.get().toString()
 }
