@@ -68,7 +68,11 @@ android {
     compileSdk= 34
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
+        namespace = "io.realm.kotlin.demo.shared"
         minSdk = 21
         targetSdk = 33
     }
+}
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()
 }
