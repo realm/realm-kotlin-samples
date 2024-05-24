@@ -9,6 +9,11 @@ pluginManagement {
 }
 
 dependencyResolutionManagement {
+    versionCatalogs {
+        create("libsx") {
+            from(files("../versions/current.toml"))
+        }
+    }
     repositories {
         google()
         mavenCentral()

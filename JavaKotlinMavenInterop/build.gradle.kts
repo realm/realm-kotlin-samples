@@ -1,5 +1,12 @@
 plugins {
-    kotlin("jvm") version "1.9.21" apply false
-    id("io.realm.kotlin") version "1.15.0" apply false
+    alias(libsx.plugins.kotlinJvm) apply false
 }
-rootProject.extra["realmVersion"] = "1.15.0"
+
+// Explicitly adding the plugin to the classpath as it makes it easier to control the version
+// centrally (don't need version in the 'plugins' block). Further, snapshots are not published with
+// marker interface so would need to be added to the classpath manually anyway.
+buildscript {
+    dependencies {
+        classpath(libsx.realm.plugin)
+    }
+}

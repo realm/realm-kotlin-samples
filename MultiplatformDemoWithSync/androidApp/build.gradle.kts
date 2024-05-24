@@ -28,5 +28,5 @@ android {
     }
 }
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions.jvmTarget = libsx.versions.jvmTarget.get().toString()
+    kotlinOptions.jvmTarget = libsx.versions.jvmTarget.get()
 }

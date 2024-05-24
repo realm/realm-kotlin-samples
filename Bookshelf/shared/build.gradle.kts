@@ -1,11 +1,14 @@
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
-    kotlin("multiplatform")
+    alias(libsx.plugins.kotlinMultiplatform)
+    alias(libsx.plugins.androidLibrary)
+    alias(libsx.plugins.kotlinSerialization)
+    // For some reason libsx.plugins.realm does not resolve directly so go through the provider
+    id(libsx.plugins.realm.get().pluginId)
+    // For some reason this does not resolve even though [id: 'org.jetbrains.kotlin.native.cocoapods', version: '2.0.0'] is available in Gradle plugin portal
+    // alias(libsx.plugins.cocoapods)
     kotlin("native.cocoapods")
-    id("com.android.library")
-    kotlin("plugin.serialization") version "1.9.0"
-    id("io.realm.kotlin")
 }
 
 kotlin {
@@ -39,7 +42,7 @@ kotlin {
                 implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
                 implementation("io.ktor:ktor-client-serialization:$ktorVersion")
-                implementation("io.realm.kotlin:library-base:${rootProject.extra["realmVersion"]}")
+                implementation(libsx.realm.base)
             }
         }
 

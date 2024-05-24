@@ -1,4 +1,0 @@
-rootProject.name = 'JavaKotlinMavenInterop'
-include 'kotlin-lib'
-include 'java-app-gradle'
-

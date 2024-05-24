@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 plugins {
     alias(libsx.plugins.kotlinMultiplatform)
     alias(libsx.plugins.androidLibrary)
+    // For some reason libsx.plugins.realm does not resolve directly so go through the provider
     id(libsx.plugins.realm.get().pluginId)
     // For some reason this does not resolve even though [id: 'org.jetbrains.kotlin.native.cocoapods', version: '2.0.0'] is available in Gradle plugin portal
     // alias(libsx.plugins.cocoapods)
@@ -75,5 +76,5 @@ android {
     }
 }
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions.jvmTarget = libsx.versions.jvmTarget.get().toString()
+    kotlinOptions.jvmTarget = libsx.versions.jvmTarget.get()
 }
