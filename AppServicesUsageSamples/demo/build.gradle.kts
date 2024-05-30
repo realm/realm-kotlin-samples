@@ -5,13 +5,13 @@ plugins {
     // alias(libs.plugins.realm.kotlin)
     id(libs.plugins.realm.kotlin.get().pluginId)
     alias(libs.plugins.kotlin.serialization)
-//    alias(libs.plugins.jetbrainsCompose)
+    alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
 }
 
 android {
     namespace = "io.realm.appservicesusagesamples"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "io.realm.appservicesusagesamples"
@@ -75,6 +75,10 @@ dependencies {
 
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
+
+    implementation(libs.bonsai)
+    // Compile only dependency of libs.bonsai, so need to include it explicitly
+    implementation(compose.materialIconsExtended)
 
     implementation(libs.realm.library.sync)
 

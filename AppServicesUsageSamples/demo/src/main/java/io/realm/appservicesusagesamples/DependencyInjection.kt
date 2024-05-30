@@ -16,6 +16,7 @@
  */
 package io.realm.appservicesusagesamples
 
+import io.realm.appservicesusagesamples.dynamicdata.DynamicDataActivity
 import io.realm.appservicesusagesamples.propertyencryption.PropertyEncryptionActivity
 import io.realm.appservicesusagesamples.ui.SampleSelectorScreenViewModel
 import io.realm.appservicesusagesamples.presence.PresenceDetectionActivity
@@ -23,6 +24,7 @@ import io.realm.appservicesusagesamples.ui.EntryView
 import io.realm.appservicesusagesamples.ui.buttonSelector
 import io.realm.appservicesusagesamples.ui.errorHandlingSelector
 import io.realm.kotlin.mongodb.App
+import io.realm.kotlin.mongodb.AppConfiguration
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -52,6 +54,13 @@ enum class Demos(
     ERROR_HANDLING(
         appId = ERROR_HANDLING_APP_ID,
         addView = errorHandlingSelector,
+    ),
+    DYNAMIC_DATA(
+        appId = DYNAMIC_DATA_APP_ID,
+        addView = buttonSelector(
+            "Dynamic data",
+            DynamicDataActivity::class.java,
+        )
     );
 
     val qualifier = named(appId)
