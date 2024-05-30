@@ -18,6 +18,10 @@ This sample demonstrates user presence detection with App Services.
 
 A showcase for the different client reset resolution strategies with an sync error handling example.
 
+### [Dynamic data](apps/dynamic-data/README.md)
+
+A showcase for storing and synchronizing collections in mixed properties.
+
 ## Demo app structure
 
 The project has been structured in two main folders:
