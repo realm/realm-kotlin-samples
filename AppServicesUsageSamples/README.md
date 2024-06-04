@@ -20,7 +20,7 @@ A showcase for the different client reset resolution strategies with an sync err
 
 ### [Modelling unstructured data](apps/dynamic-data/README.md)
 
-A showcase for storing and synchronizing unstructure data through collections in mixed properties.
+A showcase for storing and synchronizing unstructured data through collections in mixed properties.
 
 ## Demo app structure
 

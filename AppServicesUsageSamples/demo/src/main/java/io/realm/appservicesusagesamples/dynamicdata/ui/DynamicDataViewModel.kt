@@ -69,7 +69,8 @@ class DynamicDataViewModel(
                     realm = Realm.open(syncConfig)
 
                     val job = async {
-                        realm.query<DynamicDataEntity>("TRUEPREDICATE SORT(name ASCENDING)")
+                        realm.query<DynamicDataEntity>()
+                            .sort("name")
                             .asFlow()
                             .collect {
                                 instances.postValue(it.list)
