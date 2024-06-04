@@ -14,6 +14,8 @@ androidxEspresso = "3.5.1"
 androidxTestExt = "1.1.5"
 kotlinxCoroutines = "1.6.4"
 androidxTestRunner = "1.5.1"
+compose-plugin = "1.6.10"
+
 [libraries]
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidxAppCompat" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidxComposeBom" }
@@ -25,6 +27,7 @@ androidx-lifecycle-runtimeCompose = { group = "androidx.lifecycle", name = "life
 androidx-lifecycle-viewModelCompose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidxLifecycle" }
 androidx-compose-ui-tooling-core = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+bonsai = { group = "cafe.adriel.bonsai", name = "bonsai-core", version = "1.2.0" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 koin-android = { group = "io.insert-koin", name = "koin-android",version.ref = "koin"}
 koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose" ,version.ref = "koinCompose"}
@@ -41,3 +44,4 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 realm-kotlin = { id = "io.realm.kotlin", version.ref = "realm" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }

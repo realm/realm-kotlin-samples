@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Realm Inc.
+ * Copyright 2024 Realm Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.realm.appservicesusagesamples
+package io.realm.appservicesusagesamples.dynamicdata.models
 
-// Replace any <insert-app-id> with the App Services app id sample.
-// It is not mandatory to have them all replaced, only the samples to evaluate.
-const val PROPERTY_ENCRYPTION_APP_ID = "<insert-app-id>"
-const val USER_PRESENCE_APP_ID = "<insert-app-id>"
-const val ERROR_HANDLING_APP_ID = "<insert-app-id>"
-const val DYNAMIC_DATA_APP_ID = "<insert-app-id>"
+import io.realm.kotlin.types.RealmAny
+import io.realm.kotlin.types.RealmObject
+import io.realm.kotlin.types.annotations.PersistedName
+import io.realm.kotlin.types.annotations.PrimaryKey
+import org.mongodb.kbson.BsonObjectId
+import org.mongodb.kbson.ObjectId
+
+class DynamicDataEntity: RealmObject {
+    @PersistedName("_id")
+    @PrimaryKey
+    var id: ObjectId = BsonObjectId()
+
+    var name: String = "<name>"
+
+    var configuration: RealmAny? = null
+}

@@ -1,0 +1,19 @@
+{
+    "title": "DynamicDataEntity",
+    "type": "object",
+    "required": [
+        "_id",
+        "name"
+    ],
+    "properties": {
+        "_id": {
+            "bsonType": "objectId"
+        },
+        "configuration": {
+            "bsonType": "mixed"
+        },
+        "name": {
+            "bsonType": "string"
+        }
+    }
+}

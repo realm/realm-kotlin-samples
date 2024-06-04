@@ -27,6 +27,7 @@
         <activity android:name=".propertyencryption.PropertyEncryptionActivity" android:launchMode="singleTop"/>
         <activity android:name=".presence.PresenceDetectionActivity"/>
         <activity android:name=".errorhandling.ErrorHandlingActivity"/>
+        <activity android:name=".dynamicdata.DynamicDataActivity"/>
     </application>
 
 </manifest>
