@@ -10,6 +10,6 @@ The Kotlin UI shows each entity and associated 'configuration' mixed property in
 currently no update options in the UI, so data has to be added through the Atlas UI in the 
 "Data Service" section:
 
-![alt text](../Screenshots/dynamic-data-browser.png "Atlas collection browser")
+![alt text](../../Screenshots/dynamic-data-browser.png "Atlas collection browser")
 
 Updates will be reflected in the Kotlin UI. 
