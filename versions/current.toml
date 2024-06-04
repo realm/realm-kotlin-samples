@@ -15,7 +15,7 @@ androidx-compose-ui = "1.6.7"
 compose-plugin = "1.6.10"
 junit = "4.13.2"
 kotlin = "2.0.0"
-realm = "2.0.0-SNAPSHOT"
+realm = "2.0.0"
 jvmTarget = "1.8"
 
 [libraries]
