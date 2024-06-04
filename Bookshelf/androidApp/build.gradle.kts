@@ -1,6 +1,7 @@
 plugins {
-    id("com.android.application")
-    kotlin("android")
+    alias(libsx.plugins.androidApplication)
+    alias(libsx.plugins.kotlinAndroid)
+    alias(libsx.plugins.compose.compiler)
 }
 
 // https://maven.google.com/web/index.html?q=compiler#androidx.compose.compiler:compiler
@@ -18,8 +19,8 @@ repositories {
 dependencies {
     implementation(project(":shared"))
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("androidx.compose.compiler:compiler:${compose_compiler_version}")
-    compileOnly("io.realm.kotlin:library-base:${rootProject.extra["realmVersion"]}")
+
+    compileOnly(libsx.realm.base)
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.5.1")
@@ -77,7 +78,4 @@ android {
         jvmTarget = "1.8"
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = compose_compiler_version
-    }
 }

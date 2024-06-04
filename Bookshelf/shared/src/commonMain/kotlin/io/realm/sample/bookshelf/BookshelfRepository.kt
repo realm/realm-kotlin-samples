@@ -16,7 +16,6 @@
 
 package io.realm.sample.bookshelf
 
-import io.realm.kotlin.query.RealmResults
 import io.realm.sample.bookshelf.database.CFlow
 import io.realm.sample.bookshelf.model.Book
 import io.realm.sample.bookshelf.database.RealmDatabase

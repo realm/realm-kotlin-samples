@@ -1,8 +1,10 @@
 import java.net.URI
 
 plugins {
-    kotlin("jvm")
-    id("io.realm.kotlin")
+    alias(libsx.plugins.kotlinJvm)
+    // For some reason libsx.plugins.realm does not resolve directly so go through the provider
+    // alias(libsx.plugins.realm)
+    id(libsx.plugins.realm.get().pluginId)
     `maven-publish`
     signing
 }
@@ -12,6 +14,7 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+        maven("https://oss.sonatype.org/content/repositories/snapshots")
 }
 
 java {
@@ -48,7 +51,7 @@ publishing {
 }
 
 dependencies {
-    api("io.realm.kotlin:library-sync-jvm:1.13.0")
+    api("io.realm.kotlin:library-sync-jvm:${libsx.realm.sync.get().version}")
     api("io.reactivex.rxjava3:rxjava:3.0.0")
     api("org.jetbrains.kotlinx:kotlinx-coroutines-rx3:1.3.9")
     testImplementation(platform("org.junit:junit-bom:5.9.1"))

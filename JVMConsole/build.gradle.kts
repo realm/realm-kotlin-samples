@@ -1,16 +1,18 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.9.0"
+    alias(libsx.plugins.kotlinJvm)
     application
 }
 
+// Explicitly adding the plugin to the classpath as it makes it easier to control the version
+// centrally (don't need version in the 'plugins' block). Further, snapshots are not published with
+// marker interface so would need to be added to the classpath manually anyway.
 buildscript {
     dependencies {
-        classpath("io.realm.kotlin:gradle-plugin:1.15.0")
+        classpath(libsx.realm.plugin)
     }
 }
-rootProject.extra["realmVersion"] = "1.15.0"
 
 apply(plugin = "io.realm.kotlin")
 
@@ -24,7 +26,7 @@ repositories {
 }
 dependencies {
     implementation("com.jakewharton.fliptables:fliptables:1.1.0")
-    implementation("io.realm.kotlin:library-base:${rootProject.extra["realmVersion"]}")
+    implementation(libsx.realm.base)
     testImplementation(kotlin("test-junit"))
 }
 tasks.withType<KotlinCompile>() {

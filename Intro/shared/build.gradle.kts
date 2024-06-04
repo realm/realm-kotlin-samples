@@ -17,9 +17,10 @@
  */
 
 plugins {
-    kotlin("multiplatform")
-    id("com.android.library")
-    id("io.realm.kotlin")
+    alias(libsx.plugins.kotlinMultiplatform)
+    alias(libsx.plugins.androidLibrary)
+    // For some reason libsx.plugins.realm does not resolve directly so go through the provider
+    id(libsx.plugins.realm.get().pluginId)
 }
 
 kotlin {
@@ -37,14 +38,13 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("io.realm.kotlin:library-base:${rootProject.extra["realmVersion"]}")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+                implementation(libsx.kotlinx.coroutines.core)
+                implementation(libsx.realm.base)
             }
         }
         val commonTest by getting {
             dependencies {
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
+                implementation(libsx.kotlin.test)
             }
         }
         val androidMain by getting {
@@ -54,8 +54,8 @@ kotlin {
         }
         val androidInstrumentedTest by getting {
             dependencies {
-                implementation(kotlin("test-junit"))
-                implementation("junit:junit:4.13.2")
+                implementation(libsx.kotlin.test.junit)
+                implementation(libsx.junit)
                 implementation("androidx.test:runner:1.4.0")
                 implementation("androidx.test.ext:junit-ktx:1.1.3")
             }

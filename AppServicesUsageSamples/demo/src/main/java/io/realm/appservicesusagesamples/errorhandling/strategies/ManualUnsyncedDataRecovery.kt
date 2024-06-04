@@ -63,8 +63,6 @@ val ErrorHandlingViewModel.manualUnsyncedDataRecovery
 
         override fun onBeforeReset(realm: TypedRealm) = Unit
 
-        override fun onError(session: SyncSession, exception: ClientResetRequiredException) = Unit
-
         override fun onManualResetFallback(
             session: SyncSession,
             exception: ClientResetRequiredException,

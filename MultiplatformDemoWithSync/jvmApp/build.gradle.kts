@@ -1,8 +1,7 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
-    kotlin("jvm")
-    id("org.jetbrains.compose") version "1.6.2" // https://plugins.gradle.org/plugin/org.jetbrains.compose
+    alias(libsx.plugins.kotlinJvm)
+    alias(libsx.plugins.jetbrainsCompose)
+    alias(libsx.plugins.compose.compiler)
     application
 }
 
@@ -16,10 +15,6 @@ repositories {
 dependencies {
     implementation(compose.desktop.currentOs)
     implementation(project(":shared"))
-}
-
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "11"
 }
 
 application {

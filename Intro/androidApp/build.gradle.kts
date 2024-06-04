@@ -17,8 +17,8 @@
  */
 
 plugins {
-    id("com.android.application")
-    kotlin("android")
+    alias(libsx.plugins.androidApplication)
+    alias(libsx.plugins.kotlinAndroid)
 }
 
 dependencies {

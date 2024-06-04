@@ -1,8 +1,12 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.realm.kotlin)
+    // For some reason libsx.plugins.realm does not resolve directly so go through the provider
+    // alias(libs.plugins.realm.kotlin)
+    id(libs.plugins.realm.kotlin.get().pluginId)
     alias(libs.plugins.kotlin.serialization)
+//    alias(libs.plugins.jetbrainsCompose)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -27,9 +31,6 @@ android {
 
     buildFeatures {
         compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.7"
     }
     buildTypes {
         release {

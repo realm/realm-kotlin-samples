@@ -1,10 +1,13 @@
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
-    kotlin("multiplatform")
+    alias(libsx.plugins.kotlinMultiplatform)
+    alias(libsx.plugins.androidLibrary)
+    // For some reason libsx.plugins.realm does not resolve directly so go through the provider
+    id(libsx.plugins.realm.get().pluginId)
+    // For some reason this does not resolve even though [id: 'org.jetbrains.kotlin.native.cocoapods', version: '2.0.0'] is available in Gradle plugin portal
+    // alias(libsx.plugins.cocoapods)
     kotlin("native.cocoapods")
-    id("com.android.library")
-    id("io.realm.kotlin")
 }
 
 version = "1.0"
@@ -38,21 +41,20 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-                implementation("io.realm.kotlin:library-sync:${rootProject.extra["realmVersion"]}")
+                implementation(libsx.kotlinx.coroutines.core)
+                implementation(libsx.realm.sync)
             }
         }
         val commonTest by getting {
             dependencies {
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
+                implementation(libsx.kotlin.test)
             }
         }
         val androidMain by getting
         val androidInstrumentedTest by getting {
             dependencies {
-                implementation(kotlin("test-junit"))
-                implementation("junit:junit:4.13.2")
+                implementation(libsx.kotlin.test.junit)
+                implementation(libsx.junit)
             }
         }
 
@@ -68,7 +70,11 @@ android {
     compileSdk= 34
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
+        namespace = "io.realm.kotlin.demo.shared"
         minSdk = 21
         targetSdk = 33
     }
+}
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions.jvmTarget = libsx.versions.jvmTarget.get()
 }
