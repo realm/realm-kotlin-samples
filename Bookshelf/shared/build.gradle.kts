@@ -4,7 +4,9 @@ plugins {
     alias(libsx.plugins.kotlinMultiplatform)
     alias(libsx.plugins.androidLibrary)
     alias(libsx.plugins.kotlinSerialization)
-    // For some reason libsx.plugins.realm does not resolve directly so go through the provider
+    // For snapshots which are already on the classpath we have to apply the plugin by id instead of
+    // alias as it fails to validate the version
+    // alias(libsx.plugins.realm)
     id(libsx.plugins.realm.get().pluginId)
     // For some reason this does not resolve even though [id: 'org.jetbrains.kotlin.native.cocoapods', version: '2.0.0'] is available in Gradle plugin portal
     // alias(libsx.plugins.cocoapods)
@@ -31,41 +33,37 @@ kotlin {
         }
     }
 
-    val ktorVersion = "2.1.2"
-    val coroutinesVersion = "1.6.4"
-
     sourceSets {
         val commonMain  by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
-                implementation("io.ktor:ktor-client-core:$ktorVersion")
-                implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
-                implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-                implementation("io.ktor:ktor-client-serialization:$ktorVersion")
+                implementation(libsx.kotlinx.coroutines.core)
+                implementation(libsx.ktor.client.core)
+                implementation(libsx.ktor.client.content.negotiation)
+                implementation(libsx.ktor.serialization.json)
+                implementation(libsx.ktor.client.serialization)
                 implementation(libsx.realm.base)
             }
         }
 
         val commonTest by getting {
             dependencies {
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
+                implementation(libsx.kotlin.test)
             }
         }
         val androidMain by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-android:$ktorVersion")
+                implementation(libsx.ktor.client.android)
             }
         }
         val androidInstrumentedTest by getting {
             dependencies {
-                implementation(kotlin("test-junit"))
-                implementation("junit:junit:4.13.2")
+                implementation(libsx.kotlin.test.junit)
+                implementation(libsx.junit)
             }
         }
         val iosMain by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-ios:$ktorVersion")
+                implementation(libsx.ktor.client.ios)
             }
         }
         val iosTest by getting

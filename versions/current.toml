@@ -15,6 +15,7 @@ androidx-compose-ui = "1.6.7"
 compose-plugin = "1.6.10"
 junit = "4.13.2"
 kotlin = "2.0.0"
+ktor = "2.1.3"
 realm = "2.0.0"
 jvmTarget = "1.8"
 
@@ -36,10 +37,15 @@ androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-co
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidx-constraintlayout" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
+ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor"}
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor"}
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor"}
+ktor-client-ios = { module = "io.ktor:ktor-client-ios", version.ref = "ktor"}
+ktor-client-serialization = { module = "io.ktor:ktor-client-serialization", version.ref = "ktor"}
+ktor-serialization-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor"}
 realm-base = { module = "io.realm.kotlin:library-base", version.ref = "realm" }
 realm-sync = { module = "io.realm.kotlin:library-sync", version.ref = "realm" }
 realm-plugin = { module = "io.realm.kotlin:gradle-plugin", version.ref = "realm" }
-#androidx.compose.material:material:$compose_ui_version
 
 
 [plugins]
